@@ -3,6 +3,49 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+export async function GET(req: Request) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+        const user = session.user as any;
+        const { searchParams } = new URL(req.url);
+        const status = searchParams.get("status");
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const where: any = {};
+
+        if (status) where.status = status;
+
+        // Role-based filtering
+        if (user.role === "RUNNER") {
+            where.runner_id = user.id;
+        }
+
+        const purchases = await prisma.purchase.findMany({
+            where,
+            include: {
+                vendor: { select: { name: true } },
+                runner: { select: { name: true } },
+                request: {
+                    select: {
+                        request_no: true,
+                        manager: { select: { name: true } },
+                        buyer: { select: { name: true } },
+                    },
+                },
+                lines: { include: { material: true } },
+            },
+            orderBy: { created_at: "desc" },
+        });
+
+        return NextResponse.json(purchases);
+    } catch (error) {
+        console.error("Fetch purchases error:", error);
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
+}
+
 export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions);
