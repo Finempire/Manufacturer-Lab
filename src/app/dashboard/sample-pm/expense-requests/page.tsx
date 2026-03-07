@@ -14,7 +14,6 @@ interface Expense {
     expected_amount: number;
     status: string;
     order: { order_no: string };
-    buyer: { name: string };
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -22,7 +21,7 @@ const STATUS_COLORS: Record<string, string> = {
     REJECTED: "bg-red-100 text-red-800", PAID: "bg-green-100 text-green-800",
 };
 
-export default function ProductionExpensesPage() {
+export default function SamplePMExpenseRequestsPage() {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -40,7 +39,7 @@ export default function ProductionExpensesPage() {
                     <h1 className="text-xl font-bold text-gray-900">Expense Requests</h1>
                     <p className="text-sm text-gray-500 mt-1">{expenses.length} requests</p>
                 </div>
-                <Link href="/dashboard/production/expense-requests/new" className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
+                <Link href="/dashboard/sample-pm/expense-requests/new" className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
                     <Plus className="w-4 h-4" /> New Expense
                 </Link>
             </div>
@@ -74,7 +73,7 @@ export default function ProductionExpensesPage() {
                                 <td className="px-4 py-3 text-sm text-gray-600">{exp.order.order_no}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900 text-right font-medium tabular-nums">₹{exp.expected_amount.toLocaleString("en-IN")}</td>
                                 <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[exp.status] || "bg-gray-100 text-gray-800"}`}>{exp.status.replace(/_/g, " ")}</span></td>
-                                <td className="px-4 py-3 text-center"><Link href={`/dashboard/production/expense-requests/${exp.id}`} className="text-blue-600 hover:text-blue-800"><Eye className="w-4 h-4 mx-auto" /></Link></td>
+                                <td className="px-4 py-3 text-center"><Link href={`/dashboard/sample-pm/expense-requests/${exp.id}`} className="text-blue-600 hover:text-blue-800"><Eye className="w-4 h-4 mx-auto" /></Link></td>
                             </tr>
                         ))}
                     </tbody>
