@@ -1,0 +1,416 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password_hash String
+  role                 String   // STORE_MANAGER, RUNNER, ACCOUNTANT, PRODUCTION_MANAGER, MERCHANDISER, CEO
+  is_active            Boolean  @default(true)
+  must_change_password Boolean  @default(false)
+  last_login_at        DateTime?
+  created_by_id        String?
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+
+  created_by               User?                  @relation("UserCreatedBy", fields: [created_by_id], references: [id])
+  created_users            User[]                 @relation("UserCreatedBy")
+  created_vendors          Vendor[]               @relation("VendorCreatedBy")
+  created_materials        Material[]             @relation("MaterialCreatedBy")
+  created_orders           Order[]                @relation("OrderCreatedBy")
+  assigned_orders          Order[]                @relation("OrderAssignedMerchandiser")
+  tech_packs               TechPack[]             @relation("TechPackMerchandiser")
+  pm_material_requirements MaterialRequirement[]  @relation("MaterialRequirementPM")
+  sm_material_requirements MaterialRequirement[]  @relation("MaterialRequirementSM")
+  managed_requests         MaterialRequest[]      @relation("MaterialRequestManager")
+  assigned_requests        MaterialRequest[]      @relation("MaterialRequestRunner")
+  purchases                Purchase[]             @relation("PurchaseRunner")
+  payments                 Payment[]              @relation("PaymentAccountant")
+  vendor_confirmations     VendorConfirmation[]   @relation("ConfirmationRunner")
+  raised_expenses          ExpenseRequest[]       @relation("ExpenseRaisedBy")
+  notifications            Notification[]         @relation("UserNotification")
+  audit_logs               AuditLog[]             @relation("AuditLogUser")
+  created_styles           Style[]                @relation("StyleCreatedBy")
+
+  @@index([role])
+  @@index([is_active])
+  @@index([created_by_id])
+}
+
+model Vendor {
+  id                 String   @id @default(uuid())
+  name               String
+  gstin              String?
+  contact_person     String?
+  phone              String?
+  address            String?
+  notes              String?
+  is_active          Boolean  @default(true)
+  created_inline     Boolean  @default(false)
+  created_by_user_id String
+  created_at_stage   String?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  created_by         User     @relation("VendorCreatedBy", fields: [created_by_user_id], references: [id])
+  material_requests  MaterialRequest[] @relation("RequestPreferredVendor")
+  purchases          Purchase[]        @relation("PurchaseVendor")
+  expenses           ExpenseRequest[]  @relation("ExpenseVendor")
+
+  @@index([created_by_user_id])
+  @@index([is_active])
+}
+
+model Buyer {
+  id              String   @id @default(uuid())
+  name            String
+  brand_code      String   @unique
+  contact_details String?
+  notes           String?
+  created_inline  Boolean  @default(false)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  orders          Order[]           @relation("OrderBuyer")
+  requests        MaterialRequest[] @relation("RequestBuyer")
+  expenses        ExpenseRequest[]  @relation("ExpenseBuyer")
+}
+
+model Style {
+  id                 String   @id @default(uuid())
+  style_code         String   @unique
+  style_name         String
+  category           String?
+  description        String?
+  is_active          Boolean  @default(true)
+  created_inline     Boolean  @default(false)
+  created_by_user_id String?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  created_by             User?               @relation("StyleCreatedBy", fields: [created_by_user_id], references: [id])
+  order_lines            OrderLine[]
+  material_request_lines MaterialRequestLine[]
+
+  @@index([created_by_user_id])
+  @@index([is_active])
+}
+
+model Order {
+  id                       String   @id @default(uuid())
+  order_no                 String   @unique
+  buyer_id                 String
+  order_date               DateTime
+  shipping_date            DateTime
+  order_type               String   // SAMPLE, PRODUCTION
+  total_amount             Float
+  remarks                  String?
+  status                   String   @default("ORDER_RECEIVED")
+  created_by               String
+  assigned_merchandiser_id String?
+  production_manager_notes String?
+  created_at               DateTime @default(now())
+  updated_at               DateTime @updatedAt
+
+  buyer                    Buyer    @relation("OrderBuyer", fields: [buyer_id], references: [id])
+  creator                  User     @relation("OrderCreatedBy", fields: [created_by], references: [id])
+  merchandiser             User?    @relation("OrderAssignedMerchandiser", fields: [assigned_merchandiser_id], references: [id])
+  lines                    OrderLine[]
+  tech_packs               TechPack[]
+  material_requirements    MaterialRequirement[]
+  material_requests        MaterialRequest[]
+  expenses                 ExpenseRequest[]
+
+  @@index([buyer_id])
+  @@index([status])
+  @@index([created_by])
+  @@index([assigned_merchandiser_id])
+}
+
+model OrderLine {
+  id          String   @id @default(uuid())
+  order_id    String
+  style_id    String
+  description String?
+  quantity    Float
+  rate        Float
+  amount      Float
+  created_at  DateTime @default(now())
+
+  order       Order    @relation(fields: [order_id], references: [id])
+  style       Style    @relation(fields: [style_id], references: [id])
+
+  @@index([order_id])
+  @@index([style_id])
+}
+
+model TechPack {
+  id                 String   @id @default(uuid())
+  tech_pack_no       String   @unique
+  order_id           String
+  merchandiser_id    String
+  fabric_details     String?
+  trim_details       String?
+  measurements       String?
+  construction_notes String?
+  document_path      String?
+  status             String   @default("DRAFT")
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  order              Order    @relation(fields: [order_id], references: [id])
+  merchandiser       User     @relation("TechPackMerchandiser", fields: [merchandiser_id], references: [id])
+
+  @@index([order_id])
+  @@index([merchandiser_id])
+  @@index([status])
+}
+
+model MaterialRequirement {
+  id                    String   @id @default(uuid())
+  order_id              String
+  production_manager_id String
+  store_manager_id      String
+  material_notes        String
+  required_by_date      DateTime
+  special_instructions  String?
+  created_at            DateTime @default(now())
+
+  order                 Order    @relation(fields: [order_id], references: [id])
+  production_manager    User     @relation("MaterialRequirementPM", fields: [production_manager_id], references: [id])
+  store_manager         User     @relation("MaterialRequirementSM", fields: [store_manager_id], references: [id])
+  requests              MaterialRequest[]
+
+  @@index([order_id])
+  @@index([production_manager_id])
+  @@index([store_manager_id])
+}
+
+model Material {
+  id                 String   @id @default(uuid())
+  sku_code           String?  @unique
+  description        String
+  category           String
+  unit_of_measure    String
+  default_rate       Float?
+  created_inline     Boolean  @default(false)
+  created_by_user_id String
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  created_by         User     @relation("MaterialCreatedBy", fields: [created_by_user_id], references: [id])
+  request_lines      MaterialRequestLine[]
+  purchase_lines     PurchaseLine[]
+
+  @@index([created_by_user_id])
+  @@index([category])
+}
+
+model MaterialRequest {
+  id                      String   @id @default(uuid())
+  request_no              String   @unique
+  manager_id              String
+  buyer_id                String
+  order_id                String
+  material_requirement_id String?
+  store_location          String
+  expected_date           DateTime
+  remarks                 String?
+  preferred_vendor_id     String?
+  assigned_runner_id      String
+  status                  String   @default("PENDING_PURCHASE")
+  created_at              DateTime @default(now())
+  updated_at              DateTime @updatedAt
+
+  manager                 User     @relation("MaterialRequestManager", fields: [manager_id], references: [id])
+  buyer                   Buyer    @relation("RequestBuyer", fields: [buyer_id], references: [id])
+  order                   Order    @relation(fields: [order_id], references: [id])
+  requirement             MaterialRequirement? @relation(fields: [material_requirement_id], references: [id])
+  preferred_vendor        Vendor?  @relation("RequestPreferredVendor", fields: [preferred_vendor_id], references: [id])
+  runner                  User     @relation("MaterialRequestRunner", fields: [assigned_runner_id], references: [id])
+  lines                   MaterialRequestLine[]
+  purchases               Purchase[]
+
+  @@index([manager_id])
+  @@index([assigned_runner_id])
+  @@index([status])
+  @@index([order_id])
+  @@index([buyer_id])
+}
+
+model MaterialRequestLine {
+  id              String   @id @default(uuid())
+  request_id      String
+  material_id     String
+  description     String?
+  quantity        Float
+  expected_rate   Float
+  expected_amount Float
+  style_id        String?
+  created_at      DateTime @default(now())
+
+  request         MaterialRequest @relation(fields: [request_id], references: [id])
+  material        Material        @relation(fields: [material_id], references: [id])
+  style           Style?          @relation(fields: [style_id], references: [id])
+
+  @@index([request_id])
+  @@index([material_id])
+  @@index([style_id])
+}
+
+model Purchase {
+  id                       String   @id @default(uuid())
+  purchase_no              String   @unique
+  request_id               String
+  runner_id                String
+  vendor_id                String
+  invoice_no               String
+  invoice_date             DateTime
+  invoice_amount           Float
+  invoice_type_submitted   String   // PROVISIONAL, TAX
+  provisional_invoice_path String?
+  tax_invoice_path         String?
+  accountant_notes         String?
+  status                   String   @default("INVOICE_SUBMITTED")
+  created_at               DateTime @default(now())
+  updated_at               DateTime @updatedAt
+
+  request                  MaterialRequest @relation(fields: [request_id], references: [id])
+  runner                   User            @relation("PurchaseRunner", fields: [runner_id], references: [id])
+  vendor                   Vendor          @relation("PurchaseVendor", fields: [vendor_id], references: [id])
+  lines                    PurchaseLine[]
+  payments                 Payment[]
+  confirmation             VendorConfirmation?
+
+  @@index([request_id])
+  @@index([runner_id])
+  @@index([vendor_id])
+  @@index([status])
+}
+
+model PurchaseLine {
+  id          String   @id @default(uuid())
+  purchase_id String
+  material_id String
+  quantity    Float
+  rate        Float
+  amount      Float
+
+  purchase    Purchase @relation(fields: [purchase_id], references: [id])
+  material    Material @relation(fields: [material_id], references: [id])
+
+  @@index([purchase_id])
+  @@index([material_id])
+}
+
+model Payment {
+  id                 String   @id @default(uuid())
+  purchase_id        String
+  accountant_id      String
+  payment_date       DateTime
+  payment_method     String   // CASH, UPI, BANK_TRANSFER, CHEQUE
+  amount_paid        Float
+  reference_id       String?
+  payment_proof_path String
+  notes              String?
+  created_at         DateTime @default(now())
+
+  purchase           Purchase @relation(fields: [purchase_id], references: [id])
+  accountant         User     @relation("PaymentAccountant", fields: [accountant_id], references: [id])
+
+  @@index([purchase_id])
+  @@index([accountant_id])
+}
+
+model VendorConfirmation {
+  id                  String   @id @default(uuid())
+  purchase_id         String   @unique
+  runner_id           String
+  status              String   @default("NOT_CONFIRMED")
+  shown_to_vendor_at  DateTime?
+  vendor_confirmed_at DateTime?
+  runner_remark       String?
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  purchase            Purchase @relation(fields: [purchase_id], references: [id])
+  runner              User     @relation("ConfirmationRunner", fields: [runner_id], references: [id])
+
+  @@index([runner_id])
+  @@index([status])
+}
+
+model ExpenseRequest {
+  id                 String   @id @default(uuid())
+  expense_no         String   @unique
+  raised_by_id       String
+  buyer_id           String
+  order_id           String
+  expense_date       DateTime
+  expense_category   String
+  description        String
+  vendor_name        String?
+  vendor_id          String?
+  expected_amount    Float
+  actual_amount      Float?
+  attachment_path    String?
+  payment_method     String?
+  payment_date       DateTime?
+  payment_reference  String?
+  payment_proof_path String?
+  accountant_notes   String?
+  rejection_reason   String?
+  status             String   @default("PENDING_APPROVAL")
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  raised_by          User     @relation("ExpenseRaisedBy", fields: [raised_by_id], references: [id])
+  buyer              Buyer    @relation("ExpenseBuyer", fields: [buyer_id], references: [id])
+  order              Order    @relation(fields: [order_id], references: [id])
+  vendor             Vendor?  @relation("ExpenseVendor", fields: [vendor_id], references: [id])
+
+  @@index([raised_by_id])
+  @@index([status])
+  @@index([buyer_id])
+  @@index([order_id])
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  user_id     String
+  title       String
+  message     String
+  entity_type String
+  entity_id   String
+  is_read     Boolean  @default(false)
+  created_at  DateTime @default(now())
+
+  user        User     @relation("UserNotification", fields: [user_id], references: [id])
+
+  @@index([user_id])
+  @@index([is_read])
+}
+
+model AuditLog {
+  id             String   @id @default(uuid())
+  entity_type    String
+  entity_id      String
+  action         String
+  performed_by   String
+  previous_state String?
+  new_state      String?
+  ip_address     String?
+  created_at     DateTime @default(now())
+
+  user           User     @relation("AuditLogUser", fields: [performed_by], references: [id])
+
+  @@index([entity_type, entity_id])
+  @@index([performed_by])
+}

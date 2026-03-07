@@ -1,0 +1,41 @@
+"use client";
+import { ShoppingCart } from "lucide-react";
+import { useState, useEffect } from "react";
+import { format } from "date-fns";
+
+interface Order { id: string; order_no: string; order_date: string; buyer: { name: string }; order_type: string; total_amount: number; status: string; }
+
+export default function ProductionOrdersPage() {
+    const [orders, setOrders] = useState<Order[]>([]);
+    useEffect(() => { fetch("/api/orders").then(r => r.json()).then(setOrders).catch(() => { }); }, []);
+
+    return (
+        <div className="space-y-4">
+            <div><h1 className="text-xl font-bold text-gray-900">Orders</h1><p className="text-sm text-gray-500 mt-1">View and manage production orders</p></div>
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Order</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Date</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Buyer</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {orders.length === 0 ? (
+                            <tr><td colSpan={4} className="px-4 py-12 text-center text-sm text-gray-400"><ShoppingCart className="w-8 h-8 mx-auto mb-2 text-gray-300" />No orders yet</td></tr>
+                        ) : orders.map(o => (
+                            <tr key={o.id} className="hover:bg-gray-50">
+                                <td className="px-4 py-3 text-sm font-semibold text-gray-900">{o.order_no}</td>
+                                <td className="px-4 py-3 text-sm text-gray-500">{format(new Date(o.order_date), "dd MMM yyyy")}</td>
+                                <td className="px-4 py-3 text-sm text-gray-900">{o.buyer?.name}</td>
+                                <td className="px-4 py-3"><span className="px-2.5 py-1 text-[11px] font-semibold rounded-full bg-blue-100 text-blue-800">{o.status.replace(/_/g, " ")}</span></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}
