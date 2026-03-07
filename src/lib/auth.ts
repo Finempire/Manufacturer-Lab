@@ -4,96 +4,100 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
 export type UserRole =
-    | "ACCOUNTANT"
-    | "PRODUCTION_MANAGER"
-    | "MERCHANDISER"
-    | "STORE_MANAGER"
-    | "RUNNER"
-    | "CEO";
+  | "ACCOUNTANT"
+  | "SAMPLE_PRODUCTION_MANAGER"
+  | "PRODUCTION_MANAGER"
+  | "MERCHANDISER"
+  | "STORE_MANAGER"
+  | "RUNNER"
+  | "CEO";
+
+export const ROLE_LABELS: Record<UserRole, string> = {
+  ACCOUNTANT: "Accountant",
+  SAMPLE_PRODUCTION_MANAGER: "Sample Production Manager",
+  PRODUCTION_MANAGER: "Production Manager",
+  MERCHANDISER: "Merchandiser",
+  STORE_MANAGER: "Store Manager",
+  RUNNER: "Runner",
+  CEO: "CEO",
+};
 
 export const authOptions: NextAuthOptions = {
-    providers: [
-        CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-                email: { label: "Email", type: "email" },
-                password: { label: "Password", type: "password" },
-            },
-            async authorize(credentials) {
-                console.log("NextAuth Authorize: Starting for email", credentials?.email);
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Email and password are required");
+        }
 
-                if (!credentials?.email || !credentials?.password) {
-                    console.log("NextAuth Authorize: Missing email or password");
-                    throw new Error("Email and password are required");
-                }
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
 
-                const user = await prisma.user.findUnique({
-                    where: { email: credentials.email },
-                });
+        if (!user) {
+          throw new Error("Invalid credentials");
+        }
 
-                if (!user) {
-                    console.log("NextAuth Authorize: User not found in DB");
-                    throw new Error("Invalid credentials");
-                }
+        if (!user.is_active) {
+          throw new Error("Account deactivated. Contact administrator.");
+        }
 
-                if (!user.is_active) {
-                    console.log("NextAuth Authorize: User found but is_active=false");
-                    throw new Error("Invalid credentials");
-                }
+        const isValid = await bcrypt.compare(
+          credentials.password,
+          user.password_hash
+        );
 
-                const isValid = await bcrypt.compare(
-                    credentials.password,
-                    user.password_hash
-                );
+        if (!isValid) {
+          throw new Error("Invalid credentials");
+        }
 
-                if (!isValid) {
-                    console.log("NextAuth Authorize: bcrypt.compare returned false");
-                    throw new Error("Invalid credentials");
-                }
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { last_login_at: new Date() },
+        });
 
-                console.log("NextAuth Authorize: Authentication successful for", user.email);
-
-                // Update last login
-                await prisma.user.update({
-                    where: { id: user.id },
-                    data: { last_login_at: new Date() }
-                })
-
-                return {
-                    id: user.id,
-                    email: user.email,
-                    name: user.name,
-                    role: user.role,
-                    must_change_password: user.must_change_password,
-                };
-            },
-        }),
-    ],
-    session: {
-        strategy: "jwt",
-        maxAge: 24 * 60 * 60, // 1 day
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          must_change_password: user.must_change_password,
+          runner_status: user.runner_status,
+        };
+      },
+    }),
+  ],
+  session: {
+    strategy: "jwt",
+    maxAge: 24 * 60 * 60,
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = (user as Record<string, unknown>).role as string;
+        token.must_change_password = (user as Record<string, unknown>).must_change_password as boolean;
+        token.runner_status = (user as Record<string, unknown>).runner_status as string;
+      }
+      return token;
     },
-    callbacks: {
-        async jwt({ token, user }) {
-            if (user) {
-                token.id = user.id;
-                token.role = (user as { role: string }).role;
-                token.must_change_password = (user as { must_change_password: boolean }).must_change_password;
-            }
-            return token;
-        },
-        async session({ session, token }) {
-            if (session.user) {
-                (session.user as { id: string; role: string; must_change_password: boolean }).id = token.id as string;
-                (session.user as { id: string; role: string; must_change_password: boolean }).role =
-                    token.role as string;
-                (session.user as { id: string; role: string; must_change_password: boolean }).must_change_password =
-                    token.must_change_password as boolean;
-            }
-            return session;
-        },
+    async session({ session, token }) {
+      if (session.user) {
+        const u = session.user as Record<string, unknown>;
+        u.id = token.id as string;
+        u.role = token.role as string;
+        u.must_change_password = token.must_change_password as boolean;
+        u.runner_status = token.runner_status as string;
+      }
+      return session;
     },
-    pages: {
-        signIn: "/login",
-    },
+  },
+  pages: {
+    signIn: "/login",
+  },
 };
