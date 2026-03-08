@@ -13,6 +13,7 @@ export const BuyerSchema = z.object({
   name: z.string().min(1, "Buyer name is required"),
   brand_code: z.string().optional(),
   address: z.string().optional(),
+  shipping_address: z.string().optional(),
   email: z.string().email("Invalid email address").optional().or(z.literal("")),
   contact_person: z.string().optional(),
   phone: z.string().optional(),

@@ -11,6 +11,7 @@ interface Buyer {
     contact_person: string | null;
     phone: string | null;
     email: string | null;
+    shipping_address: string | null;
     notes: string | null;
     created_inline: boolean;
     created_at: string;
@@ -20,7 +21,7 @@ export default function BuyersPage() {
     const [buyers, setBuyers] = useState<Buyer[]>([]);
     const [showModal, setShowModal] = useState(false);
     const [filterInline, setFilterInline] = useState(false);
-    const [form, setForm] = useState({ name: "", brand_code: "", contact_person: "", phone: "", notes: "" });
+    const [form, setForm] = useState({ name: "", brand_code: "", contact_person: "", phone: "", shipping_address: "", notes: "" });
     const [error, setError] = useState("");
 
     const fetchBuyers = () => {
@@ -45,7 +46,7 @@ export default function BuyersPage() {
         if (!res.ok) { toast.error("Failed to create buyer"); return; }
         toast.success("Buyer created");
         setShowModal(false);
-        setForm({ name: "", brand_code: "", contact_person: "", phone: "", notes: "" });
+        setForm({ name: "", brand_code: "", contact_person: "", phone: "", shipping_address: "", notes: "" });
         setError("");
         fetchBuyers();
     };
@@ -87,6 +88,7 @@ export default function BuyersPage() {
                             <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Name</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Brand Code</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Contact</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Shipping Address</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Notes</th>
                         </tr>
                     </thead>
@@ -99,12 +101,13 @@ export default function BuyersPage() {
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-500 font-mono">{b.brand_code}</td>
                                 <td className="px-4 py-3 text-sm text-gray-500">{[b.contact_person, b.phone].filter(Boolean).join(" | ") || "—"}</td>
+                                <td className="px-4 py-3 text-sm text-gray-500">{b.shipping_address || "—"}</td>
                                 <td className="px-4 py-3 text-sm text-gray-500">{b.notes || "—"}</td>
                             </tr>
                         ))}
                         {displayed.length === 0 && (
                             <tr>
-                                <td colSpan={4} className="px-4 py-8 text-center text-sm text-gray-400">
+                                <td colSpan={5} className="px-4 py-8 text-center text-sm text-gray-400">
                                     {filterInline ? "No inline-created buyers found" : "No buyers found"}
                                 </td>
                             </tr>
@@ -137,6 +140,10 @@ export default function BuyersPage() {
                             <div>
                                 <label className="block text-xs font-medium text-gray-700 mb-1">Phone</label>
                                 <input type="text" className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-medium text-gray-700 mb-1">Shipping Address</label>
+                                <textarea rows={2} placeholder="Full shipping address" className="w-full p-3 border border-gray-300 rounded-lg text-sm" value={form.shipping_address} onChange={(e) => setForm({ ...form, shipping_address: e.target.value })} />
                             </div>
                             <div>
                                 <label className="block text-xs font-medium text-gray-700 mb-1">Notes</label>

@@ -18,6 +18,7 @@ export default function AddBuyerModal({ isOpen, onClose, onSuccess }: AddBuyerMo
         brand_code: "",
         contact_person: "",
         phone_email: "",
+        shipping_address: "",
         notes: "",
     });
 
@@ -51,6 +52,7 @@ export default function AddBuyerModal({ isOpen, onClose, onSuccess }: AddBuyerMo
                     brand_code: formData.brand_code || undefined,
                     contact_person: formData.contact_person || undefined,
                     phone: formData.phone_email || undefined,
+                    shipping_address: formData.shipping_address || undefined,
                     notes: formData.notes || undefined,
                     created_inline: true,
                 }),
@@ -68,7 +70,7 @@ export default function AddBuyerModal({ isOpen, onClose, onSuccess }: AddBuyerMo
             toast.success("Buyer added and selected");
             onSuccess({ id: buyer.id, name: buyer.name, brand_code: buyer.brand_code });
             // Reset form
-            setFormData({ name: "", brand_code: "", contact_person: "", phone_email: "", notes: "" });
+            setFormData({ name: "", brand_code: "", contact_person: "", phone_email: "", shipping_address: "", notes: "" });
             onClose();
         } catch (err: unknown) {
             toast.error(err instanceof Error ? err.message : "Failed to create buyer");
@@ -134,6 +136,16 @@ export default function AddBuyerModal({ isOpen, onClose, onSuccess }: AddBuyerMo
                                 className="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 value={formData.phone_email}
                                 onChange={(e) => setFormData({ ...formData, phone_email: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">Shipping Address</label>
+                            <textarea
+                                rows={2}
+                                placeholder="Full shipping address"
+                                className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                value={formData.shipping_address}
+                                onChange={(e) => setFormData({ ...formData, shipping_address: e.target.value })}
                             />
                         </div>
                         <div>
