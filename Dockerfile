@@ -14,7 +14,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # We need to generate Prisma client for the build to succeed typechecks
-RUN npx prisma generate
+RUN npx prisma@6.19.2 generate
 # Create uploads directory for build-time access
 RUN mkdir -p /app/uploads /app/public
 RUN npm run build
