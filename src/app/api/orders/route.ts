@@ -29,7 +29,7 @@ export async function GET(req: Request) {
     // RBAC-based filtering
     const role = auth.user.role;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let where: any = {};
+    const where: any = {};
 
     if (role === "SAMPLE_PRODUCTION_MANAGER") {
         where.order_type = "SAMPLE";
