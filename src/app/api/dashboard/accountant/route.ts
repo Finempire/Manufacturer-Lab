@@ -15,7 +15,7 @@ export async function GET() {
         totalUsers,
     ] = await Promise.all([
         prisma.purchase.count({ where: { status: "INVOICE_SUBMITTED" } }),
-        prisma.purchase.count({ where: { status: "PAYMENT_PENDING" } }),
+        prisma.purchase.count({ where: { status: { in: ["APPROVED", "PARTIALLY_PAID"] } } }),
         prisma.order.count({ where: { status: { not: "COMPLETED" } } }),
         prisma.expenseRequest.count({ where: { status: "PENDING_APPROVAL" } }),
         prisma.payment.aggregate({

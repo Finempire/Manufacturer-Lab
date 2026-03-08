@@ -9,7 +9,7 @@ export async function GET() {
     const [newOrders, pendingTechPacks, materialRequirements, pendingExpenses] =
         await Promise.all([
             prisma.order.count({ where: { status: "ORDER_RECEIVED" } }),
-            prisma.techPack.count({ where: { status: "DRAFT" } }),
+            prisma.techPack.count({ where: { status: "SUBMITTED_FOR_REVIEW" } }),
             prisma.materialRequirement.count({
                 where: { production_manager_id: auth.user.id },
             }),
