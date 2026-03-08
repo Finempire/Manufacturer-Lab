@@ -42,46 +42,46 @@ export default function SamplePMProductionPage() {
     return (
         <div className="space-y-4">
             <div>
-                <h1 className="text-xl font-bold text-gray-900">Sample Production</h1>
-                <p className="text-sm text-gray-500 mt-1">Sample orders in production pipeline</p>
+                <h1 className="text-lg font-semibold tracking-tight text-slate-900">Sample Production</h1>
+                <p className="text-sm text-slate-500 mt-1">Sample orders in production pipeline</p>
             </div>
 
             <div className="grid grid-cols-3 gap-4">
                 {PRODUCTION_STATUSES.map(status => (
-                    <div key={status} className="bg-white rounded-xl border border-gray-200 p-4">
-                        <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wider">{status.replace(/_/g, " ")}</p>
-                        <p className="text-2xl font-bold text-gray-900 mt-1">{orders.filter(o => o.status === status).length}</p>
+                    <div key={status} className="bg-white rounded-lg border border-slate-200 p-4">
+                        <p className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">{status.replace(/_/g, " ")}</p>
+                        <p className="text-2xl font-bold text-slate-900 mt-1">{orders.filter(o => o.status === status).length}</p>
                     </div>
                 ))}
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+                <table className="min-w-full divide-y divide-slate-200">
+                    <thead className="bg-slate-50">
                         <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Order No</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Buyer</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Order Date</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Ship Date</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
-                            <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">View</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Order No</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Buyer</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Order Date</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Ship Date</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
+                            <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">View</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-slate-100">
                         {loading ? (
-                            <tr><td colSpan={6} className="px-4 py-12 text-center text-sm text-gray-400">Loading...</td></tr>
+                            <tr><td colSpan={6} className="px-4 py-12 text-center text-sm text-slate-400">Loading...</td></tr>
                         ) : orders.length === 0 ? (
                             <tr><td colSpan={6} className="px-4 py-12 text-center">
-                                <Factory className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                                <p className="text-sm text-gray-500">No samples in production</p>
+                                <Factory className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                                <p className="text-sm text-slate-500">No samples in production</p>
                             </td></tr>
                         ) : orders.map(order => (
-                            <tr key={order.id} className="hover:bg-gray-50">
-                                <td className="px-4 py-3 text-sm font-semibold text-gray-900">{order.order_no}</td>
-                                <td className="px-4 py-3 text-sm text-gray-600">{order.buyer.name}</td>
-                                <td className="px-4 py-3 text-sm text-gray-500">{format(new Date(order.order_date), "dd MMM yyyy")}</td>
-                                <td className="px-4 py-3 text-sm text-gray-500">{format(new Date(order.shipping_date), "dd MMM yyyy")}</td>
-                                <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[order.status] || "bg-gray-100 text-gray-800"}`}>{order.status.replace(/_/g, " ")}</span></td>
+                            <tr key={order.id} className="hover:bg-slate-50">
+                                <td className="px-4 py-3 text-sm font-semibold text-slate-900">{order.order_no}</td>
+                                <td className="px-4 py-3 text-sm text-slate-600">{order.buyer.name}</td>
+                                <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(order.order_date), "dd MMM yyyy")}</td>
+                                <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(order.shipping_date), "dd MMM yyyy")}</td>
+                                <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[order.status] || "bg-slate-100 text-slate-800"}`}>{order.status.replace(/_/g, " ")}</span></td>
                                 <td className="px-4 py-3 text-center"><Link href={`/dashboard/sample-pm/orders/${order.id}`} className="text-blue-600 hover:text-blue-800"><Eye className="w-4 h-4 mx-auto" /></Link></td>
                             </tr>
                         ))}

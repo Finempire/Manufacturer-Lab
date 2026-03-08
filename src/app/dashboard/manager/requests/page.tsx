@@ -161,8 +161,8 @@ export default function MaterialRequestsPage() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-xl font-bold text-gray-900">Material Requests</h1>
-                    <p className="text-sm text-gray-500 mt-1">Create and manage material purchase requests</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-slate-900">Material Requests</h1>
+                    <p className="text-sm text-slate-500 mt-1">Create and manage material purchase requests</p>
                 </div>
                 <button
                     onClick={openDrawer}
@@ -172,9 +172,9 @@ export default function MaterialRequestsPage() {
                 </button>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-                <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 text-sm">No material requests created</p>
+            <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
+                <Package className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <p className="text-slate-500 text-sm">No material requests created</p>
             </div>
 
             {/* Backdrop overlay */}
@@ -185,9 +185,9 @@ export default function MaterialRequestsPage() {
             {/* Side Drawer */}
             <div className={`fixed top-0 right-0 h-full w-full max-w-3xl bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}>
                 <div className="flex flex-col h-full">
-                    <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <h2 className="text-lg font-bold text-gray-900">New Material Purchase Request</h2>
-                        <button onClick={closeDrawer} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-slate-50">
+                        <h2 className="text-lg font-bold text-slate-900">New Material Purchase Request</h2>
+                        <button onClick={closeDrawer} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                             <X className="w-5 h-5" />
                         </button>
                     </div>
@@ -195,84 +195,84 @@ export default function MaterialRequestsPage() {
                     <div className="flex-1 overflow-y-auto px-6 py-5">
                         <form id="new-request-form" onSubmit={handleSubmit} className="space-y-6">
                             {/* General Details */}
-                            <div className="bg-white p-4 rounded-xl border border-gray-200 space-y-4">
-                                <h3 className="text-sm font-bold text-gray-900">General Information</h3>
+                            <div className="bg-white p-4 rounded-lg border border-slate-200 space-y-4">
+                                <h3 className="text-sm font-bold text-slate-900">General Information</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1">Buyer *</label>
-                                        <select required className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.buyer_id} onChange={(e) => setFormData({ ...formData, buyer_id: e.target.value })}>
+                                        <label className="block text-xs font-medium text-slate-700 mb-1">Buyer *</label>
+                                        <select required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.buyer_id} onChange={(e) => setFormData({ ...formData, buyer_id: e.target.value })}>
                                             <option value="">Select Buyer</option>
                                             {buyers.map((b) => (<option key={b.id} value={b.id}>{b.name}</option>))}
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1">Order *</label>
-                                        <select required className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.order_id} onChange={(e) => setFormData({ ...formData, order_id: e.target.value })}>
+                                        <label className="block text-xs font-medium text-slate-700 mb-1">Order *</label>
+                                        <select required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.order_id} onChange={(e) => setFormData({ ...formData, order_id: e.target.value })}>
                                             <option value="">Select Order</option>
                                             {orders.map((o) => (<option key={o.id} value={o.id}>{o.order_no}</option>))}
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1">Store Location *</label>
-                                        <input type="text" required placeholder="e.g. Main Warehouse" className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.store_location} onChange={(e) => setFormData({ ...formData, store_location: e.target.value })} />
+                                        <label className="block text-xs font-medium text-slate-700 mb-1">Store Location *</label>
+                                        <input type="text" required placeholder="e.g. Main Warehouse" className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.store_location} onChange={(e) => setFormData({ ...formData, store_location: e.target.value })} />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1">Expected Date *</label>
-                                        <input type="date" required className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.expected_date} onChange={(e) => setFormData({ ...formData, expected_date: e.target.value })} />
+                                        <label className="block text-xs font-medium text-slate-700 mb-1">Expected Date *</label>
+                                        <input type="date" required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.expected_date} onChange={(e) => setFormData({ ...formData, expected_date: e.target.value })} />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1">Assigned Runner *</label>
-                                        <select required className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.assigned_runner_id} onChange={(e) => setFormData({ ...formData, assigned_runner_id: e.target.value })}>
+                                        <label className="block text-xs font-medium text-slate-700 mb-1">Assigned Runner *</label>
+                                        <select required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.assigned_runner_id} onChange={(e) => setFormData({ ...formData, assigned_runner_id: e.target.value })}>
                                             <option value="">Select Runner</option>
                                             {runners.map((r) => (<option key={r.id} value={r.id}>{r.name}</option>))}
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1">Preferred Vendor (Optional)</label>
-                                        <select className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.preferred_vendor_id} onChange={(e) => setFormData({ ...formData, preferred_vendor_id: e.target.value })}>
+                                        <label className="block text-xs font-medium text-slate-700 mb-1">Preferred Vendor (Optional)</label>
+                                        <select className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.preferred_vendor_id} onChange={(e) => setFormData({ ...formData, preferred_vendor_id: e.target.value })}>
                                             <option value="">No Preference</option>
                                             {vendors.map((v) => (<option key={v.id} value={v.id}>{v.name}</option>))}
                                         </select>
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-700 mb-1">Remarks</label>
-                                    <textarea rows={2} placeholder="Any specific instructions..." className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.remarks} onChange={(e) => setFormData({ ...formData, remarks: e.target.value })} />
+                                    <label className="block text-xs font-medium text-slate-700 mb-1">Remarks</label>
+                                    <textarea rows={2} placeholder="Any specific instructions..." className="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.remarks} onChange={(e) => setFormData({ ...formData, remarks: e.target.value })} />
                                 </div>
                             </div>
 
                             {/* Lines */}
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-sm font-semibold text-gray-900">Material Items</h3>
+                                    <h3 className="text-sm font-semibold text-slate-900">Material Items</h3>
                                     <button type="button" onClick={() => setLines([...lines, { material_id: "", style_id: "", description: "", quantity: "", expected_rate: "", expected_amount: 0 }])} className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 rounded-lg hover:bg-blue-100">
                                         <Plus className="w-3.5 h-3.5" /> Add Material
                                     </button>
                                 </div>
-                                <div className="overflow-x-auto border border-gray-200 rounded-lg">
-                                    <table className="min-w-full divide-y divide-gray-200">
-                                        <thead className="bg-gray-50">
+                                <div className="overflow-x-auto border border-slate-200 rounded-lg">
+                                    <table className="min-w-full divide-y divide-slate-200">
+                                        <thead className="bg-slate-50">
                                             <tr>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase" style={{ minWidth: 150 }}>Material</th>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase" style={{ minWidth: 130 }}>Style</th>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell" style={{ minWidth: 100 }}>Description</th>
-                                                <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase w-24">Qty</th>
-                                                <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase w-28">Exp. Rate</th>
-                                                <th className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase w-32">Amount</th>
-                                                <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase w-12">×</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase" style={{ minWidth: 150 }}>Material</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase" style={{ minWidth: 130 }}>Style</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase hidden md:table-cell" style={{ minWidth: 100 }}>Description</th>
+                                                <th className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase w-24">Qty</th>
+                                                <th className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase w-28">Exp. Rate</th>
+                                                <th className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase w-32">Amount</th>
+                                                <th className="px-3 py-2 text-center text-xs font-medium text-slate-500 uppercase w-12">×</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-gray-100 bg-white">
+                                        <tbody className="divide-y divide-slate-100 bg-white">
                                             {lines.map((line, i) => (
                                                 <tr key={i}>
                                                     <td className="px-3 py-2">
-                                                        <select required className="w-full h-8 px-2 border border-gray-300 rounded text-sm min-w-[150px]" value={line.material_id} onChange={(e) => handleLineChange(i, "material_id", e.target.value)}>
+                                                        <select required className="w-full h-8 px-2 border border-slate-300 rounded text-sm min-w-[150px]" value={line.material_id} onChange={(e) => handleLineChange(i, "material_id", e.target.value)}>
                                                             <option value="">Select...</option>
                                                             {materials.map(m => <option key={m.id} value={m.id}>{m.description}</option>)}
                                                         </select>
                                                     </td>
                                                     <td className="px-3 py-2">
-                                                        <select className="w-full h-8 px-2 border border-gray-300 rounded text-sm min-w-[130px]" value={line.style_id} onChange={(e) => handleStyleSelect(i, e.target.value)}>
+                                                        <select className="w-full h-8 px-2 border border-slate-300 rounded text-sm min-w-[130px]" value={line.style_id} onChange={(e) => handleStyleSelect(i, e.target.value)}>
                                                             <option value="">Any / General</option>
                                                             {orderStyles.length > 0 && orderStyles.map(s => <option key={s.id} value={s.id}>{s.style_code} — {s.style_name}</option>)}
                                                             {orderStyles.length > 0 && otherStyles.length > 0 && <option disabled>─── Other Styles ───</option>}
@@ -281,13 +281,13 @@ export default function MaterialRequestsPage() {
                                                         </select>
                                                     </td>
                                                     <td className="px-3 py-2 hidden md:table-cell">
-                                                        <input type="text" className="w-full h-8 px-2 border border-gray-300 rounded text-sm" value={line.description} onChange={(e) => handleLineChange(i, "description", e.target.value)} />
+                                                        <input type="text" className="w-full h-8 px-2 border border-slate-300 rounded text-sm" value={line.description} onChange={(e) => handleLineChange(i, "description", e.target.value)} />
                                                     </td>
                                                     <td className="px-3 py-2">
-                                                        <input type="number" required min="0.1" step="0.1" className="w-full h-8 px-2 border border-gray-300 rounded text-sm text-right" value={line.quantity} onChange={(e) => handleLineChange(i, "quantity", e.target.value)} />
+                                                        <input type="number" required min="0.1" step="0.1" className="w-full h-8 px-2 border border-slate-300 rounded text-sm text-right" value={line.quantity} onChange={(e) => handleLineChange(i, "quantity", e.target.value)} />
                                                     </td>
                                                     <td className="px-3 py-2">
-                                                        <input type="number" required min="0" step="0.01" className="w-full h-8 px-2 border border-gray-300 rounded text-sm text-right" value={line.expected_rate} onChange={(e) => handleLineChange(i, "expected_rate", e.target.value)} />
+                                                        <input type="number" required min="0" step="0.01" className="w-full h-8 px-2 border border-slate-300 rounded text-sm text-right" value={line.expected_rate} onChange={(e) => handleLineChange(i, "expected_rate", e.target.value)} />
                                                     </td>
                                                     <td className="px-3 py-2 text-right text-sm font-medium tabular-nums">
                                                         ₹{line.expected_amount.toFixed(2)}
@@ -300,10 +300,10 @@ export default function MaterialRequestsPage() {
                                                 </tr>
                                             ))}
                                         </tbody>
-                                        <tfoot className="bg-gray-50">
+                                        <tfoot className="bg-slate-50">
                                             <tr>
-                                                <td colSpan={3} className="px-3 py-3 text-right text-sm font-semibold text-gray-700 hidden md:table-cell">Estimated Total Required:</td>
-                                                <td colSpan={3} className="px-3 py-3 text-right text-sm font-bold text-gray-900 tabular-nums">₹{totalAmount.toFixed(2)}</td>
+                                                <td colSpan={3} className="px-3 py-3 text-right text-sm font-semibold text-slate-700 hidden md:table-cell">Estimated Total Required:</td>
+                                                <td colSpan={3} className="px-3 py-3 text-right text-sm font-bold text-slate-900 tabular-nums">₹{totalAmount.toFixed(2)}</td>
                                                 <td></td>
                                             </tr>
                                         </tfoot>
@@ -313,8 +313,8 @@ export default function MaterialRequestsPage() {
                         </form>
                     </div>
 
-                    <div className="flex justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50">
-                        <button type="button" onClick={closeDrawer} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+                    <div className="flex justify-end gap-3 px-6 py-4 border-t border-slate-200 bg-slate-50">
+                        <button type="button" onClick={closeDrawer} className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50">Cancel</button>
                         <button type="submit" form="new-request-form" disabled={submitting} className="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50">{submitting ? "Submitting..." : "Submit Purchase Request"}</button>
                     </div>
                 </div>

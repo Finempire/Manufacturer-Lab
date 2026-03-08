@@ -25,7 +25,7 @@ interface RunnerStatusBadgeProps {
 export default function RunnerStatusBadge({ status }: RunnerStatusBadgeProps) {
   const config = RUNNER_STATUS_MAP[status] ?? {
     label: status.replace(/_/g, " "),
-    classes: "bg-gray-50 text-gray-600 border border-gray-200",
+    classes: "bg-slate-50 text-slate-600 border border-slate-200",
   };
 
   return (

@@ -24,27 +24,27 @@ export default function ProductionOrdersPage() {
 
     return (
         <div className="space-y-4">
-            <div><h1 className="text-xl font-bold text-gray-900">Orders</h1><p className="text-sm text-gray-500 mt-1">View and manage production orders</p></div>
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            <div><h1 className="text-lg font-semibold tracking-tight text-slate-900">Orders</h1><p className="text-sm text-slate-500 mt-1">View and manage production orders</p></div>
+            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+                <table className="min-w-full divide-y divide-slate-200">
+                    <thead className="bg-slate-50">
                         <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Order</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Date</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Buyer</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
-                            <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Action</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Order</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Date</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Buyer</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
+                            <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Action</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-slate-100">
                         {orders.length === 0 ? (
-                            <tr><td colSpan={5} className="px-4 py-12 text-center text-sm text-gray-400"><ShoppingCart className="w-8 h-8 mx-auto mb-2 text-gray-300" />No orders yet</td></tr>
+                            <tr><td colSpan={5} className="px-4 py-12 text-center text-sm text-slate-400"><ShoppingCart className="w-8 h-8 mx-auto mb-2 text-slate-300" />No orders yet</td></tr>
                         ) : orders.map(o => (
-                            <tr key={o.id} className="hover:bg-gray-50">
-                                <td className="px-4 py-3 text-sm font-semibold text-gray-900">{o.order_no}</td>
-                                <td className="px-4 py-3 text-sm text-gray-500">{format(new Date(o.order_date), "dd MMM yyyy")}</td>
-                                <td className="px-4 py-3 text-sm text-gray-900">{o.buyer?.name}</td>
-                                <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[o.status] || "bg-gray-100 text-gray-800"}`}>{o.status.replace(/_/g, " ")}</span></td>
+                            <tr key={o.id} className="hover:bg-slate-50">
+                                <td className="px-4 py-3 text-sm font-semibold text-slate-900">{o.order_no}</td>
+                                <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(o.order_date), "dd MMM yyyy")}</td>
+                                <td className="px-4 py-3 text-sm text-slate-900">{o.buyer?.name}</td>
+                                <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[o.status] || "bg-slate-100 text-slate-800"}`}>{o.status.replace(/_/g, " ")}</span></td>
                                 <td className="px-4 py-3 text-center">
                                     <Link href={`/dashboard/production/orders/${o.id}`} className="text-blue-600 hover:text-blue-800" title="View">
                                         <Eye className="w-4 h-4 mx-auto" />
