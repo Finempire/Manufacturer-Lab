@@ -8,8 +8,12 @@ const FILE_SIGNING_SECRET =
     process.env.FILE_SIGNING_SECRET || "fallback_signing_secret_for_dev";
 
 export function ensureUploadDir(): void {
-    if (!fs.existsSync(UPLOAD_BASE_PATH)) {
-        fs.mkdirSync(UPLOAD_BASE_PATH, { recursive: true });
+    try {
+        if (!fs.existsSync(UPLOAD_BASE_PATH)) {
+            fs.mkdirSync(UPLOAD_BASE_PATH, { recursive: true });
+        }
+    } catch (error) {
+        console.warn(`[Warning] Could not create upload directory at ${UPLOAD_BASE_PATH}. This is expected during build time. Error:`, error);
     }
 }
 
