@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -26,11 +26,11 @@ jobs:
 
             # Clone or pull latest code
             if [ ! -d "$APP_DIR" ]; then
-              git clone --branch main https://github.com/${{ github.repository }}.git "$APP_DIR"
+              git clone --branch master https://github.com/${{ github.repository }}.git "$APP_DIR"
             else
               cd "$APP_DIR"
-              git fetch origin main
-              git reset --hard origin/main
+              git fetch origin master
+              git reset --hard origin/master
             fi
 
             cd "$APP_DIR"
