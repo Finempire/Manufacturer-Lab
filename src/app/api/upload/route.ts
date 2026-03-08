@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { saveFile, ensureUploadDir, ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from "@/lib/fileStorage";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 // Basic rate limiting map (IP/User -> { count, timestamp })
 const rateLimitMap = new Map<string, { count: number, resetAt: number }>();
 

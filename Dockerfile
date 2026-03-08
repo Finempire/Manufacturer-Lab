@@ -16,7 +16,7 @@ COPY . .
 # We need to generate Prisma client for the build to succeed typechecks
 RUN npx prisma generate
 # Create uploads directory for build-time access
-RUN mkdir -p /app/uploads
+RUN mkdir -p /app/uploads /app/public
 RUN npm run build
 
 # Production stage

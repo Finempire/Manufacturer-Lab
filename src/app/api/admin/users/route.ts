@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import nodemailer from "nodemailer";
 
+export const dynamic = "force-dynamic";
+
 // Helper to check admin role
 async function checkAdmin() {
     const session = await getServerSession(authOptions);
