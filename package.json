@@ -7,17 +7,19 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:push": "prisma db push",
-    "db:seed": "prisma db seed",
-    "db:generate": "prisma generate",
-    "db:studio": "prisma studio"
+    "db:push": "npx prisma@6.19.2 db push",
+    "db:seed": "npx prisma@6.19.2 db seed",
+    "db:generate": "npx prisma@6.19.2 generate",
+    "db:studio": "npx prisma@6.19.2 studio",
+    "db:migrate": "npx prisma@6.19.2 migrate dev",
+    "db:setup": "npx prisma@6.19.2 db push && npx prisma@6.19.2 db seed"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@prisma/client": "^6.19.2",
+    "@prisma/client": "6.19.2",
     "@tanstack/react-table": "^8.21.3",
     "bcryptjs": "^3.0.3",
     "date-fns": "^4.1.0",
@@ -25,7 +27,7 @@
     "next": "14.2.35",
     "next-auth": "^4.24.13",
     "nodemailer": "^7.0.13",
-    "prisma": "^6.19.2",
+    "prisma": "6.19.2",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.71.2",
