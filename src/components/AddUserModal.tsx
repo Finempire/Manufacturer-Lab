@@ -80,11 +80,11 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
             <div className="bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden">
-                <div className="flex items-center justify-between p-5 border-b border-gray-100">
-                    <h2 className="text-xl font-semibold text-gray-900">Add New User</h2>
+                <div className="flex items-center justify-between p-5 border-b border-slate-100">
+                    <h2 className="text-xl font-semibold text-slate-900">Add New User</h2>
                     <button
                         onClick={onClose}
-                        className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -92,37 +92,37 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
 
                 <form onSubmit={handleSubmit} className="p-5 space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name *</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name *</label>
                         <input
                             type="text"
                             required
                             minLength={2}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="John Doe"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Email Address *</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address *</label>
                         <input
                             type="email"
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="john@cashflow.com"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Role *</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">Role *</label>
                         <select
                             required
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
-                            className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
                             <option value="STORE_MANAGER">Store Manager</option>
                             <option value="RUNNER">Runner</option>
@@ -135,7 +135,7 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
 
                     <div>
                         <div className="flex items-center justify-between mb-1.5">
-                            <label className="block text-sm font-medium text-gray-700">Temporary Password *</label>
+                            <label className="block text-sm font-medium text-slate-700">Temporary Password *</label>
                             <button
                                 type="button"
                                 onClick={generatePassword}
@@ -151,13 +151,13 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
                                 minLength={8}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full h-10 pl-3 pr-10 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full h-10 pl-3 pr-10 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Min 8 chars, 1 uppercase, 1 number"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                             >
                                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
@@ -169,16 +169,16 @@ export default function AddUserModal({ isOpen, onClose, onSuccess }: AddUserModa
                             type="checkbox"
                             checked={mustChangePassword}
                             onChange={(e) => setMustChangePassword(e.target.checked)}
-                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                            className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
                         />
-                        <span className="text-sm font-medium text-gray-700">Force Password Change on First Login</span>
+                        <span className="text-sm font-medium text-slate-700">Force Password Change on First Login</span>
                     </label>
 
-                    <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 mt-6">
+                    <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 mt-6">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                             Cancel
                         </button>

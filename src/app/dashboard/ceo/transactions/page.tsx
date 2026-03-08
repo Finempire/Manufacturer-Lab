@@ -32,41 +32,41 @@ export default function CEOTransactionsPage() {
         <div className="space-y-4">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-xl font-bold text-gray-900">Transactions</h1>
-                    <p className="text-sm text-gray-500 mt-1">{payments.length} payments &bull; ₹{totalPaid.toLocaleString("en-IN")} total</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-slate-900">Transactions</h1>
+                    <p className="text-sm text-slate-500 mt-1">{payments.length} payments &bull; ₹{totalPaid.toLocaleString("en-IN")} total</p>
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+                <table className="min-w-full divide-y divide-slate-200">
+                    <thead className="bg-slate-50">
                         <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Date</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Purchase</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Vendor</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Method</th>
-                            <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Amount</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Reference</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Accountant</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Date</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Purchase</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Vendor</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Method</th>
+                            <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase">Amount</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Reference</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Accountant</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-slate-100">
                         {loading ? (
-                            <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-gray-400">Loading...</td></tr>
+                            <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-400">Loading...</td></tr>
                         ) : payments.length === 0 ? (
                             <tr><td colSpan={7} className="px-4 py-12 text-center">
-                                <CreditCard className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                                <p className="text-sm text-gray-500">No transactions yet</p>
+                                <CreditCard className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                                <p className="text-sm text-slate-500">No transactions yet</p>
                             </td></tr>
                         ) : payments.map(p => (
-                            <tr key={p.id} className="hover:bg-gray-50">
-                                <td className="px-4 py-3 text-sm text-gray-500">{format(new Date(p.payment_date), "dd MMM yyyy")}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-900">{p.purchase.purchase_no}</td>
-                                <td className="px-4 py-3 text-sm text-gray-600">{p.purchase.vendor.name}</td>
-                                <td className="px-4 py-3 text-sm text-gray-600">{p.payment_method.replace(/_/g, " ")}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-gray-900 text-right tabular-nums">₹{p.amount_paid.toLocaleString("en-IN")}</td>
-                                <td className="px-4 py-3 text-sm text-gray-500">{p.reference_id || "—"}</td>
-                                <td className="px-4 py-3 text-sm text-gray-600">{p.accountant.name}</td>
+                            <tr key={p.id} className="hover:bg-slate-50">
+                                <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(p.payment_date), "dd MMM yyyy")}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-slate-900">{p.purchase.purchase_no}</td>
+                                <td className="px-4 py-3 text-sm text-slate-600">{p.purchase.vendor.name}</td>
+                                <td className="px-4 py-3 text-sm text-slate-600">{p.payment_method.replace(/_/g, " ")}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-slate-900 text-right tabular-nums">₹{p.amount_paid.toLocaleString("en-IN")}</td>
+                                <td className="px-4 py-3 text-sm text-slate-500">{p.reference_id || "—"}</td>
+                                <td className="px-4 py-3 text-sm text-slate-600">{p.accountant.name}</td>
                             </tr>
                         ))}
                     </tbody>

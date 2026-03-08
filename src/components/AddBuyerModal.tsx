@@ -82,10 +82,10 @@ export default function AddBuyerModal({ isOpen, onClose, onSuccess }: AddBuyerMo
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-            <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]">
-                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900">Add New Buyer</h3>
-                    <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+            <div className="relative w-full max-w-md bg-white rounded-lg shadow-2xl flex flex-col max-h-[90vh]">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+                    <h3 className="text-lg font-bold text-slate-900">Add New Buyer</h3>
+                    <button onClick={onClose} className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                         <X className="w-5 h-5" />
                     </button>
                 </div>
@@ -98,61 +98,61 @@ export default function AddBuyerModal({ isOpen, onClose, onSuccess }: AddBuyerMo
                             </div>
                         )}
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Buyer Name *</label>
+                            <label className="block text-xs font-medium text-slate-600 mb-1">Buyer Name *</label>
                             <input
                                 type="text"
                                 required
                                 autoFocus
-                                className="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full h-9 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Brand Code</label>
+                            <label className="block text-xs font-medium text-slate-600 mb-1">Brand Code</label>
                             <input
                                 type="text"
                                 maxLength={10}
                                 placeholder="Short code like HM-IN, ZARA-UK"
-                                className="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase placeholder:normal-case"
+                                className="w-full h-9 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase placeholder:normal-case"
                                 value={formData.brand_code}
                                 onChange={(e) => setFormData({ ...formData, brand_code: e.target.value.toUpperCase() })}
                             />
-                            <p className="text-[10px] text-gray-400 mt-1">Optional — auto-generated if left blank</p>
+                            <p className="text-[10px] text-slate-400 mt-1">Optional — auto-generated if left blank</p>
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Contact Person</label>
+                            <label className="block text-xs font-medium text-slate-600 mb-1">Contact Person</label>
                             <input
                                 type="text"
-                                className="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full h-9 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 value={formData.contact_person}
                                 onChange={(e) => setFormData({ ...formData, contact_person: e.target.value })}
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Phone / Email</label>
+                            <label className="block text-xs font-medium text-slate-600 mb-1">Phone / Email</label>
                             <input
                                 type="text"
-                                className="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full h-9 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 value={formData.phone_email}
                                 onChange={(e) => setFormData({ ...formData, phone_email: e.target.value })}
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Shipping Address</label>
+                            <label className="block text-xs font-medium text-slate-600 mb-1">Shipping Address</label>
                             <textarea
                                 rows={2}
                                 placeholder="Full shipping address"
-                                className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 value={formData.shipping_address}
                                 onChange={(e) => setFormData({ ...formData, shipping_address: e.target.value })}
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">Notes</label>
+                            <label className="block text-xs font-medium text-slate-600 mb-1">Notes</label>
                             <textarea
                                 rows={2}
-                                className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 value={formData.notes}
                                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                             />
@@ -160,8 +160,8 @@ export default function AddBuyerModal({ isOpen, onClose, onSuccess }: AddBuyerMo
                     </form>
                 </div>
 
-                <div className="flex justify-end gap-3 px-5 py-4 border-t border-gray-100 bg-gray-50/50 rounded-b-xl">
-                    <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                <div className="flex justify-end gap-3 px-5 py-4 border-t border-slate-100 bg-slate-50/50 rounded-b-xl">
+                    <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50">
                         Cancel
                     </button>
                     <button type="submit" form="add-buyer-form" disabled={submitting} className="px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50">

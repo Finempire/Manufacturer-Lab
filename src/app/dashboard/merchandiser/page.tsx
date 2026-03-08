@@ -18,15 +18,15 @@ export default function MerchandiserDashboard() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-xl font-bold text-gray-900">Merchandiser Dashboard</h1>
-                <p className="text-sm text-gray-500 mt-1">Tech pack management for assigned orders</p>
+                <h1 className="text-lg font-semibold tracking-tight text-slate-900">Merchandiser Dashboard</h1>
+                <p className="text-sm text-slate-500 mt-1">Tech pack management for assigned orders</p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {cards.map((card) => (
-                    <div key={card.label} className="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow">
+                    <div key={card.label} className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-shadow">
                         <div className={`inline-flex items-center justify-center w-10 h-10 rounded-lg ${card.color} mb-3`}>{card.icon}</div>
-                        <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wider">{card.label}</p>
-                        <p className="text-2xl font-bold text-gray-900 mt-1 tabular-nums">{card.value}</p>
+                        <p className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">{card.label}</p>
+                        <p className="text-2xl font-bold text-slate-900 mt-1 tabular-nums">{card.value}</p>
                     </div>
                 ))}
             </div>

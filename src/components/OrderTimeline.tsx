@@ -236,8 +236,8 @@ export default function OrderTimeline({ status, orderType, order }: OrderTimelin
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+      <h3 className="text-lg font-semibold text-slate-900 mb-4">
         Order Timeline
       </h3>
       <div className="relative">
@@ -260,7 +260,7 @@ export default function OrderTimeline({ status, orderType, order }: OrderTimelin
                       ? "bg-green-300"
                       : stepStatus === "current"
                         ? "bg-blue-300"
-                        : "border-l border-dashed border-gray-300"
+                        : "border-l border-dashed border-slate-300"
                   }`}
                 />
               )}
@@ -272,7 +272,7 @@ export default function OrderTimeline({ status, orderType, order }: OrderTimelin
                     ? "bg-green-100 text-green-600"
                     : stepStatus === "current"
                       ? "bg-blue-100 text-blue-600 ring-2 ring-blue-300"
-                      : "bg-gray-100 text-gray-400"
+                      : "bg-slate-100 text-slate-400"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -283,10 +283,10 @@ export default function OrderTimeline({ status, orderType, order }: OrderTimelin
                 <p
                   className={`text-sm font-medium ${
                     stepStatus === "completed"
-                      ? "text-gray-900"
+                      ? "text-slate-900"
                       : stepStatus === "current"
                         ? "text-blue-700"
-                        : "text-gray-400"
+                        : "text-slate-400"
                   }`}
                 >
                   {step.label}
@@ -294,10 +294,10 @@ export default function OrderTimeline({ status, orderType, order }: OrderTimelin
                 {stepStatus === "completed" && (
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5">
                     {timestamp && (
-                      <span className="text-xs text-gray-500">{timestamp}</span>
+                      <span className="text-xs text-slate-500">{timestamp}</span>
                     )}
                     {actor && (
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-slate-500">
                         by {actor}
                       </span>
                     )}

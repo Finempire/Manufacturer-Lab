@@ -112,21 +112,21 @@ export default function AccountantOrderDetail() {
         }
     };
 
-    if (loading) return <div className="text-center py-12 text-gray-400">Loading order...</div>;
-    if (!order) return <div className="text-center py-12 text-gray-400">Order not found</div>;
+    if (loading) return <div className="text-center py-12 text-slate-400">Loading order...</div>;
+    if (!order) return <div className="text-center py-12 text-slate-400">Order not found</div>;
 
     return (
         <div className="space-y-6 max-w-5xl mx-auto pb-10">
             {/* Header */}
             <div className="flex items-center gap-4">
-                <button onClick={() => router.back()} className="p-2 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition">
-                    <ArrowLeft className="w-5 h-5 text-gray-600" />
+                <button onClick={() => router.back()} className="p-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition">
+                    <ArrowLeft className="w-5 h-5 text-slate-600" />
                 </button>
                 <div className="flex-1">
-                    <h1 className="text-xl font-bold text-gray-900">{order.order_no}</h1>
-                    <p className="text-sm text-gray-500 mt-0.5">{order.buyer.name} {order.buyer.brand_code ? `(${order.buyer.brand_code})` : ""} &bull; {order.order_type}</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-slate-900">{order.order_no}</h1>
+                    <p className="text-sm text-slate-500 mt-0.5">{order.buyer.name} {order.buyer.brand_code ? `(${order.buyer.brand_code})` : ""} &bull; {order.order_type}</p>
                 </div>
-                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border ${STATUS_COLORS[order.status] || "bg-gray-100 text-gray-800 border-gray-200"}`}>
+                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border ${STATUS_COLORS[order.status] || "bg-slate-100 text-slate-800 border-slate-200"}`}>
                     {order.status.replace(/_/g, " ")}
                 </span>
             </div>
@@ -135,52 +135,52 @@ export default function AccountantOrderDetail() {
                 {/* Left Column */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Order Info Card */}
-                    <div className="bg-white rounded-xl border border-gray-200 p-5">
-                        <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wide border-b pb-2">Order Information</h3>
+                    <div className="bg-white rounded-lg border border-slate-200 p-5">
+                        <h3 className="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wide border-b pb-2">Order Information</h3>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-6">
-                            <div><p className="text-xs text-gray-500 mb-1">Order Date</p><p className="text-sm font-medium">{format(new Date(order.order_date), "dd MMM yyyy")}</p></div>
-                            <div><p className="text-xs text-gray-500 mb-1">Shipping Date</p><p className="text-sm font-medium">{format(new Date(order.shipping_date), "dd MMM yyyy")}</p></div>
-                            <div><p className="text-xs text-gray-500 mb-1">Created By</p><p className="text-sm font-medium">{order.creator.name}</p></div>
-                            <div><p className="text-xs text-gray-500 mb-1">Merchandiser</p><p className="text-sm font-medium">{order.merchandiser?.name || "Not assigned"}</p></div>
+                            <div><p className="text-xs text-slate-500 mb-1">Order Date</p><p className="text-sm font-medium">{format(new Date(order.order_date), "dd MMM yyyy")}</p></div>
+                            <div><p className="text-xs text-slate-500 mb-1">Shipping Date</p><p className="text-sm font-medium">{format(new Date(order.shipping_date), "dd MMM yyyy")}</p></div>
+                            <div><p className="text-xs text-slate-500 mb-1">Created By</p><p className="text-sm font-medium">{order.creator.name}</p></div>
+                            <div><p className="text-xs text-slate-500 mb-1">Merchandiser</p><p className="text-sm font-medium">{order.merchandiser?.name || "Not assigned"}</p></div>
                         </div>
                         {order.remarks && (
-                            <div className="mt-4 pt-3 border-t border-gray-100">
-                                <p className="text-xs text-gray-500 mb-1">Remarks</p>
-                                <p className="text-sm text-gray-700">{order.remarks}</p>
+                            <div className="mt-4 pt-3 border-t border-slate-100">
+                                <p className="text-xs text-slate-500 mb-1">Remarks</p>
+                                <p className="text-sm text-slate-700">{order.remarks}</p>
                             </div>
                         )}
                     </div>
 
                     {/* Item Lines */}
-                    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <div className="px-5 py-3 border-b border-gray-100 bg-gray-50">
-                            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Item Lines</h3>
+                    <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+                        <div className="px-5 py-3 border-b border-slate-100 bg-slate-50">
+                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Item Lines</h3>
                         </div>
-                        <table className="min-w-full divide-y divide-gray-100">
-                            <thead className="bg-gray-50/50">
+                        <table className="min-w-full divide-y divide-slate-100">
+                            <thead className="bg-slate-50/50">
                                 <tr>
-                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase">Style</th>
-                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 uppercase">Description</th>
-                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-gray-500 uppercase">Qty</th>
-                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-gray-500 uppercase">Rate</th>
-                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-gray-500 uppercase">Amount</th>
+                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase">Style</th>
+                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase">Description</th>
+                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase">Qty</th>
+                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase">Rate</th>
+                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase">Amount</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-50">
                                 {order.lines.map(line => (
                                     <tr key={line.id}>
-                                        <td className="px-4 py-2.5 text-sm font-medium text-gray-900">{line.style.style_code}</td>
-                                        <td className="px-4 py-2.5 text-sm text-gray-500">{line.description || line.style.style_name}</td>
-                                        <td className="px-4 py-2.5 text-sm text-gray-900 text-right tabular-nums">{line.quantity}</td>
-                                        <td className="px-4 py-2.5 text-sm text-gray-900 text-right tabular-nums">₹{line.rate.toLocaleString("en-IN")}</td>
-                                        <td className="px-4 py-2.5 text-sm font-medium text-gray-900 text-right tabular-nums">₹{line.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+                                        <td className="px-4 py-2.5 text-sm font-medium text-slate-900">{line.style.style_code}</td>
+                                        <td className="px-4 py-2.5 text-sm text-slate-500">{line.description || line.style.style_name}</td>
+                                        <td className="px-4 py-2.5 text-sm text-slate-900 text-right tabular-nums">{line.quantity}</td>
+                                        <td className="px-4 py-2.5 text-sm text-slate-900 text-right tabular-nums">₹{line.rate.toLocaleString("en-IN")}</td>
+                                        <td className="px-4 py-2.5 text-sm font-medium text-slate-900 text-right tabular-nums">₹{line.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
                                     </tr>
                                 ))}
                             </tbody>
-                            <tfoot className="bg-gray-50">
+                            <tfoot className="bg-slate-50">
                                 <tr>
-                                    <td colSpan={4} className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Total:</td>
-                                    <td className="px-4 py-3 text-right text-sm font-bold text-gray-900 tabular-nums">₹{order.total_amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+                                    <td colSpan={4} className="px-4 py-3 text-right text-sm font-semibold text-slate-700">Total:</td>
+                                    <td className="px-4 py-3 text-right text-sm font-bold text-slate-900 tabular-nums">₹{order.total_amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -189,18 +189,18 @@ export default function AccountantOrderDetail() {
                     {/* Related Items */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Tech Packs */}
-                        <div className="bg-white rounded-xl border border-gray-200 p-4">
+                        <div className="bg-white rounded-lg border border-slate-200 p-4">
                             <div className="flex items-center gap-2 mb-3">
                                 <FileText className="w-4 h-4 text-purple-500" />
-                                <h4 className="text-sm font-bold text-gray-900">Tech Packs ({order.tech_packs.length})</h4>
+                                <h4 className="text-sm font-bold text-slate-900">Tech Packs ({order.tech_packs.length})</h4>
                             </div>
                             {order.tech_packs.length === 0 ? (
-                                <p className="text-xs text-gray-400">No tech packs created yet</p>
+                                <p className="text-xs text-slate-400">No tech packs created yet</p>
                             ) : (
                                 <div className="space-y-2">
                                     {order.tech_packs.map(tp => (
-                                        <div key={tp.id} className="flex items-center justify-between py-1.5 px-2 bg-gray-50 rounded-lg">
-                                            <span className="text-xs font-medium text-gray-700">{tp.tech_pack_no}</span>
+                                        <div key={tp.id} className="flex items-center justify-between py-1.5 px-2 bg-slate-50 rounded-lg">
+                                            <span className="text-xs font-medium text-slate-700">{tp.tech_pack_no}</span>
                                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700">{tp.status.replace(/_/g, " ")}</span>
                                         </div>
                                     ))}
@@ -209,20 +209,20 @@ export default function AccountantOrderDetail() {
                         </div>
 
                         {/* Material Requests */}
-                        <div className="bg-white rounded-xl border border-gray-200 p-4">
+                        <div className="bg-white rounded-lg border border-slate-200 p-4">
                             <div className="flex items-center gap-2 mb-3">
                                 <Package className="w-4 h-4 text-orange-500" />
-                                <h4 className="text-sm font-bold text-gray-900">Material Requests ({order.material_requests.length})</h4>
+                                <h4 className="text-sm font-bold text-slate-900">Material Requests ({order.material_requests.length})</h4>
                             </div>
                             {order.material_requests.length === 0 ? (
-                                <p className="text-xs text-gray-400">No material requests yet</p>
+                                <p className="text-xs text-slate-400">No material requests yet</p>
                             ) : (
                                 <div className="space-y-2">
                                     {order.material_requests.map(mr => (
-                                        <div key={mr.id} className="flex items-center justify-between py-1.5 px-2 bg-gray-50 rounded-lg">
+                                        <div key={mr.id} className="flex items-center justify-between py-1.5 px-2 bg-slate-50 rounded-lg">
                                             <div>
-                                                <span className="text-xs font-medium text-gray-700">{mr.request_no}</span>
-                                                {mr.runner && <span className="text-[10px] text-gray-400 ml-1">({mr.runner.name})</span>}
+                                                <span className="text-xs font-medium text-slate-700">{mr.request_no}</span>
+                                                {mr.runner && <span className="text-[10px] text-slate-400 ml-1">({mr.runner.name})</span>}
                                             </div>
                                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-orange-50 text-orange-700">{mr.status.replace(/_/g, " ")}</span>
                                         </div>
@@ -234,15 +234,15 @@ export default function AccountantOrderDetail() {
 
                     {/* Expenses */}
                     {order.expenses.length > 0 && (
-                        <div className="bg-white rounded-xl border border-gray-200 p-4">
-                            <h4 className="text-sm font-bold text-gray-900 mb-3">Expense Requests ({order.expenses.length})</h4>
+                        <div className="bg-white rounded-lg border border-slate-200 p-4">
+                            <h4 className="text-sm font-bold text-slate-900 mb-3">Expense Requests ({order.expenses.length})</h4>
                             <div className="space-y-2">
                                 {order.expenses.map(exp => (
-                                    <div key={exp.id} className="flex items-center justify-between py-1.5 px-2 bg-gray-50 rounded-lg">
-                                        <span className="text-xs font-medium text-gray-700">{exp.expense_no}</span>
+                                    <div key={exp.id} className="flex items-center justify-between py-1.5 px-2 bg-slate-50 rounded-lg">
+                                        <span className="text-xs font-medium text-slate-700">{exp.expense_no}</span>
                                         <div className="flex items-center gap-2">
-                                            <span className="text-xs text-gray-600 tabular-nums">₹{exp.expected_amount.toLocaleString("en-IN")}</span>
-                                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">{exp.status.replace(/_/g, " ")}</span>
+                                            <span className="text-xs text-slate-600 tabular-nums">₹{exp.expected_amount.toLocaleString("en-IN")}</span>
+                                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">{exp.status.replace(/_/g, " ")}</span>
                                         </div>
                                     </div>
                                 ))}
@@ -254,8 +254,8 @@ export default function AccountantOrderDetail() {
                 {/* Right Column - Timeline & Actions */}
                 <div className="space-y-6">
                     {/* Actions */}
-                    <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
-                        <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Actions</h4>
+                    <div className="bg-white rounded-lg border border-slate-200 p-4 space-y-3">
+                        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Actions</h4>
 
                         {!order.merchandiser && order.status === "ORDER_RECEIVED" && (
                             <>
@@ -265,12 +265,12 @@ export default function AccountantOrderDetail() {
                                     </button>
                                 ) : (
                                     <div className="space-y-2">
-                                        <select className="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm" value={selectedMerch} onChange={e => setSelectedMerch(e.target.value)}>
+                                        <select className="w-full h-9 px-3 border border-slate-300 rounded-lg text-sm" value={selectedMerch} onChange={e => setSelectedMerch(e.target.value)}>
                                             <option value="">Select merchandiser...</option>
                                             {merchandisers.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
                                         </select>
                                         <div className="flex gap-2">
-                                            <button onClick={() => setShowAssignPanel(false)} className="flex-1 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200">Cancel</button>
+                                            <button onClick={() => setShowAssignPanel(false)} className="flex-1 py-2 text-sm text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200">Cancel</button>
                                             <button onClick={handleAssignMerchandiser} disabled={!selectedMerch || assigning} className="flex-1 py-2 text-sm text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50">
                                                 {assigning ? "Assigning..." : "Assign"}
                                             </button>
@@ -295,37 +295,37 @@ export default function AccountantOrderDetail() {
                     </div>
 
                     {/* Assignments */}
-                    <div className="bg-white rounded-xl border border-gray-200 p-4">
-                        <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">Assignments</h4>
+                    <div className="bg-white rounded-lg border border-slate-200 p-4">
+                        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3">Assignments</h4>
                         <div className="space-y-3">
                             <div>
-                                <p className="text-xs text-gray-500">Merchandiser</p>
-                                <p className="text-sm font-medium text-gray-900">{order.merchandiser?.name || "—"}</p>
+                                <p className="text-xs text-slate-500">Merchandiser</p>
+                                <p className="text-sm font-medium text-slate-900">{order.merchandiser?.name || "—"}</p>
                             </div>
                             {order.order_type === "SAMPLE" && (
                                 <div>
-                                    <p className="text-xs text-gray-500">Sample PM</p>
-                                    <p className="text-sm font-medium text-gray-900">{order.assigned_sample_pm?.name || "—"}</p>
+                                    <p className="text-xs text-slate-500">Sample PM</p>
+                                    <p className="text-sm font-medium text-slate-900">{order.assigned_sample_pm?.name || "—"}</p>
                                 </div>
                             )}
                             {order.order_type === "PRODUCTION" && (
                                 <div>
-                                    <p className="text-xs text-gray-500">Production PM</p>
-                                    <p className="text-sm font-medium text-gray-900">{order.assigned_production_pm?.name || "—"}</p>
+                                    <p className="text-xs text-slate-500">Production PM</p>
+                                    <p className="text-sm font-medium text-slate-900">{order.assigned_production_pm?.name || "—"}</p>
                                 </div>
                             )}
                             {order.pm_accepted_by && (
                                 <div>
-                                    <p className="text-xs text-gray-500">PM Accepted By</p>
-                                    <p className="text-sm font-medium text-gray-900">{order.pm_accepted_by.name}</p>
+                                    <p className="text-xs text-slate-500">PM Accepted By</p>
+                                    <p className="text-sm font-medium text-slate-900">{order.pm_accepted_by.name}</p>
                                 </div>
                             )}
                         </div>
                     </div>
 
                     {/* Timeline */}
-                    <div className="bg-white rounded-xl border border-gray-200 p-4">
-                        <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">
+                    <div className="bg-white rounded-lg border border-slate-200 p-4">
+                        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3">
                             <Clock className="w-4 h-4 inline mr-1" /> Timeline
                         </h4>
                         <OrderTimeline status={order.status} orderType={order.order_type} />

@@ -9,7 +9,7 @@ import {
   LayoutDashboard, ShoppingCart, CreditCard, FileText,
   Package, Users, Boxes, ClipboardList, Truck,
   BarChart3, Receipt, Palette, Store, Factory,
-  BookOpen, AlertCircle
+  AlertCircle
 } from "lucide-react";
 
 interface NavItem {
@@ -21,57 +21,57 @@ interface NavItem {
 
 const NAV_ITEMS: Record<string, NavItem[]> = {
   ACCOUNTANT: [
-    { path: "/dashboard/accountant", label: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/accountant/orders", label: "Orders", icon: <ShoppingCart className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/accountant/purchases-review", label: "Purchases Review", icon: <ClipboardList className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/accountant/payments", label: "Payments", icon: <CreditCard className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/accountant/expense-requests", label: "Expense Requests", icon: <Receipt className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/accountant/material-needs", label: "Material Needs", icon: <Package className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/accountant/reports", label: "Reports", icon: <BarChart3 className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/accountant/master/vendors", label: "Vendors", icon: <Store className="w-4 h-4" />, section: "Master Data" },
-    { path: "/dashboard/accountant/master/buyers", label: "Buyers", icon: <Users className="w-4 h-4" />, section: "Master Data" },
-    { path: "/dashboard/accountant/master/materials", label: "Materials", icon: <Boxes className="w-4 h-4" />, section: "Master Data" },
-    { path: "/dashboard/accountant/master/styles", label: "Styles", icon: <Palette className="w-4 h-4" />, section: "Master Data" },
-    { path: "/dashboard/accountant/users", label: "Users", icon: <Users className="w-4 h-4" />, section: "Administration" },
+    { path: "/dashboard/accountant", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/accountant/orders", label: "Orders", icon: <ShoppingCart className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/accountant/purchases-review", label: "Purchases Review", icon: <ClipboardList className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/accountant/payments", label: "Payments", icon: <CreditCard className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/accountant/expense-requests", label: "Expense Requests", icon: <Receipt className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/accountant/material-needs", label: "Material Needs", icon: <Package className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/accountant/reports", label: "Reports", icon: <BarChart3 className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/accountant/master/vendors", label: "Vendors", icon: <Store className="w-[18px] h-[18px]" />, section: "Master Data" },
+    { path: "/dashboard/accountant/master/buyers", label: "Buyers", icon: <Users className="w-[18px] h-[18px]" />, section: "Master Data" },
+    { path: "/dashboard/accountant/master/materials", label: "Materials", icon: <Boxes className="w-[18px] h-[18px]" />, section: "Master Data" },
+    { path: "/dashboard/accountant/master/styles", label: "Styles", icon: <Palette className="w-[18px] h-[18px]" />, section: "Master Data" },
+    { path: "/dashboard/accountant/users", label: "Users", icon: <Users className="w-[18px] h-[18px]" />, section: "Administration" },
   ],
   SAMPLE_PRODUCTION_MANAGER: [
-    { path: "/dashboard/sample-pm", label: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/sample-pm/orders", label: "Orders", icon: <ShoppingCart className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/sample-pm/tech-packs", label: "Tech Packs", icon: <FileText className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/sample-pm/material-needs", label: "Material Needs", icon: <Package className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/sample-pm/production", label: "Production", icon: <Factory className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/sample-pm/expense-requests", label: "Expense Requests", icon: <Receipt className="w-4 h-4" />, section: "Main" },
+    { path: "/dashboard/sample-pm", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/sample-pm/orders", label: "Orders", icon: <ShoppingCart className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/sample-pm/tech-packs", label: "Tech Packs", icon: <FileText className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/sample-pm/material-needs", label: "Material Needs", icon: <Package className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/sample-pm/production", label: "Production", icon: <Factory className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/sample-pm/expense-requests", label: "Expense Requests", icon: <Receipt className="w-[18px] h-[18px]" />, section: "Main" },
   ],
   PRODUCTION_MANAGER: [
-    { path: "/dashboard/production", label: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/production/orders", label: "Orders", icon: <ShoppingCart className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/production/tech-packs", label: "Tech Packs", icon: <FileText className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/production/material-needs", label: "Material Needs", icon: <Package className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/production/production", label: "Production", icon: <Factory className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/production/expense-requests", label: "Expense Requests", icon: <Receipt className="w-4 h-4" />, section: "Main" },
+    { path: "/dashboard/production", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/production/orders", label: "Orders", icon: <ShoppingCart className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/production/tech-packs", label: "Tech Packs", icon: <FileText className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/production/material-needs", label: "Material Needs", icon: <Package className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/production/production", label: "Production", icon: <Factory className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/production/expense-requests", label: "Expense Requests", icon: <Receipt className="w-[18px] h-[18px]" />, section: "Main" },
   ],
   MERCHANDISER: [
-    { path: "/dashboard/merchandiser", label: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/merchandiser/tech-packs", label: "Tech Packs", icon: <FileText className="w-4 h-4" />, section: "Main" },
+    { path: "/dashboard/merchandiser", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/merchandiser/tech-packs", label: "Tech Packs", icon: <FileText className="w-[18px] h-[18px]" />, section: "Main" },
   ],
   STORE_MANAGER: [
-    { path: "/dashboard/manager", label: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/manager/requirements", label: "Requirements", icon: <ClipboardList className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/manager/requests", label: "Material Requests", icon: <Package className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/manager/expense-requests", label: "Expense Requests", icon: <Receipt className="w-4 h-4" />, section: "Main" },
+    { path: "/dashboard/manager", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/manager/requirements", label: "Requirements", icon: <ClipboardList className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/manager/requests", label: "Material Requests", icon: <Package className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/manager/expense-requests", label: "Expense Requests", icon: <Receipt className="w-[18px] h-[18px]" />, section: "Main" },
   ],
   RUNNER: [
-    { path: "/dashboard/runner", label: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/runner/pending", label: "Pending", icon: <AlertCircle className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/runner/my-purchases", label: "My Purchases", icon: <Truck className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/runner/notifications", label: "Notifications", icon: <Bell className="w-4 h-4" />, section: "Main" },
+    { path: "/dashboard/runner", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/runner/pending", label: "Pending", icon: <AlertCircle className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/runner/my-purchases", label: "My Purchases", icon: <Truck className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/runner/notifications", label: "Notifications", icon: <Bell className="w-[18px] h-[18px]" />, section: "Main" },
   ],
   CEO: [
-    { path: "/dashboard/ceo", label: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/ceo/orders", label: "Orders", icon: <ShoppingCart className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/ceo/transactions", label: "Transactions", icon: <CreditCard className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/ceo/expense-requests", label: "Expense Requests", icon: <Receipt className="w-4 h-4" />, section: "Main" },
-    { path: "/dashboard/ceo/reports", label: "Reports", icon: <BarChart3 className="w-4 h-4" />, section: "Main" },
+    { path: "/dashboard/ceo", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/ceo/orders", label: "Orders", icon: <ShoppingCart className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/ceo/transactions", label: "Transactions", icon: <CreditCard className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/ceo/expense-requests", label: "Expense Requests", icon: <Receipt className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/ceo/reports", label: "Reports", icon: <BarChart3 className="w-[18px] h-[18px]" />, section: "Main" },
   ],
 };
 
@@ -135,39 +135,39 @@ export default function DashboardSidebar() {
   const sidebarContent = (
     <>
       {/* Header */}
-      <div className="flex items-center justify-between h-14 px-4 border-b border-gray-200/80 shrink-0 bg-white">
+      <div className="flex items-center justify-between h-12 px-4 border-b border-slate-200 shrink-0">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow-sm">
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+          <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
+            <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
             </svg>
           </div>
-          <span className="text-base font-bold text-gray-900 tracking-tight">CashFlow</span>
+          <span className="text-base font-bold text-slate-900 tracking-tight">CashFlow</span>
         </div>
-        <button onClick={() => setSidebarOpen(false)} className="md:hidden text-gray-400 hover:text-gray-600">
+        <button onClick={() => setSidebarOpen(false)} className="md:hidden text-slate-400 hover:text-slate-600">
           <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* Role Badge */}
-      <div className="px-4 py-2.5 border-b border-gray-100 bg-gray-50/50">
+      <div className="px-4 py-2 border-b border-slate-100">
         <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{ROLE_LABELS[role] || role}</p>
+          <div className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></div>
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">{ROLE_LABELS[role] || role}</span>
         </div>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto py-2">
         {Object.entries(sections).map(([sectionName, items]) => (
-          <div key={sectionName} className="mb-1">
+          <div key={sectionName}>
             {sectionName !== "Main" && (
               <button
                 onClick={() => toggleSection(sectionName)}
-                className="w-full flex items-center justify-between px-4 py-1.5 mt-2"
+                className="w-full flex items-center justify-between px-4 py-1.5 mt-4 mb-1"
               >
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">{sectionName}</span>
-                <ChevronDown className={`w-3 h-3 text-gray-400 transition-transform ${collapsedSections[sectionName] ? '-rotate-90' : ''}`} />
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">{sectionName}</span>
+                <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${collapsedSections[sectionName] ? '-rotate-90' : ''}`} />
               </button>
             )}
             {!collapsedSections[sectionName] && (
@@ -180,13 +180,13 @@ export default function DashboardSidebar() {
                       key={item.path}
                       href={item.path}
                       onClick={() => setSidebarOpen(false)}
-                      className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] font-medium transition-all duration-150 ${
+                      className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 ${
                         isActive
-                          ? "bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-100"
-                          : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900"
+                          ? "bg-slate-100 text-slate-900 border-l-2 border-blue-600 ml-0 pl-[10px]"
+                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                       }`}
                     >
-                      <span className={`shrink-0 ${isActive ? "text-blue-600" : "text-gray-400"}`}>{item.icon}</span>
+                      <span className={`shrink-0 ${isActive ? "text-slate-900" : "text-slate-400"}`}>{item.icon}</span>
                       <span className="truncate">{item.label}</span>
                     </Link>
                   );
@@ -198,18 +198,18 @@ export default function DashboardSidebar() {
       </nav>
 
       {/* User Footer */}
-      <div className="border-t border-gray-200 p-3 shrink-0 bg-white">
+      <div className="border-t border-slate-200 p-3 shrink-0">
         <div className="flex items-center gap-2.5 px-1">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center text-xs font-semibold shadow-sm shrink-0">
+          <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-semibold shrink-0">
             {session.user.name?.charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate leading-tight">{session.user.name}</p>
-            <p className="text-[11px] text-gray-400 truncate">{session.user.email}</p>
+            <p className="text-sm font-medium text-slate-900 truncate leading-tight">{session.user.name}</p>
+            <p className="text-[11px] text-slate-400 truncate">{session.user.email}</p>
           </div>
           <button
             onClick={handleLogout}
-            className="text-gray-400 hover:text-red-500 transition-colors p-1"
+            className="text-slate-400 hover:text-red-500 transition-colors p-1"
             title="Sign out"
           >
             <LogOut className="w-4 h-4" />
@@ -222,14 +222,14 @@ export default function DashboardSidebar() {
   return (
     <>
       {/* Mobile header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-14 bg-white border-b border-gray-200 flex items-center px-4 shadow-sm">
-        <button onClick={() => setSidebarOpen(true)} className="text-gray-600 hover:text-gray-900">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-12 bg-white border-b border-slate-200 flex items-center px-4">
+        <button onClick={() => setSidebarOpen(true)} className="text-slate-600 hover:text-slate-900">
           <Menu className="w-5 h-5" />
         </button>
-        <span className="ml-3 text-sm font-bold text-gray-900">CashFlow</span>
+        <span className="ml-3 text-sm font-bold text-slate-900 tracking-tight">CashFlow</span>
         <div className="ml-auto flex items-center gap-2">
-          <button className="text-gray-400 hover:text-gray-600 relative p-1">
-            <Bell className="w-5 h-5" />
+          <button className="text-slate-400 hover:text-slate-600 relative p-1">
+            <Bell className="w-[18px] h-[18px]" />
             {unreadCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                 {unreadCount > 9 ? "9+" : unreadCount}
@@ -242,14 +242,14 @@ export default function DashboardSidebar() {
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar — 240px as per spec */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-60 bg-white border-r border-gray-200/80 flex flex-col transition-transform duration-200 ease-in-out md:relative md:translate-x-0 shadow-lg md:shadow-none ${
+        className={`fixed inset-y-0 left-0 z-50 w-[240px] bg-white border-r border-slate-200 flex flex-col transition-transform duration-200 ease-in-out md:relative md:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

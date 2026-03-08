@@ -79,12 +79,12 @@ export default function MaterialCompletionChecker({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-      <h3 className="text-lg font-semibold text-gray-900 mb-1">
+    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+      <h3 className="text-lg font-semibold text-slate-900 mb-1">
         Material and Expense Completion
       </h3>
       {styleName && (
-        <p className="text-sm text-gray-500 mb-4">Style: {styleName}</p>
+        <p className="text-sm text-slate-500 mb-4">Style: {styleName}</p>
       )}
 
       {/* Summary cards */}
@@ -101,11 +101,11 @@ export default function MaterialCompletionChecker({
             <Package
               className={`w-4 h-4 ${allMaterialsDone ? "text-green-600" : "text-amber-600"}`}
             />
-            <span className="text-sm font-medium text-gray-900">
+            <span className="text-sm font-medium text-slate-900">
               Material Requests
             </span>
           </div>
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-slate-600">
             {completedMaterials.length} / {materialRequests.length} completed
           </p>
         </div>
@@ -122,11 +122,11 @@ export default function MaterialCompletionChecker({
             <Receipt
               className={`w-4 h-4 ${allExpensesDone ? "text-green-600" : "text-amber-600"}`}
             />
-            <span className="text-sm font-medium text-gray-900">
+            <span className="text-sm font-medium text-slate-900">
               Expense Requests
             </span>
           </div>
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-slate-600">
             {completedExpenses.length} / {expenseRequests.length} completed
           </p>
         </div>
@@ -204,8 +204,8 @@ export default function MaterialCompletionChecker({
             : "Mark All Materials & Expenses Completed"}
         </button>
       ) : (
-        <div className="flex items-center gap-2 text-sm text-gray-500">
-          <AlertCircle className="w-4 h-4 text-gray-400" />
+        <div className="flex items-center gap-2 text-sm text-slate-500">
+          <AlertCircle className="w-4 h-4 text-slate-400" />
           <span>
             All material requests and expenses must be completed before marking
             this order.

@@ -107,8 +107,8 @@ export default function StylesMasterPage() {
         <div className="space-y-4">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-xl font-bold text-gray-900">Styles</h1>
-                    <p className="text-sm text-gray-500 mt-1">{styles.length} styles total</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-slate-900">Styles</h1>
+                    <p className="text-sm text-slate-500 mt-1">{styles.length} styles total</p>
                 </div>
                 <button onClick={openAdd} className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
                     <Plus className="w-4 h-4" /> Add Style
@@ -117,42 +117,42 @@ export default function StylesMasterPage() {
 
             <div className="flex flex-wrap gap-3 items-center">
                 <div className="relative flex-1 min-w-[200px]">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input type="text" placeholder="Search by code or name..." className="w-full h-9 pl-9 pr-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={search} onChange={(e) => setSearch(e.target.value)} />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <input type="text" placeholder="Search by code or name..." className="w-full h-9 pl-9 pr-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={search} onChange={(e) => setSearch(e.target.value)} />
                 </div>
-                <div className="flex gap-1 bg-gray-100 rounded-lg p-0.5">
+                <div className="flex gap-1 bg-slate-100 rounded-lg p-0.5">
                     {(["all", "active", "inline"] as const).map(f => (
-                        <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${filter === f ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"}`}>
+                        <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${filter === f ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}>
                             {f === "all" ? "All" : f === "active" ? "Active Only" : "Inline Created"}
                         </button>
                     ))}
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-slate-200">
+                        <thead className="bg-slate-50">
                             <tr>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Style Code</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Style Name</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Category</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Description</th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Tags</th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Actions</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Style Code</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Style Name</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Category</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Description</th>
+                                <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Tags</th>
+                                <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-slate-100">
                             {loading ? (
-                                <tr><td colSpan={6} className="px-4 py-12 text-center text-sm text-gray-400">Loading...</td></tr>
+                                <tr><td colSpan={6} className="px-4 py-12 text-center text-sm text-slate-400">Loading...</td></tr>
                             ) : filtered.length === 0 ? (
-                                <tr><td colSpan={6} className="px-4 py-12 text-center text-sm text-gray-400">No styles found</td></tr>
+                                <tr><td colSpan={6} className="px-4 py-12 text-center text-sm text-slate-400">No styles found</td></tr>
                             ) : filtered.map(s => (
-                                <tr key={s.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-4 py-3 text-sm font-mono font-semibold text-gray-900">{s.style_code}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-900">{s.style_name}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-500">{s.category || "—"}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-500 max-w-[200px] truncate">{s.description || "—"}</td>
+                                <tr key={s.id} className="hover:bg-slate-50 transition-colors">
+                                    <td className="px-4 py-3 text-sm font-mono font-semibold text-slate-900">{s.style_code}</td>
+                                    <td className="px-4 py-3 text-sm text-slate-900">{s.style_name}</td>
+                                    <td className="px-4 py-3 text-sm text-slate-500">{s.category || "—"}</td>
+                                    <td className="px-4 py-3 text-sm text-slate-500 max-w-[200px] truncate">{s.description || "—"}</td>
                                     <td className="px-4 py-3 text-center">
                                         <div className="flex gap-1 justify-center flex-wrap">
                                             {s.created_inline && <span className="px-2 py-0.5 text-[10px] font-semibold bg-purple-100 text-purple-700 rounded-full">Inline Added</span>}
@@ -161,8 +161,8 @@ export default function StylesMasterPage() {
                                     </td>
                                     <td className="px-4 py-3 text-center">
                                         <div className="flex gap-2 justify-center">
-                                            <button onClick={() => openEdit(s)} className="text-gray-400 hover:text-blue-600 transition-colors" title="Edit"><Pencil className="w-4 h-4" /></button>
-                                            <button onClick={() => toggleActive(s)} className="text-gray-400 hover:text-amber-600 transition-colors" title={s.is_active !== false ? "Deactivate" : "Reactivate"}>
+                                            <button onClick={() => openEdit(s)} className="text-slate-400 hover:text-blue-600 transition-colors" title="Edit"><Pencil className="w-4 h-4" /></button>
+                                            <button onClick={() => toggleActive(s)} className="text-slate-400 hover:text-amber-600 transition-colors" title={s.is_active !== false ? "Deactivate" : "Reactivate"}>
                                                 {s.is_active !== false ? <ToggleRight className="w-4 h-4" /> : <ToggleLeft className="w-4 h-4" />}
                                             </button>
                                         </div>
@@ -177,31 +177,31 @@ export default function StylesMasterPage() {
             {/* Add/Edit Modal */}
             {modalOpen && (
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
-                        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-                            <h3 className="text-sm font-bold text-gray-900">{editStyle ? "Edit Style" : "Add New Style"}</h3>
-                            <button onClick={() => setModalOpen(false)} className="p-1 text-gray-400 hover:text-gray-600 rounded"><X className="w-4 h-4" /></button>
+                    <div className="bg-white rounded-lg shadow-2xl w-full max-w-md">
+                        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+                            <h3 className="text-sm font-bold text-slate-900">{editStyle ? "Edit Style" : "Add New Style"}</h3>
+                            <button onClick={() => setModalOpen(false)} className="p-1 text-slate-400 hover:text-slate-600 rounded"><X className="w-4 h-4" /></button>
                         </div>
                         <form onSubmit={handleSave} className="p-4 space-y-3">
                             {formError && <p className="text-xs text-red-600 bg-red-50 px-3 py-2 rounded-lg">{formError}</p>}
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 mb-1">Style Name *</label>
-                                <input type="text" required className="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm" value={formName} onChange={(e) => setFormName(e.target.value)} />
+                                <label className="block text-xs font-medium text-slate-700 mb-1">Style Name *</label>
+                                <input type="text" required className="w-full h-9 px-3 border border-slate-300 rounded-lg text-sm" value={formName} onChange={(e) => setFormName(e.target.value)} />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 mb-1">Style Code *</label>
-                                <input type="text" required className="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm uppercase" value={formCode} onChange={(e) => setFormCode(e.target.value.toUpperCase())} />
+                                <label className="block text-xs font-medium text-slate-700 mb-1">Style Code *</label>
+                                <input type="text" required className="w-full h-9 px-3 border border-slate-300 rounded-lg text-sm uppercase" value={formCode} onChange={(e) => setFormCode(e.target.value.toUpperCase())} />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 mb-1">Category</label>
-                                <input type="text" className="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm" value={formCategory} onChange={(e) => setFormCategory(e.target.value)} />
+                                <label className="block text-xs font-medium text-slate-700 mb-1">Category</label>
+                                <input type="text" className="w-full h-9 px-3 border border-slate-300 rounded-lg text-sm" value={formCategory} onChange={(e) => setFormCategory(e.target.value)} />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
-                                <textarea className="w-full p-3 border border-gray-300 rounded-lg text-sm" rows={2} value={formDescription} onChange={(e) => setFormDescription(e.target.value)} />
+                                <label className="block text-xs font-medium text-slate-700 mb-1">Description</label>
+                                <textarea className="w-full p-3 border border-slate-300 rounded-lg text-sm" rows={2} value={formDescription} onChange={(e) => setFormDescription(e.target.value)} />
                             </div>
                             <div className="flex justify-end gap-2 pt-2">
-                                <button type="button" onClick={() => setModalOpen(false)} className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+                                <button type="button" onClick={() => setModalOpen(false)} className="px-3 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50">Cancel</button>
                                 <button type="submit" disabled={submitting} className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50">{submitting ? "Saving..." : editStyle ? "Update" : "Save"}</button>
                             </div>
                         </form>

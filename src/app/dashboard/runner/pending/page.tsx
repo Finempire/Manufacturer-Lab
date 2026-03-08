@@ -176,25 +176,25 @@ export default function PendingPurchasesPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-xl font-bold text-gray-900">Pending Purchases</h1>
-                <p className="text-sm text-gray-500 mt-1">Material requests assigned to you for purchase</p>
+                <h1 className="text-lg font-semibold tracking-tight text-slate-900">Pending Purchases</h1>
+                <p className="text-sm text-slate-500 mt-1">Material requests assigned to you for purchase</p>
             </div>
 
             {loading ? (
-                <div className="text-center py-12 text-gray-500">Loading...</div>
+                <div className="text-center py-12 text-slate-500">Loading...</div>
             ) : requests.length === 0 ? (
-                <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-                    <Truck className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500 text-sm">No pending purchases assigned</p>
+                <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
+                    <Truck className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                    <p className="text-slate-500 text-sm">No pending purchases assigned</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {requests.map(req => (
-                        <div key={req.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-                            <div className="p-4 border-b border-gray-100 bg-gray-50 flex items-start justify-between">
+                        <div key={req.id} className="bg-white border border-slate-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                            <div className="p-4 border-b border-slate-100 bg-slate-50 flex items-start justify-between">
                                 <div>
-                                    <h3 className="font-bold text-gray-900">{req.request_no}</h3>
-                                    <p className="text-xs text-gray-500 mt-1">{req.buyer.name}</p>
+                                    <h3 className="font-bold text-slate-900">{req.request_no}</h3>
+                                    <p className="text-xs text-slate-500 mt-1">{req.buyer.name}</p>
                                 </div>
                                 <span className="px-2 py-1 text-[10px] uppercase font-bold tracking-wider rounded-md bg-amber-100 text-amber-800">
                                     Pending
@@ -202,12 +202,12 @@ export default function PendingPurchasesPage() {
                             </div>
                             <div className="p-4 space-y-3">
                                 <div>
-                                    <p className="text-xs text-gray-500 mb-0.5">Deliver to</p>
-                                    <p className="text-sm font-medium text-gray-900">{req.store_location}</p>
+                                    <p className="text-xs text-slate-500 mb-0.5">Deliver to</p>
+                                    <p className="text-sm font-medium text-slate-900">{req.store_location}</p>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-500 mb-0.5">Expected Due</p>
-                                    <p className="text-sm font-medium text-gray-900">{format(new Date(req.expected_date), "dd MMM yyyy")}</p>
+                                    <p className="text-xs text-slate-500 mb-0.5">Expected Due</p>
+                                    <p className="text-sm font-medium text-slate-900">{format(new Date(req.expected_date), "dd MMM yyyy")}</p>
                                 </div>
                                 {req.preferred_vendor && (
                                     <div className="p-2 bg-blue-50 rounded text-xs text-blue-800 border-l-2 border-blue-400">
@@ -215,8 +215,8 @@ export default function PendingPurchasesPage() {
                                         {req.preferred_vendor.name}
                                     </div>
                                 )}
-                                <div className="mt-4 pt-4 border-t border-gray-100 border-dashed">
-                                    <p className="text-xs text-center text-gray-500 mb-2">{req.lines.length} items to purchase</p>
+                                <div className="mt-4 pt-4 border-t border-slate-100 border-dashed">
+                                    <p className="text-xs text-center text-slate-500 mb-2">{req.lines.length} items to purchase</p>
                                     <button onClick={() => openDrawer(req)} className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition">
                                         <Upload className="w-4 h-4" /> Upload Invoice
                                     </button>
@@ -236,12 +236,12 @@ export default function PendingPurchasesPage() {
             <div className={`fixed top-0 right-0 h-full w-full max-w-2xl bg-white shadow-2xl z-[50] transform transition-transform duration-300 ease-in-out flex flex-col ${selectedReq ? "translate-x-0" : "translate-x-full"}`}>
                 {selectedReq && (
                     <>
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-white">
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-white">
                             <div>
-                                <h2 className="text-lg font-bold text-gray-900">Submit Purchase Info</h2>
-                                <p className="text-xs text-gray-500">{selectedReq.request_no}</p>
+                                <h2 className="text-lg font-bold text-slate-900">Submit Purchase Info</h2>
+                                <p className="text-xs text-slate-500">{selectedReq.request_no}</p>
                             </div>
-                            <button onClick={closeDrawer} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                            <button onClick={closeDrawer} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
@@ -261,10 +261,10 @@ export default function PendingPurchasesPage() {
 
                                 {/* Row 1: Actual Vendor */}
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-700 mb-1">Actual Vendor *</label>
+                                    <label className="block text-xs font-medium text-slate-700 mb-1">Actual Vendor *</label>
                                     <select
                                         required
-                                        className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                                        className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
                                         value={formData.vendor_id}
                                         onChange={(e) => {
                                             if (e.target.value === "ADD_NEW") setShowVendorModal(true);
@@ -280,33 +280,33 @@ export default function PendingPurchasesPage() {
                                 {/* Row 2: Invoice No | Invoice Date */}
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1">Invoice Number *</label>
-                                        <input type="text" required placeholder="e.g. INV-123" className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_no} onChange={(e) => setFormData({ ...formData, invoice_no: e.target.value })} />
+                                        <label className="block text-xs font-medium text-slate-700 mb-1">Invoice Number *</label>
+                                        <input type="text" required placeholder="e.g. INV-123" className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_no} onChange={(e) => setFormData({ ...formData, invoice_no: e.target.value })} />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1">Invoice Date *</label>
-                                        <input type="date" required className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_date} onChange={(e) => setFormData({ ...formData, invoice_date: e.target.value })} />
+                                        <label className="block text-xs font-medium text-slate-700 mb-1">Invoice Date *</label>
+                                        <input type="date" required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_date} onChange={(e) => setFormData({ ...formData, invoice_date: e.target.value })} />
                                     </div>
                                 </div>
 
                                 {/* Row 3: Invoice Type | Total Amount */}
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1">Invoice Type *</label>
-                                        <select required className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_type_submitted} onChange={(e) => setFormData({ ...formData, invoice_type_submitted: e.target.value })}>
+                                        <label className="block text-xs font-medium text-slate-700 mb-1">Invoice Type *</label>
+                                        <select required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_type_submitted} onChange={(e) => setFormData({ ...formData, invoice_type_submitted: e.target.value })}>
                                             <option value="PROVISIONAL">Provisional Slip (Kacha Bill)</option>
                                             <option value="TAX">Final Tax Invoice</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-700 mb-1">Total Invoice Amount (₹) *</label>
-                                        <input type="number" required min="1" step="0.01" className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm text-right font-medium tabular-nums focus:ring-2 focus:ring-blue-500" value={formData.invoice_amount} onChange={(e) => setFormData({ ...formData, invoice_amount: e.target.value })} />
+                                        <label className="block text-xs font-medium text-slate-700 mb-1">Total Invoice Amount (₹) *</label>
+                                        <input type="number" required min="1" step="0.01" className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm text-right font-medium tabular-nums focus:ring-2 focus:ring-blue-500" value={formData.invoice_amount} onChange={(e) => setFormData({ ...formData, invoice_amount: e.target.value })} />
                                     </div>
                                 </div>
 
                                 {/* Upload */}
                                 <div className="pt-2">
-                                    <label className="block text-xs font-bold text-gray-900 mb-2">Upload Invoice *</label>
+                                    <label className="block text-xs font-bold text-slate-900 mb-2">Upload Invoice *</label>
                                     <FileUpload
                                         type={formData.invoice_type_submitted === "PROVISIONAL" ? "PROVISIONAL_INVOICE" : "TAX_INVOICE"}
                                         entityId={selectedReq.id}
@@ -317,34 +317,34 @@ export default function PendingPurchasesPage() {
                                 {/* Purchase Lines Table with resizable columns */}
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between">
-                                        <h3 className="text-sm font-semibold text-gray-900">Purchase Lines</h3>
+                                        <h3 className="text-sm font-semibold text-slate-900">Purchase Lines</h3>
                                     </div>
                                     <div className="overflow-x-auto">
-                                        <table className="min-w-full divide-y divide-gray-200" style={{ tableLayout: "fixed" }}>
-                                            <thead className="bg-gray-50">
+                                        <table className="min-w-full divide-y divide-slate-200" style={{ tableLayout: "fixed" }}>
+                                            <thead className="bg-slate-50">
                                                 <tr>
-                                                    <th style={{ width: widths.material, minWidth: 80, position: "relative" }} className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Material<ResizeHandle colKey="material" /></th>
-                                                    <th style={{ width: widths.description, minWidth: 100, position: "relative" }} className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Description<ResizeHandle colKey="description" /></th>
-                                                    <th style={{ width: widths.qty, minWidth: 60, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Qty<ResizeHandle colKey="qty" /></th>
-                                                    <th style={{ width: widths.rate, minWidth: 80, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Rate<ResizeHandle colKey="rate" /></th>
-                                                    <th style={{ width: widths.amount, minWidth: 90, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase">Amount<ResizeHandle colKey="amount" /></th>
-                                                    <th style={{ width: 32 }} className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase">×</th>
+                                                    <th style={{ width: widths.material, minWidth: 80, position: "relative" }} className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase">Material<ResizeHandle colKey="material" /></th>
+                                                    <th style={{ width: widths.description, minWidth: 100, position: "relative" }} className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase">Description<ResizeHandle colKey="description" /></th>
+                                                    <th style={{ width: widths.qty, minWidth: 60, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase">Qty<ResizeHandle colKey="qty" /></th>
+                                                    <th style={{ width: widths.rate, minWidth: 80, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase">Rate<ResizeHandle colKey="rate" /></th>
+                                                    <th style={{ width: widths.amount, minWidth: 90, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase">Amount<ResizeHandle colKey="amount" /></th>
+                                                    <th style={{ width: 32 }} className="px-3 py-2 text-center text-xs font-medium text-slate-500 uppercase">×</th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-gray-100">
+                                            <tbody className="divide-y divide-slate-100">
                                                 {purchaseLines.map((line, i) => (
                                                     <tr key={i}>
                                                         <td className="px-3 py-2" style={{ width: widths.material }}>
-                                                            <span className="text-sm text-gray-900 truncate block">{line.material_name}</span>
+                                                            <span className="text-sm text-slate-900 truncate block">{line.material_name}</span>
                                                         </td>
                                                         <td className="px-3 py-2" style={{ width: widths.description }}>
-                                                            <input type="text" className="w-full h-8 px-2 border border-gray-300 rounded text-sm" value={line.description} onChange={(e) => handleLineChange(i, "description", e.target.value)} />
+                                                            <input type="text" className="w-full h-8 px-2 border border-slate-300 rounded text-sm" value={line.description} onChange={(e) => handleLineChange(i, "description", e.target.value)} />
                                                         </td>
                                                         <td className="px-3 py-2" style={{ width: widths.qty }}>
-                                                            <input type="number" required min="1" className="w-full h-8 px-2 border border-gray-300 rounded text-sm text-right" value={line.quantity || ""} onChange={(e) => handleLineChange(i, "quantity", Number(e.target.value))} />
+                                                            <input type="number" required min="1" className="w-full h-8 px-2 border border-slate-300 rounded text-sm text-right" value={line.quantity || ""} onChange={(e) => handleLineChange(i, "quantity", Number(e.target.value))} />
                                                         </td>
                                                         <td className="px-3 py-2" style={{ width: widths.rate }}>
-                                                            <input type="number" required min="0" step="0.01" className="w-full h-8 px-2 border border-gray-300 rounded text-sm text-right" value={line.rate || ""} onChange={(e) => handleLineChange(i, "rate", Number(e.target.value))} />
+                                                            <input type="number" required min="0" step="0.01" className="w-full h-8 px-2 border border-slate-300 rounded text-sm text-right" value={line.rate || ""} onChange={(e) => handleLineChange(i, "rate", Number(e.target.value))} />
                                                         </td>
                                                         <td className="px-3 py-2 text-right text-sm font-medium tabular-nums" style={{ width: widths.amount }}>₹{line.amount.toFixed(2)}</td>
                                                         <td className="px-3 py-2 text-center" style={{ width: 32 }}>
@@ -355,10 +355,10 @@ export default function PendingPurchasesPage() {
                                                     </tr>
                                                 ))}
                                             </tbody>
-                                            <tfoot className="bg-gray-50">
+                                            <tfoot className="bg-slate-50">
                                                 <tr>
-                                                    <td colSpan={4} className="px-3 py-3 text-right text-sm font-semibold text-gray-700">Total:</td>
-                                                    <td className="px-3 py-3 text-right text-sm font-bold text-gray-900 tabular-nums">₹{linesTotalAmount.toFixed(2)}</td>
+                                                    <td colSpan={4} className="px-3 py-3 text-right text-sm font-semibold text-slate-700">Total:</td>
+                                                    <td className="px-3 py-3 text-right text-sm font-bold text-slate-900 tabular-nums">₹{linesTotalAmount.toFixed(2)}</td>
                                                     <td></td>
                                                 </tr>
                                             </tfoot>
@@ -369,8 +369,8 @@ export default function PendingPurchasesPage() {
                             </form>
                         </div>
 
-                        <div className="p-4 border-t border-gray-100 bg-gray-50 flex gap-3 pb-8 md:pb-4">
-                            <button type="button" onClick={closeDrawer} className="flex-1 py-3 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+                        <div className="p-4 border-t border-slate-100 bg-slate-50 flex gap-3 pb-8 md:pb-4">
+                            <button type="button" onClick={closeDrawer} className="flex-1 py-3 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition">
                                 Cancel
                             </button>
                             <button type="submit" form="purchase-form" disabled={submitting} className="flex-1 py-3 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition flex items-center justify-center gap-2">

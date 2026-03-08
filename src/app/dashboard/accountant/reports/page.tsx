@@ -101,25 +101,25 @@ export default function ReportsPage() {
     };
 
     const renderTable = () => {
-        if (!data || data.length === 0) return <div className="p-8 text-center text-gray-500">No data found for this period</div>;
+        if (!data || data.length === 0) return <div className="p-8 text-center text-slate-500">No data found for this period</div>;
 
         const headers = Object.keys(data[0]);
 
         return (
             <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm whitespace-nowrap">
-                    <thead className="bg-gray-50 border-y border-gray-200 text-xs uppercase font-bold text-gray-600">
+                    <thead className="bg-slate-50 border-y border-slate-200 text-xs uppercase font-bold text-slate-600">
                         <tr>
                             {headers.map(h => (
                                 <th key={h} className="px-4 py-3">{h.replace(/_/g, " ")}</th>
                             ))}
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-slate-100">
                         {data.map((row, i) => (
-                            <tr key={i} className="hover:bg-gray-50 transition-colors">
+                            <tr key={i} className="hover:bg-slate-50 transition-colors">
                                 {headers.map(h => (
-                                    <td key={h} className="px-4 py-2 text-gray-800">
+                                    <td key={h} className="px-4 py-2 text-slate-800">
                                         {typeof row[h] === "number" && h.includes("amount") ? `₹${row[h].toLocaleString()}` : row[h]?.toString()}
                                     </td>
                                 ))}
@@ -135,27 +135,27 @@ export default function ReportsPage() {
         <div className="space-y-6 max-w-7xl mx-auto">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2"><LayoutDashboard className="w-5 h-5 text-blue-600" /> Analytical Reports</h1>
-                    <p className="text-sm text-gray-500 mt-1">Export, filter, and track core business metrics</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-slate-900 flex items-center gap-2"><LayoutDashboard className="w-5 h-5 text-blue-600" /> Analytical Reports</h1>
+                    <p className="text-sm text-slate-500 mt-1">Export, filter, and track core business metrics</p>
                 </div>
 
-                <div className="flex bg-white border border-gray-200 rounded-lg p-1.5 shadow-sm">
+                <div className="flex bg-white border border-slate-200 rounded-lg p-1.5 shadow-sm">
                     <input type="date" className="text-xs px-2 py-1 outline-none" value={dateRange.start} onChange={e => setDateRange({ ...dateRange, start: e.target.value })} />
-                    <span className="text-gray-400 px-2">-</span>
+                    <span className="text-slate-400 px-2">-</span>
                     <input type="date" className="text-xs px-2 py-1 outline-none" value={dateRange.end} onChange={e => setDateRange({ ...dateRange, end: e.target.value })} />
-                    <button onClick={fetchReportData} className="ml-2 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded text-xs font-semibold flex items-center gap-1 transition">
+                    <button onClick={fetchReportData} className="ml-2 px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-semibold flex items-center gap-1 transition">
                         <Filter className="w-3 h-3" /> Apply
                     </button>
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="flex overflow-x-auto border-b border-gray-100 scrollbar-hide">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div className="flex overflow-x-auto border-b border-slate-100 scrollbar-hide">
                     {TABS.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`px-5 py-3.5 text-sm font-semibold whitespace-nowrap transition-colors border-b-2 ${activeTab === tab.id ? 'border-blue-600 text-blue-700 bg-blue-50/50' : 'border-transparent text-gray-500 hover:text-gray-800 hover:bg-gray-50'}`}
+                            className={`px-5 py-3.5 text-sm font-semibold whitespace-nowrap transition-colors border-b-2 ${activeTab === tab.id ? 'border-blue-600 text-blue-700 bg-blue-50/50' : 'border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50'}`}
                         >
                             {tab.label}
                         </button>
@@ -164,18 +164,18 @@ export default function ReportsPage() {
 
                 <div className="p-6">
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-lg font-bold text-gray-800">{TABS.find(t => t.id === activeTab)?.label}</h2>
+                        <h2 className="text-lg font-bold text-slate-800">{TABS.find(t => t.id === activeTab)?.label}</h2>
                         <button onClick={handleExport} disabled={data.length === 0} className="flex flex-row items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-green-700 transition disabled:opacity-50">
                             <Download className="w-4 h-4" /> Export Excel
                         </button>
                     </div>
 
                     {loading ? (
-                        <div className="py-24 text-center text-gray-400 animate-pulse">Running data aggregation...</div>
+                        <div className="py-24 text-center text-slate-400 animate-pulse">Running data aggregation...</div>
                     ) : (
                         <>
                             {renderChart()}
-                            <div className="border border-gray-200 rounded-xl overflow-hidden">
+                            <div className="border border-slate-200 rounded-lg overflow-hidden">
                                 {renderTable()}
                             </div>
                         </>

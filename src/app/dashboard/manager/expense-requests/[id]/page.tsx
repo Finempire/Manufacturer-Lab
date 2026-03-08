@@ -43,41 +43,41 @@ export default function ManagerExpenseDetailPage() {
             .catch(() => { toast.error("Failed to load expense"); setLoading(false); });
     }, [params.id]);
 
-    if (loading) return <div className="text-center py-12 text-gray-400">Loading...</div>;
-    if (!expense) return <div className="text-center py-12 text-gray-400">Expense not found</div>;
+    if (loading) return <div className="text-center py-12 text-slate-400">Loading...</div>;
+    if (!expense) return <div className="text-center py-12 text-slate-400">Expense not found</div>;
 
     return (
         <div className="space-y-6 max-w-3xl mx-auto pb-10">
             <div className="flex items-center gap-4">
-                <button onClick={() => router.back()} className="p-2 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition">
-                    <ArrowLeft className="w-5 h-5 text-gray-600" />
+                <button onClick={() => router.back()} className="p-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition">
+                    <ArrowLeft className="w-5 h-5 text-slate-600" />
                 </button>
                 <div className="flex-1">
-                    <h1 className="text-xl font-bold text-gray-900">{expense.expense_no}</h1>
-                    <p className="text-sm text-gray-500 mt-0.5">{expense.order.order_no} &bull; {expense.buyer.name}</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-slate-900">{expense.expense_no}</h1>
+                    <p className="text-sm text-slate-500 mt-0.5">{expense.order.order_no} &bull; {expense.buyer.name}</p>
                 </div>
-                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border ${STATUS_COLORS[expense.status] || "bg-gray-100 text-gray-800 border-gray-200"}`}>
+                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border ${STATUS_COLORS[expense.status] || "bg-slate-100 text-slate-800 border-slate-200"}`}>
                     {expense.status.replace(/_/g, " ")}
                 </span>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-5">
-                <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wide border-b pb-2">Details</h3>
+            <div className="bg-white rounded-lg border border-slate-200 p-5">
+                <h3 className="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wide border-b pb-2">Details</h3>
                 <div className="grid grid-cols-2 gap-y-4 gap-x-6">
-                    <div><p className="text-xs text-gray-500 mb-1">Date</p><p className="text-sm font-medium">{format(new Date(expense.expense_date), "dd MMM yyyy")}</p></div>
-                    <div><p className="text-xs text-gray-500 mb-1">Category</p><p className="text-sm font-medium">{expense.expense_category.replace(/_/g, " ")}</p></div>
-                    <div><p className="text-xs text-gray-500 mb-1">Raised By</p><p className="text-sm font-medium">{expense.raised_by.name}</p></div>
-                    <div><p className="text-xs text-gray-500 mb-1">Vendor</p><p className="text-sm font-medium">{expense.vendor_name || "—"}</p></div>
-                    <div><p className="text-xs text-gray-500 mb-1">Expected Amount</p><p className="text-sm font-bold text-gray-900">₹{expense.expected_amount.toLocaleString("en-IN")}</p></div>
-                    {expense.actual_amount && <div><p className="text-xs text-gray-500 mb-1">Actual Amount</p><p className="text-sm font-bold text-green-700">₹{expense.actual_amount.toLocaleString("en-IN")}</p></div>}
-                    <div className="col-span-2"><p className="text-xs text-gray-500 mb-1">Description</p><p className="text-sm text-gray-700">{expense.description}</p></div>
+                    <div><p className="text-xs text-slate-500 mb-1">Date</p><p className="text-sm font-medium">{format(new Date(expense.expense_date), "dd MMM yyyy")}</p></div>
+                    <div><p className="text-xs text-slate-500 mb-1">Category</p><p className="text-sm font-medium">{expense.expense_category.replace(/_/g, " ")}</p></div>
+                    <div><p className="text-xs text-slate-500 mb-1">Raised By</p><p className="text-sm font-medium">{expense.raised_by.name}</p></div>
+                    <div><p className="text-xs text-slate-500 mb-1">Vendor</p><p className="text-sm font-medium">{expense.vendor_name || "—"}</p></div>
+                    <div><p className="text-xs text-slate-500 mb-1">Expected Amount</p><p className="text-sm font-bold text-slate-900">₹{expense.expected_amount.toLocaleString("en-IN")}</p></div>
+                    {expense.actual_amount && <div><p className="text-xs text-slate-500 mb-1">Actual Amount</p><p className="text-sm font-bold text-green-700">₹{expense.actual_amount.toLocaleString("en-IN")}</p></div>}
+                    <div className="col-span-2"><p className="text-xs text-slate-500 mb-1">Description</p><p className="text-sm text-slate-700">{expense.description}</p></div>
                 </div>
             </div>
 
             {expense.attachment_path && (
-                <div className="bg-white rounded-xl border border-gray-200 p-4">
+                <div className="bg-white rounded-lg border border-slate-200 p-4">
                     <div className="flex items-center gap-2 mb-2"><FileText className="w-4 h-4 text-blue-500" /><span className="text-sm font-bold">Attachment</span></div>
-                    <button onClick={() => window.open(`/api/files/${expense.attachment_path}?action=inline`, '_blank')} className="px-4 py-2 text-xs font-medium bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100">View Document</button>
+                    <button onClick={() => window.open(`/api/files/${expense.attachment_path}?action=inline`, '_blank')} className="px-4 py-2 text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100">View Document</button>
                 </div>
             )}
         </div>

@@ -35,16 +35,16 @@ export default function SamplePMDashboard() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-xl font-bold text-gray-900">Sample PM Dashboard</h1>
-                <p className="text-sm text-gray-500 mt-1">Overview of sample production operations</p>
+                <h1 className="text-lg font-semibold tracking-tight text-slate-900">Sample PM Dashboard</h1>
+                <p className="text-sm text-slate-500 mt-1">Overview of sample production operations</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {cards.map(card => (
-                    <Link key={card.label} href={card.link} className="bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow block relative group">
+                    <Link key={card.label} href={card.link} className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-shadow block relative group">
                         <div className={`inline-flex items-center justify-center w-10 h-10 rounded-lg ${card.color} mb-3`}>{card.icon}</div>
-                        <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wider">{card.label}</p>
-                        <p className="text-2xl font-bold text-gray-900 mt-1 tabular-nums">{card.value}</p>
+                        <p className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">{card.label}</p>
+                        <p className="text-2xl font-bold text-slate-900 mt-1 tabular-nums">{card.value}</p>
                         <div className="absolute inset-x-0 bottom-0 h-1 bg-blue-600 rounded-b-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                     </Link>
                 ))}

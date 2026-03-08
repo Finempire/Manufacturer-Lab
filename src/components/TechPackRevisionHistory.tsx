@@ -61,7 +61,7 @@ function getStatusConfig(status: string): {
       return {
         label: status.replace(/_/g, " "),
         icon: Clock,
-        badgeClasses: "bg-gray-50 text-gray-600",
+        badgeClasses: "bg-slate-50 text-slate-600",
       };
   }
 }
@@ -86,10 +86,10 @@ export default function TechPackRevisionHistory({
     sorted.length > 0 && sorted[0].status === "REVISION_REQUIRED";
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
       <div className="flex items-center gap-2 mb-4">
-        <FileText className="w-5 h-5 text-gray-600" />
-        <h3 className="text-lg font-semibold text-gray-900">
+        <FileText className="w-5 h-5 text-slate-600" />
+        <h3 className="text-lg font-semibold text-slate-900">
           Tech Pack Revision History
         </h3>
       </div>
@@ -106,7 +106,7 @@ export default function TechPackRevisionHistory({
       )}
 
       {sorted.length === 0 ? (
-        <p className="text-sm text-gray-400 text-center py-6">
+        <p className="text-sm text-slate-400 text-center py-6">
           No tech pack revisions found.
         </p>
       ) : (
@@ -121,13 +121,13 @@ export default function TechPackRevisionHistory({
                 className={`rounded-md border p-3 ${
                   rev.status === "REVISION_REQUIRED"
                     ? "border-orange-200 bg-orange-50/30"
-                    : "border-gray-200 bg-white"
+                    : "border-slate-200 bg-white"
                 }`}
               >
                 {/* Header row */}
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm font-semibold text-slate-900">
                       Revision {rev.revisionNumber}
                     </span>
                     <span
@@ -153,26 +153,26 @@ export default function TechPackRevisionHistory({
                 {/* Details grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1 text-xs">
                   <div>
-                    <span className="text-gray-400 block">Submitted</span>
-                    <span className="text-gray-700">
+                    <span className="text-slate-400 block">Submitted</span>
+                    <span className="text-slate-700">
                       {formatDate(rev.submittedAt)}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block">Submitted By</span>
-                    <span className="text-gray-700">
+                    <span className="text-slate-400 block">Submitted By</span>
+                    <span className="text-slate-700">
                       {rev.submittedBy ?? "-"}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block">Reviewed</span>
-                    <span className="text-gray-700">
+                    <span className="text-slate-400 block">Reviewed</span>
+                    <span className="text-slate-700">
                       {formatDate(rev.reviewedAt)}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-400 block">Reviewed By</span>
-                    <span className="text-gray-700">
+                    <span className="text-slate-400 block">Reviewed By</span>
+                    <span className="text-slate-700">
                       {rev.reviewedBy ?? "-"}
                     </span>
                   </div>
@@ -180,11 +180,11 @@ export default function TechPackRevisionHistory({
 
                 {/* PM Notes */}
                 {rev.pmNotes && (
-                  <div className="mt-2 pt-2 border-t border-gray-100">
-                    <span className="text-xs text-gray-400 block mb-0.5">
+                  <div className="mt-2 pt-2 border-t border-slate-100">
+                    <span className="text-xs text-slate-400 block mb-0.5">
                       PM Notes
                     </span>
-                    <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                    <p className="text-sm text-slate-700 whitespace-pre-wrap">
                       {rev.pmNotes}
                     </p>
                   </div>

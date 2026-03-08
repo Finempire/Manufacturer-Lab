@@ -82,11 +82,11 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user }: Edit
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
             <div className="bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden">
-                <div className="flex items-center justify-between p-5 border-b border-gray-100">
-                    <h2 className="text-xl font-semibold text-gray-900">Edit User Details</h2>
+                <div className="flex items-center justify-between p-5 border-b border-slate-100">
+                    <h2 className="text-xl font-semibold text-slate-900">Edit User Details</h2>
                     <button
                         onClick={onClose}
-                        className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -94,36 +94,36 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user }: Edit
 
                 <form onSubmit={handleSubmit} className="p-5 space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name *</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name *</label>
                         <input
                             type="text"
                             required
                             minLength={2}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Email Address *</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address *</label>
                         <input
                             type="email"
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Role *</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">Role *</label>
                         <select
                             required
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
                             disabled={isSelfEdit}
-                            className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                            className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100 disabled:text-slate-500"
                         >
                             <option value="STORE_MANAGER">Store Manager</option>
                             <option value="RUNNER">Runner</option>
@@ -137,16 +137,16 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user }: Edit
                         )}
                     </div>
 
-                    <div className="pt-2 border-t border-gray-100 mt-2">
+                    <div className="pt-2 border-t border-slate-100 mt-2">
                         <label className="flex items-center gap-2 cursor-pointer mt-2">
                             <input
                                 type="checkbox"
                                 checked={isActive}
                                 onChange={(e) => setIsActive(e.target.checked)}
                                 disabled={isSelfEdit}
-                                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50"
+                                className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 disabled:opacity-50"
                             />
-                            <span className={`text-sm font-medium ${isSelfEdit ? "text-gray-400" : "text-gray-700"}`}>
+                            <span className={`text-sm font-medium ${isSelfEdit ? "text-slate-400" : "text-slate-700"}`}>
                                 Account is Active
                             </span>
                         </label>
@@ -155,11 +155,11 @@ export default function EditUserModal({ isOpen, onClose, onSuccess, user }: Edit
                         )}
                     </div>
 
-                    <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 mt-6">
+                    <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 mt-6">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
                             Cancel
                         </button>

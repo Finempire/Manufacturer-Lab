@@ -39,45 +39,45 @@ export default function MerchandiserTechPacksPage() {
     return (
         <div className="space-y-4">
             <div>
-                <h1 className="text-xl font-bold text-gray-900">Tech Packs</h1>
-                <p className="text-sm text-gray-500 mt-1">View and manage your assigned tech packs</p>
+                <h1 className="text-lg font-semibold tracking-tight text-slate-900">Tech Packs</h1>
+                <p className="text-sm text-slate-500 mt-1">View and manage your assigned tech packs</p>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                    <table className="min-w-full divide-y divide-slate-200">
+                        <thead className="bg-slate-50">
                             <tr>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Tech Pack No</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Order</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Buyer</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Fabric</th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Revisions</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Created</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Tech Pack No</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Order</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Buyer</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Fabric</th>
+                                <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Revisions</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Created</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-slate-100">
                             {loading ? (
-                                <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-gray-400">Loading...</td></tr>
+                                <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-400">Loading...</td></tr>
                             ) : techPacks.length === 0 ? (
                                 <tr><td colSpan={7} className="px-4 py-12 text-center">
-                                    <FileText className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                                    <p className="text-sm text-gray-500">No tech packs assigned to you</p>
+                                    <FileText className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                                    <p className="text-sm text-slate-500">No tech packs assigned to you</p>
                                 </td></tr>
                             ) : techPacks.map(tp => (
-                                <tr key={tp.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-4 py-3 text-sm font-semibold text-gray-900">{tp.tech_pack_no}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-600">{tp.order.order_no}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-600">{tp.order.buyer.name}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-500 max-w-[200px] truncate">{tp.fabric_details || "—"}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-600 text-center">{tp.revision_count}</td>
+                                <tr key={tp.id} className="hover:bg-slate-50 transition-colors">
+                                    <td className="px-4 py-3 text-sm font-semibold text-slate-900">{tp.tech_pack_no}</td>
+                                    <td className="px-4 py-3 text-sm text-slate-600">{tp.order.order_no}</td>
+                                    <td className="px-4 py-3 text-sm text-slate-600">{tp.order.buyer.name}</td>
+                                    <td className="px-4 py-3 text-sm text-slate-500 max-w-[200px] truncate">{tp.fabric_details || "—"}</td>
+                                    <td className="px-4 py-3 text-sm text-slate-600 text-center">{tp.revision_count}</td>
                                     <td className="px-4 py-3">
-                                        <span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[tp.status] || "bg-gray-100 text-gray-800"}`}>
+                                        <span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[tp.status] || "bg-slate-100 text-slate-800"}`}>
                                             {tp.status.replace(/_/g, " ")}
                                         </span>
                                     </td>
-                                    <td className="px-4 py-3 text-sm text-gray-500">{format(new Date(tp.created_at), "dd MMM yyyy")}</td>
+                                    <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(tp.created_at), "dd MMM yyyy")}</td>
                                 </tr>
                             ))}
                         </tbody>
