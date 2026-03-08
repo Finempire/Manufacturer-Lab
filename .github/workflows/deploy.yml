@@ -22,7 +22,7 @@ jobs:
           script: |
             set -e
 
-            APP_DIR="/opt/cashflow"
+            APP_DIR="/opt/Manufacturer-Lab"
 
             # Clone or pull latest code
             if [ ! -d "$APP_DIR" ]; then
