@@ -254,7 +254,7 @@ export default function AccountantExpenseDetailPage() {
                                 </div>
                                 <div>
                                     <label className="block text-xs font-medium text-gray-700 mb-1">Payment Proof</label>
-                                    <FileUpload type="EXPENSE_PROOF" entityId={expense.id} onUploadSuccess={path => setPaymentProofPath(path)} />
+                                    <FileUpload type="EXPENSE_ATTACHMENT" entityId={expense.id} onUploadSuccess={path => setPaymentProofPath(path)} />
                                 </div>
                                 <div className="flex gap-2">
                                     <button onClick={() => setAction(null)} className="flex-1 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg">Cancel</button>
