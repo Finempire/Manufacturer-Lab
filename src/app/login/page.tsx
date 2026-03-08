@@ -198,12 +198,12 @@ function GlobeBackground() {
 
 // --- Demo role credentials ---
 const DEMO_ROLES = [
-  { email: "accountant@demo.com", label: "Accountant" },
-  { email: "sample.pm@demo.com", label: "Sample PM" },
-  { email: "prod.pm@demo.com", label: "Production PM" },
-  { email: "merch@demo.com", label: "Merchandiser" },
-  { email: "store.mgr@demo.com", label: "Store Mgr" },
-  { email: "runner@demo.com", label: "Runner" },
+  { email: "accountant@cashflow.com", label: "Accountant" },
+  { email: "sample.pm@cashflow.com", label: "Sample PM" },
+  { email: "production@cashflow.com", label: "Production PM" },
+  { email: "merch@cashflow.com", label: "Merchandiser" },
+  { email: "manager@cashflow.com", label: "Store Mgr" },
+  { email: "runner@cashflow.com", label: "Runner" },
 ];
 
 // --- Main Login Page ---
@@ -358,7 +358,7 @@ export default function LoginPage() {
                 </button>
               ))}
               <button
-                onClick={() => setDemoRole("ceo@demo.com")}
+                onClick={() => setDemoRole("ceo@cashflow.com")}
                 type="button"
                 className="col-span-2 text-xs font-medium text-blue-700 bg-transparent hover:bg-blue-500/10 border border-blue-400/50 py-2.5 rounded-lg transition-colors"
               >

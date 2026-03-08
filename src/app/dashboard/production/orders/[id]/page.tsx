@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { format } from "date-fns";
-import { ArrowLeft, CheckCircle, Clock, Package, FileText, Play, Flag } from "lucide-react";
+import { ArrowLeft, CheckCircle, Clock, Package, FileText, Play, Flag, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import OrderTimeline from "@/components/OrderTimeline";
+
+interface Merchandiser { id: string; name: string; }
 
 interface OrderDetail {
     id: string;
@@ -44,12 +46,19 @@ export default function ProductionOrderDetail() {
     const [accepting, setAccepting] = useState(false);
     const [completing, setCompleting] = useState(false);
     const [completionNotes, setCompletionNotes] = useState("");
+    const [merchandisers, setMerchandisers] = useState<Merchandiser[]>([]);
+    const [selectedMerchandiser, setSelectedMerchandiser] = useState("");
+    const [assigning, setAssigning] = useState(false);
 
     useEffect(() => {
         fetch(`/api/orders/${params.id}`)
             .then(r => r.json())
             .then(data => { setOrder(data); setLoading(false); })
             .catch(() => { toast.error("Failed to load order"); setLoading(false); });
+        fetch("/api/master/users?role=MERCHANDISER")
+            .then(r => r.json())
+            .then(data => setMerchandisers(Array.isArray(data) ? data : []))
+            .catch(() => {});
     }, [params.id]);
 
     const handleAccept = async () => {
@@ -82,10 +91,28 @@ export default function ProductionOrderDetail() {
         finally { setCompleting(false); }
     };
 
+    const handleAssignMerchandiser = async () => {
+        if (!selectedMerchandiser) { toast.error("Please select a merchandiser"); return; }
+        setAssigning(true);
+        try {
+            const res = await fetch(`/api/orders/${params.id}/assign-merchandiser`, {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ merchandiser_id: selectedMerchandiser }),
+            });
+            if (!res.ok) throw new Error("Failed");
+            toast.success("Merchandiser assigned");
+            const updated = await fetch(`/api/orders/${params.id}`).then(r => r.json());
+            setOrder(updated);
+            setSelectedMerchandiser("");
+        } catch { toast.error("Failed to assign merchandiser"); }
+        finally { setAssigning(false); }
+    };
+
     if (loading) return <div className="text-center py-12 text-gray-400">Loading...</div>;
     if (!order) return <div className="text-center py-12 text-gray-400">Order not found</div>;
 
-    const canAccept = order.status === "PENDING_PM_ACCEPTANCE";
+    const canAccept = order.status === "ORDER_RECEIVED" || order.status === "PENDING_PM_ACCEPTANCE";
+    const canAssignMerchandiser = (order.status === "PENDING_PM_ACCEPTANCE" || order.status === "ORDER_RECEIVED") && !order.merchandiser;
     const canComplete = order.status === "UNDER_PRODUCTION";
 
     return (
@@ -188,6 +215,26 @@ export default function ProductionOrderDetail() {
                             <button onClick={handleAccept} disabled={accepting} className="w-full flex items-center justify-center gap-2 py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition disabled:opacity-50">
                                 <Play className="w-4 h-4" /> {accepting ? "Accepting..." : "Accept Order"}
                             </button>
+                        )}
+
+                        {canAssignMerchandiser && (
+                            <div className="space-y-2 pt-2 border-t border-gray-100">
+                                <p className="text-xs font-medium text-gray-600">Assign Merchandiser</p>
+                                <select className="w-full h-9 px-3 border border-gray-300 rounded-lg text-sm" value={selectedMerchandiser} onChange={e => setSelectedMerchandiser(e.target.value)}>
+                                    <option value="">Select Merchandiser</option>
+                                    {merchandisers.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+                                </select>
+                                <button onClick={handleAssignMerchandiser} disabled={assigning || !selectedMerchandiser} className="w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition disabled:opacity-50">
+                                    <UserPlus className="w-4 h-4" /> {assigning ? "Assigning..." : "Assign"}
+                                </button>
+                            </div>
+                        )}
+
+                        {order.merchandiser && (
+                            <div className="pt-2 border-t border-gray-100">
+                                <p className="text-xs text-gray-500 mb-1">Assigned Merchandiser</p>
+                                <p className="text-sm font-medium text-gray-900">{order.merchandiser.name}</p>
+                            </div>
                         )}
 
                         {canComplete && (
