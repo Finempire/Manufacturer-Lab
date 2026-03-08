@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { name, brand_code, contact_details, notes, created_inline } = body;
+    const { name, brand_code, contact_person, phone, email, notes, created_inline } = body;
 
     if (!name || name.trim().length < 2) {
         return NextResponse.json({ error: "Buyer name is required (min 2 characters)" }, { status: 400 });
@@ -33,9 +33,12 @@ export async function POST(req: Request) {
         data: {
             name: name.trim(),
             brand_code: brand_code ? brand_code.trim().toUpperCase() : `BUY-${Date.now().toString(36).toUpperCase()}`,
-            contact_details: contact_details || null,
+            contact_person: contact_person || null,
+            phone: phone || null,
+            email: email || null,
             notes: notes || null,
             created_inline: created_inline === true,
+            created_by_user_id: (session.user as { id: string }).id,
         },
     });
 

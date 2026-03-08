@@ -8,7 +8,9 @@ interface Buyer {
     id: string;
     name: string;
     brand_code: string;
-    contact_details: string | null;
+    contact_person: string | null;
+    phone: string | null;
+    email: string | null;
     notes: string | null;
     created_inline: boolean;
     created_at: string;
@@ -18,7 +20,7 @@ export default function BuyersPage() {
     const [buyers, setBuyers] = useState<Buyer[]>([]);
     const [showModal, setShowModal] = useState(false);
     const [filterInline, setFilterInline] = useState(false);
-    const [form, setForm] = useState({ name: "", brand_code: "", contact_details: "", notes: "" });
+    const [form, setForm] = useState({ name: "", brand_code: "", contact_person: "", phone: "", notes: "" });
     const [error, setError] = useState("");
 
     const fetchBuyers = () => {
@@ -43,7 +45,7 @@ export default function BuyersPage() {
         if (!res.ok) { toast.error("Failed to create buyer"); return; }
         toast.success("Buyer created");
         setShowModal(false);
-        setForm({ name: "", brand_code: "", contact_details: "", notes: "" });
+        setForm({ name: "", brand_code: "", contact_person: "", phone: "", notes: "" });
         setError("");
         fetchBuyers();
     };
@@ -96,7 +98,7 @@ export default function BuyersPage() {
                                     {b.created_inline && <span className="ml-2 px-2 py-0.5 text-[10px] font-medium bg-purple-100 text-purple-700 rounded-full">Inline Added</span>}
                                 </td>
                                 <td className="px-4 py-3 text-sm text-gray-500 font-mono">{b.brand_code}</td>
-                                <td className="px-4 py-3 text-sm text-gray-500">{b.contact_details || "—"}</td>
+                                <td className="px-4 py-3 text-sm text-gray-500">{[b.contact_person, b.phone].filter(Boolean).join(" | ") || "—"}</td>
                                 <td className="px-4 py-3 text-sm text-gray-500">{b.notes || "—"}</td>
                             </tr>
                         ))}
@@ -129,8 +131,12 @@ export default function BuyersPage() {
                                 <input type="text" required className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm uppercase" value={form.brand_code} onChange={(e) => setForm({ ...form, brand_code: e.target.value.toUpperCase() })} />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-gray-700 mb-1">Contact Details</label>
-                                <input type="text" className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm" value={form.contact_details} onChange={(e) => setForm({ ...form, contact_details: e.target.value })} />
+                                <label className="block text-xs font-medium text-gray-700 mb-1">Contact Person</label>
+                                <input type="text" className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm" value={form.contact_person} onChange={(e) => setForm({ ...form, contact_person: e.target.value })} />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-medium text-gray-700 mb-1">Phone</label>
+                                <input type="text" className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
                             </div>
                             <div>
                                 <label className="block text-xs font-medium text-gray-700 mb-1">Notes</label>

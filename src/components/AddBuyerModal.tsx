@@ -49,7 +49,8 @@ export default function AddBuyerModal({ isOpen, onClose, onSuccess }: AddBuyerMo
                 body: JSON.stringify({
                     name: formData.name.trim(),
                     brand_code: formData.brand_code || undefined,
-                    contact_details: [formData.contact_person, formData.phone_email].filter(Boolean).join(" | ") || undefined,
+                    contact_person: formData.contact_person || undefined,
+                    phone: formData.phone_email || undefined,
                     notes: formData.notes || undefined,
                     created_inline: true,
                 }),
