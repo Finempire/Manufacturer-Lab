@@ -203,8 +203,9 @@ model Buyer {
   id              String   @id @default(uuid())
   name            String
   brand_code      String?  @unique
-  address         String?
-  email           String?
+  address          String?
+  shipping_address String?
+  email            String?
   contact_person  String?
   phone           String?
   notes           String?

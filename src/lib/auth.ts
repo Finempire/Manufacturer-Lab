@@ -77,22 +77,23 @@ export const authOptions: NextAuthOptions = {
     maxAge: 24 * 60 * 60,
   },
   callbacks: {
-    async jwt({ token, user }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
-        token.role = (user as Record<string, unknown>).role as string;
-        token.must_change_password = (user as Record<string, unknown>).must_change_password as boolean;
-        token.runner_status = (user as Record<string, unknown>).runner_status as string;
+        token.role = user.role;
+        token.must_change_password = user.must_change_password;
+        token.runner_status = user.runner_status;
       }
       return token;
     },
-    async session({ session, token }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async session({ session, token }: any) {
       if (session.user) {
-        const u = session.user as Record<string, unknown>;
-        u.id = token.id as string;
-        u.role = token.role as string;
-        u.must_change_password = token.must_change_password as boolean;
-        u.runner_status = token.runner_status as string;
+        session.user.id = token.id;
+        session.user.role = token.role;
+        session.user.must_change_password = token.must_change_password;
+        session.user.runner_status = token.runner_status;
       }
       return session;
     },

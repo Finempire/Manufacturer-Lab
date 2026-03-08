@@ -4,14 +4,15 @@ import { authOptions } from "@/lib/auth";
 import { saveFile, ensureUploadDir, ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from "@/lib/fileStorage";
 import { prisma } from "@/lib/prisma";
 
-// Ensure uploads directory exists on boot
-ensureUploadDir();
+export const dynamic = "force-dynamic";
 
 // Basic rate limiting map (IP/User -> { count, timestamp })
 const rateLimitMap = new Map<string, { count: number, resetAt: number }>();
 
 export async function POST(req: Request) {
     try {
+        ensureUploadDir();
+
         const session = await getServerSession(authOptions);
         if (!session?.user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

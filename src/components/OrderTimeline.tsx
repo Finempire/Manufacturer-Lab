@@ -169,10 +169,28 @@ const TIMELINE_STEPS: TimelineStepConfig[] = [
 ];
 
 interface OrderTimelineProps {
-  order: Record<string, unknown>;
+  status: string;
+  orderType: string;
+  order?: Record<string, unknown>;
 }
 
-function getStepStatus(
+const ORDER_STATUS_SEQUENCE = [
+  "ORDER_RECEIVED",
+  "PM_ACCEPTED",
+  "MERCH_ASSIGNED",
+  "MERCH_ACCEPTED",
+  "TECH_PACK_IN_PROGRESS",
+  "TECH_PACK_SUBMITTED",
+  "PM_REVIEWED",
+  "SHARED_WITH_BUYER",
+  "BUYER_APPROVED",
+  "MATERIAL_SOURCING",
+  "UNDER_PRODUCTION",
+  "PRODUCTION_COMPLETED",
+  "COMPLETED",
+];
+
+function getStepStatusFromOrder(
   order: Record<string, unknown>,
   steps: TimelineStepConfig[],
   index: number
@@ -189,6 +207,19 @@ function getStepStatus(
   return "upcoming";
 }
 
+function getStepStatusFromString(
+  currentStatus: string,
+  stepIndex: number
+): "completed" | "current" | "upcoming" {
+  const currentIdx = ORDER_STATUS_SEQUENCE.indexOf(currentStatus);
+  if (currentIdx === -1) {
+    return stepIndex === 0 ? "current" : "upcoming";
+  }
+  if (stepIndex < currentIdx) return "completed";
+  if (stepIndex === currentIdx) return "current";
+  return "upcoming";
+}
+
 function formatTimestamp(value: unknown): string {
   if (!value) return "";
   try {
@@ -198,19 +229,26 @@ function formatTimestamp(value: unknown): string {
   }
 }
 
-export default function OrderTimeline({ order }: OrderTimelineProps) {
+export default function OrderTimeline({ status, orderType, order }: OrderTimelineProps) {
+  const steps = TIMELINE_STEPS.slice(
+    0,
+    orderType === "SAMPLE" ? TIMELINE_STEPS.length : TIMELINE_STEPS.length
+  );
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">
         Order Timeline
       </h3>
       <div className="relative">
-        {TIMELINE_STEPS.map((step, index) => {
-          const status = getStepStatus(order, TIMELINE_STEPS, index);
+        {steps.map((step, index) => {
+          const stepStatus = order
+            ? getStepStatusFromOrder(order, steps, index)
+            : getStepStatusFromString(status, index);
           const Icon = step.icon;
-          const timestamp = formatTimestamp(order[step.timestampField]);
-          const actor = order[step.actorField] as string | undefined;
-          const isLast = index === TIMELINE_STEPS.length - 1;
+          const timestamp = order ? formatTimestamp(order[step.timestampField]) : "";
+          const actor = order ? (order[step.actorField] as string | undefined) : undefined;
+          const isLast = index === steps.length - 1;
 
           return (
             <div key={step.key} className="relative flex gap-3 pb-6 last:pb-0">
@@ -218,9 +256,9 @@ export default function OrderTimeline({ order }: OrderTimelineProps) {
               {!isLast && (
                 <div
                   className={`absolute left-4 top-8 w-0.5 h-full -translate-x-1/2 ${
-                    status === "completed"
+                    stepStatus === "completed"
                       ? "bg-green-300"
-                      : status === "current"
+                      : stepStatus === "current"
                         ? "bg-blue-300"
                         : "border-l border-dashed border-gray-300"
                   }`}
@@ -230,9 +268,9 @@ export default function OrderTimeline({ order }: OrderTimelineProps) {
               {/* Icon circle */}
               <div
                 className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-full shrink-0 ${
-                  status === "completed"
+                  stepStatus === "completed"
                     ? "bg-green-100 text-green-600"
-                    : status === "current"
+                    : stepStatus === "current"
                       ? "bg-blue-100 text-blue-600 ring-2 ring-blue-300"
                       : "bg-gray-100 text-gray-400"
                 }`}
@@ -244,16 +282,16 @@ export default function OrderTimeline({ order }: OrderTimelineProps) {
               <div className="flex-1 min-w-0 pt-0.5">
                 <p
                   className={`text-sm font-medium ${
-                    status === "completed"
+                    stepStatus === "completed"
                       ? "text-gray-900"
-                      : status === "current"
+                      : stepStatus === "current"
                         ? "text-blue-700"
                         : "text-gray-400"
                   }`}
                 >
                   {step.label}
                 </p>
-                {status === "completed" && (
+                {stepStatus === "completed" && (
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5">
                     {timestamp && (
                       <span className="text-xs text-gray-500">{timestamp}</span>
@@ -265,7 +303,7 @@ export default function OrderTimeline({ order }: OrderTimelineProps) {
                     )}
                   </div>
                 )}
-                {status === "current" && (
+                {stepStatus === "current" && (
                   <span className="text-xs text-blue-500 mt-0.5 inline-block">
                     Pending
                   </span>

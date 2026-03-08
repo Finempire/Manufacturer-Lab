@@ -5,6 +5,8 @@ import { verifySignedToken, getAbsolutePath } from "@/lib/fileStorage";
 import fs from "fs";
 import path from "path";
 
+export const dynamic = "force-dynamic";
+
 
 export async function GET(
     req: NextRequest,

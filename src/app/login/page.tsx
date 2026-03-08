@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Mail, Lock, LogIn, Factory } from "lucide-react";
 
 const ROLE_DASHBOARDS: Record<string, string> = {
   ACCOUNTANT: "/dashboard/accountant",
@@ -15,6 +16,197 @@ const ROLE_DASHBOARDS: Record<string, string> = {
   CEO: "/dashboard/ceo",
 };
 
+// --- 3D Globe Background Component ---
+function GlobeBackground() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let width: number;
+    let height: number;
+
+    let mouseX = 0;
+    let mouseY = 0;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX = (e.clientX - width / 2) / (width / 2);
+      mouseY = (e.clientY - height / 2) / (height / 2);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+
+    const numPoints = 1200;
+    const points: { x: number; y: number; z: number; baseSize: number; isLand: boolean }[] = [];
+    const phi = Math.PI * (3 - Math.sqrt(5));
+
+    for (let i = 0; i < numPoints; i++) {
+      const y = 1 - (i / (numPoints - 1)) * 2;
+      const radius = Math.sqrt(1 - y * y);
+      const theta = phi * i;
+      const x = Math.cos(theta) * radius;
+      const z = Math.sin(theta) * radius;
+      const noise = Math.sin(x * 5) * Math.cos(y * 5) + Math.sin(z * 5);
+      const isLand = noise > 0.2;
+
+      points.push({
+        x,
+        y,
+        z,
+        baseSize: isLand ? Math.random() * 1.5 + 1.0 : Math.random() * 1.0 + 0.5,
+        isLand,
+      });
+    }
+
+    const routes = Array.from({ length: 30 }).map(() => ({
+      startIndex: Math.floor(Math.random() * numPoints),
+      endIndex: Math.floor(Math.random() * numPoints),
+      progress: Math.random(),
+      speed: Math.random() * 0.003 + 0.001,
+      type: Math.random() > 0.5 ? "air" : "sea",
+    }));
+
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    };
+    window.addEventListener("resize", resize);
+    resize();
+
+    let rotationY = 0;
+    let rotationX = 0.3;
+    let targetRotationY = 0;
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      targetRotationY += 0.002;
+      rotationY += (targetRotationY + mouseX * 0.5 - rotationY) * 0.05;
+      rotationX += (0.3 + mouseY * 0.3 - rotationX) * 0.05;
+
+      const globeRadius = Math.min(width, height) * 0.54;
+      const fov = 400;
+      const cameraZ = 2.5;
+
+      const projectedPoints: { x: number; y: number; z: number; x2d: number; y2d: number; scale: number }[] = [];
+
+      points.forEach((p) => {
+        const rY = p.y * Math.cos(rotationX) - p.z * Math.sin(rotationX);
+        const rZ = p.y * Math.sin(rotationX) + p.z * Math.cos(rotationX);
+        const rX = p.x;
+
+        const finalX = rX * Math.cos(rotationY) - rZ * Math.sin(rotationY);
+        const finalZ = rX * Math.sin(rotationY) + rZ * Math.cos(rotationY);
+        const finalY = rY;
+
+        const scale = fov / (fov + finalZ + cameraZ);
+        const x2d = width / 2 + finalX * scale * globeRadius;
+        const y2d = height / 2 + finalY * scale * globeRadius;
+
+        projectedPoints.push({ x: finalX, y: finalY, z: finalZ, x2d, y2d, scale });
+
+        if (finalZ > -1.5) {
+          const depthAlpha = Math.max(0.1, (finalZ + 1.5) / 2.5);
+          ctx.beginPath();
+          ctx.arc(x2d, y2d, p.baseSize * scale, 0, Math.PI * 2);
+          ctx.fillStyle = p.isLand
+            ? `rgba(16, 185, 129, ${depthAlpha * 0.8})`
+            : `rgba(96, 165, 250, ${depthAlpha * 0.3})`;
+          ctx.fill();
+        }
+      });
+
+      routes.forEach((route) => {
+        route.progress += route.speed;
+        if (route.progress > 1) route.progress = 0;
+
+        const p1 = projectedPoints[route.startIndex];
+        const p2 = projectedPoints[route.endIndex];
+
+        if (p1.z > -0.5 && p2.z > -0.5) {
+          const arcMax = route.type === "air" ? 0.35 : 0.02;
+          const arcHeight = Math.sin(route.progress * Math.PI) * arcMax;
+
+          const curX = p1.x + (p2.x - p1.x) * route.progress;
+          const curY = p1.y + (p2.y - p1.y) * route.progress - arcHeight;
+          const curZ = p1.z + (p2.z - p1.z) * route.progress;
+
+          const scale = fov / (fov + curZ + cameraZ);
+          const x2d = width / 2 + curX * scale * globeRadius;
+          const y2d = height / 2 + curY * scale * globeRadius;
+
+          const nextProgress = route.progress + 0.01;
+          const nextArcHeight = Math.sin(nextProgress * Math.PI) * arcMax;
+          const nextX = p1.x + (p2.x - p1.x) * nextProgress;
+          const nextY = p1.y + (p2.y - p1.y) * nextProgress - nextArcHeight;
+          const nextZ = p1.z + (p2.z - p1.z) * nextProgress;
+          const nextScale = fov / (fov + nextZ + cameraZ);
+          const nextX2d = width / 2 + nextX * nextScale * globeRadius;
+          const nextY2d = height / 2 + nextY * nextScale * globeRadius;
+
+          const angle = Math.atan2(nextY2d - y2d, nextX2d - x2d);
+
+          ctx.beginPath();
+          ctx.moveTo(p1.x2d, p1.y2d);
+          ctx.lineTo(x2d, y2d);
+          ctx.strokeStyle =
+            route.type === "air"
+              ? `rgba(239, 68, 68, ${Math.sin(route.progress * Math.PI) * 0.3})`
+              : `rgba(30, 64, 175, ${Math.sin(route.progress * Math.PI) * 0.4})`;
+          ctx.lineWidth = route.type === "air" ? 1.5 : 1;
+          ctx.stroke();
+
+          ctx.save();
+          ctx.translate(x2d, y2d);
+          ctx.rotate(angle);
+
+          if (route.type === "air") {
+            ctx.fillStyle = `rgba(239, 68, 68, ${Math.sin(route.progress * Math.PI)})`;
+            ctx.beginPath();
+            ctx.moveTo(5 * scale, 0);
+            ctx.lineTo(-4 * scale, 4 * scale);
+            ctx.lineTo(-4 * scale, -4 * scale);
+            ctx.fill();
+          } else {
+            ctx.fillStyle = `rgba(30, 58, 138, ${Math.sin(route.progress * Math.PI)})`;
+            ctx.fillRect(-3 * scale, -1.5 * scale, 6 * scale, 3 * scale);
+          }
+
+          ctx.restore();
+        }
+      });
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />;
+}
+
+// --- Demo role credentials ---
+const DEMO_ROLES = [
+  { email: "accountant@demo.com", label: "Accountant" },
+  { email: "sample.pm@demo.com", label: "Sample PM" },
+  { email: "prod.pm@demo.com", label: "Production PM" },
+  { email: "merch@demo.com", label: "Merchandiser" },
+  { email: "store.mgr@demo.com", label: "Store Mgr" },
+  { email: "runner@demo.com", label: "Runner" },
+];
+
+// --- Main Login Page ---
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,61 +248,84 @@ export default function LoginPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-      }} />
+  const setDemoRole = (roleEmail: string) => {
+    setEmail(roleEmail);
+    setPassword("Change@123");
+  };
 
-      <div className="w-full max-w-md mx-4 relative z-10">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 shadow-xl shadow-blue-600/30 mb-4">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">CashFlow</h1>
-          <p className="text-blue-300/60 mt-1.5 text-sm">Order-to-Payment Management System</p>
+  return (
+    <div className="relative min-h-screen w-full bg-slate-50 flex items-center justify-center font-sans overflow-hidden selection:bg-blue-200">
+      {/* 3D Globe Background */}
+      <GlobeBackground />
+
+      <div className="absolute inset-0 z-0 pointer-events-none" />
+
+      {/* Login Container */}
+      <div className="relative z-10 w-full max-w-[420px] px-4">
+        {/* Header / Brand */}
+        <div className="flex flex-col items-center mb-8 text-center">
+          <h1 className="text-2xl font-bold text-slate-800 tracking-tight">
+            The Manufacturer Club
+          </h1>
+          <p className="text-sm text-slate-600 font-medium mt-1 flex items-center gap-1.5">
+            <Factory className="w-4 h-4" /> Global Production Tracking
+          </p>
         </div>
 
-        <div className="bg-white/[0.08] backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
-          <h2 className="text-lg font-semibold text-white mb-6">Sign in to your account</h2>
+        {/* Card */}
+        <div className="bg-transparent backdrop-blur-[2px] border border-slate-400/40 shadow-2xl shadow-slate-300/20 rounded-3xl p-8">
+          <h2 className="text-lg font-semibold text-slate-800 mb-6">
+            Sign in to your account
+          </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label htmlFor="email" className="block text-xs font-medium text-blue-200/70 mb-1.5">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Email Field */}
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="text-sm font-medium text-slate-700 block">
                 Email Address
               </label>
-              <input
-                id="email"
-                type="email"
-                required
-                className="w-full h-11 px-4 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/25 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
-                placeholder="you@cashflow.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                  <Mail className="h-4 w-4 text-slate-500" />
+                </div>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-transparent border border-slate-400/50 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:bg-white/10 focus:ring-2 focus:ring-blue-500/30 transition-all duration-200"
+                  placeholder="you@manufacturer.club"
+                  required
+                />
+              </div>
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-xs font-medium text-blue-200/70 mb-1.5">
+            {/* Password Field */}
+            <div className="space-y-1.5">
+              <label htmlFor="password" className="text-sm font-medium text-slate-700 block">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                required
-                className="w-full h-11 px-4 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/25 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-slate-500" />
+                </div>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-transparent border border-slate-400/50 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:bg-white/10 focus:ring-2 focus:ring-blue-500/30 transition-all duration-200"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-11 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-medium text-sm rounded-lg transition-all duration-200 flex items-center justify-center shadow-lg shadow-blue-600/25 hover:shadow-blue-500/40"
+              className="w-full mt-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-medium py-2.5 rounded-xl shadow-lg shadow-blue-600/20 transition-all duration-200 flex items-center justify-center gap-2 group"
             >
               {loading ? (
                 <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
@@ -118,41 +333,44 @@ export default function LoginPage() {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
               ) : (
-                "Sign In"
+                <>
+                  Sign In
+                  <LogIn className="w-4 h-4 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                </>
               )}
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-white/10">
-            <p className="text-[11px] text-blue-200/40 text-center mb-3">Demo Credentials (password: Change@123)</p>
-            <div className="grid grid-cols-2 gap-1.5">
-              {[
-                { email: "accountant@cashflow.com", label: "Accountant" },
-                { email: "sample.pm@cashflow.com", label: "Sample PM" },
-                { email: "production@cashflow.com", label: "Production PM" },
-                { email: "merch@cashflow.com", label: "Merchandiser" },
-                { email: "manager@cashflow.com", label: "Store Mgr" },
-                { email: "runner@cashflow.com", label: "Runner" },
-                { email: "ceo@cashflow.com", label: "CEO" },
-              ].map((cred) => (
+          {/* Demo Credentials */}
+          <div className="mt-8 pt-6 border-t border-slate-400/30">
+            <p className="text-xs font-medium text-slate-600 text-center mb-4 uppercase tracking-wider">
+              Demo Roles (pw: Change@123)
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              {DEMO_ROLES.map((cred) => (
                 <button
                   key={cred.email}
+                  onClick={() => setDemoRole(cred.email)}
                   type="button"
-                  onClick={() => {
-                    setEmail(cred.email);
-                    setPassword("Change@123");
-                  }}
-                  className="px-3 py-1.5 text-[11px] font-medium text-blue-200/60 bg-white/5 hover:bg-white/10 border border-white/5 rounded-md transition-all truncate"
+                  className="text-xs font-medium text-slate-700 bg-transparent hover:bg-slate-300/30 border border-slate-400/50 py-2.5 rounded-lg transition-colors"
                 >
                   {cred.label}
                 </button>
               ))}
+              <button
+                onClick={() => setDemoRole("ceo@demo.com")}
+                type="button"
+                className="col-span-2 text-xs font-medium text-blue-700 bg-transparent hover:bg-blue-500/10 border border-blue-400/50 py-2.5 rounded-lg transition-colors"
+              >
+                CEO
+              </button>
             </div>
           </div>
         </div>
 
-        <p className="text-center mt-6 text-[11px] text-blue-200/30">
-          Garment Manufacturing Management System
+        {/* Footer */}
+        <p className="text-center text-xs text-slate-500 mt-8 font-medium">
+          &copy; 2026 The Manufacturer Club Systems
         </p>
       </div>
     </div>

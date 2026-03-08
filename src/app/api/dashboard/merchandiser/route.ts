@@ -8,8 +8,8 @@ export async function GET() {
 
     const [assignedOrders, draftTechPacks, completedTechPacks] = await Promise.all([
         prisma.order.count({ where: { assigned_merchandiser_id: auth.user.id } }),
-        prisma.techPack.count({ where: { merchandiser_id: auth.user.id, status: "DRAFT" } }),
-        prisma.techPack.count({ where: { merchandiser_id: auth.user.id, status: "COMPLETED" } }),
+        prisma.techPack.count({ where: { merchandiser_id: auth.user.id, status: "IN_PROGRESS" } }),
+        prisma.techPack.count({ where: { merchandiser_id: auth.user.id, status: "BUYER_APPROVED" } }),
     ]);
 
     return NextResponse.json({ assignedOrders, draftTechPacks, completedTechPacks });
