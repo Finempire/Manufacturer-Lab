@@ -1,0 +1,66 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Linode
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Linode server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.LINODE_HOST }}
+          username: ${{ secrets.LINODE_USER }}
+          key: ${{ secrets.LINODE_SSH_KEY }}
+          script: |
+            set -e
+
+            APP_DIR="/opt/cashflow"
+
+            # Clone or pull latest code
+            if [ ! -d "$APP_DIR" ]; then
+              git clone --branch main https://github.com/${{ github.repository }}.git "$APP_DIR"
+            else
+              cd "$APP_DIR"
+              git fetch origin main
+              git reset --hard origin/main
+            fi
+
+            cd "$APP_DIR"
+
+            # Ensure .env exists (created during initial setup)
+            if [ ! -f .env ]; then
+              echo "ERROR: .env file not found. Run initial setup first."
+              exit 1
+            fi
+
+            # Build and restart containers
+            docker compose build --no-cache
+            docker compose up -d
+
+            # Wait for app to be ready
+            echo "Waiting for app to start..."
+            sleep 10
+
+            # Run database migrations
+            docker compose exec -T web npx prisma db push --accept-data-loss 2>/dev/null || \
+              docker compose run --rm -e DATABASE_URL="$DATABASE_URL" --entrypoint "" web npx prisma db push --accept-data-loss
+
+            # Health check
+            for i in $(seq 1 5); do
+              if curl -sf http://localhost:3000 > /dev/null 2>&1; then
+                echo "Deployment successful! App is running."
+                exit 0
+              fi
+              echo "Attempt $i: App not ready yet, waiting..."
+              sleep 5
+            done
+
+            echo "WARNING: App may not be fully ready. Check logs with: docker compose logs web"
