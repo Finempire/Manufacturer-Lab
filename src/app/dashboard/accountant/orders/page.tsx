@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Plus, Eye, X, Trash2 } from "lucide-react";
+import { Plus, Eye, Pencil, X, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { useColumnResize } from "@/hooks/useColumnResize";
@@ -197,9 +197,14 @@ export default function OrdersList() {
                                             </span>
                                         </td>
                                         <td className="px-4 py-3 text-center">
-                                            <Link href={`/dashboard/accountant/orders/${order.id}`} className="text-blue-600 hover:text-blue-800">
-                                                <Eye className="w-4 h-4 mx-auto" />
-                                            </Link>
+                                            <div className="flex items-center justify-center gap-2">
+                                                <Link href={`/dashboard/accountant/orders/${order.id}`} className="text-blue-600 hover:text-blue-800" title="View">
+                                                    <Eye className="w-4 h-4" />
+                                                </Link>
+                                                <Link href={`/dashboard/accountant/orders/${order.id}/edit`} className="text-gray-500 hover:text-blue-600" title="Edit">
+                                                    <Pencil className="w-4 h-4" />
+                                                </Link>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))

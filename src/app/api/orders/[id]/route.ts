@@ -78,15 +78,65 @@ export async function PUT(
 
     try {
         const body = await req.json();
-        const { status, assigned_merchandiser_id, remarks, shipping_date } = body;
+        const { status, assigned_merchandiser_id, remarks, shipping_date, buyer_id, order_date, order_type, lines } = body;
 
         const existingOrder = await prisma.order.findUnique({
             where: { id: params.id },
+            include: { lines: true },
         });
         if (!existingOrder) {
             return NextResponse.json({ error: "Order not found" }, { status: 404 });
         }
 
+        // Full edit (with lines) — only ACCOUNTANT can do this
+        if (lines && Array.isArray(lines)) {
+            if (auth.user.role !== "ACCOUNTANT") {
+                return NextResponse.json({ error: "Only accountants can edit order details" }, { status: 403 });
+            }
+
+            const totalAmount = lines.reduce((sum: number, l: { amount: number }) => sum + Number(l.amount), 0);
+
+            const order = await prisma.$transaction(async (tx) => {
+                // Delete old lines
+                await tx.orderLine.deleteMany({ where: { order_id: params.id } });
+
+                // Update order + create new lines
+                return tx.order.update({
+                    where: { id: params.id },
+                    data: {
+                        buyer_id: buyer_id || existingOrder.buyer_id,
+                        order_date: order_date ? new Date(order_date) : existingOrder.order_date,
+                        shipping_date: shipping_date ? new Date(shipping_date) : existingOrder.shipping_date,
+                        order_type: order_type || existingOrder.order_type,
+                        remarks: remarks !== undefined ? remarks : existingOrder.remarks,
+                        total_amount: totalAmount,
+                        lines: {
+                            create: lines.map((l: { style_id: string; description?: string; quantity: number; rate: number; amount: number }) => ({
+                                style_id: l.style_id,
+                                description: l.description || "",
+                                quantity: Number(l.quantity),
+                                rate: Number(l.rate),
+                                amount: Number(l.amount),
+                            })),
+                        },
+                    },
+                    include: { lines: true, buyer: true },
+                });
+            });
+
+            await createAuditLog({
+                entityType: "ORDER",
+                entityId: order.id,
+                action: "ORDER_EDITED",
+                performedBy: auth.user.id,
+                previousState: JSON.stringify({ total_amount: existingOrder.total_amount, lines_count: existingOrder.lines.length }),
+                newState: JSON.stringify({ total_amount: order.total_amount, lines_count: order.lines.length }),
+            });
+
+            return NextResponse.json(order);
+        }
+
+        // Partial update (status, merchandiser, remarks, shipping_date)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const updateData: Record<string, any> = {};
         if (status) updateData.status = status;
