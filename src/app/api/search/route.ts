@@ -110,7 +110,7 @@ export async function GET(req: NextRequest) {
       id: b.id,
       type: "buyer",
       title: b.name,
-      subtitle: b.brand_code,
+      subtitle: b.brand_code ?? "",
     });
   }
 
@@ -120,7 +120,7 @@ export async function GET(req: NextRequest) {
       type: "style",
       title: s.style_code,
       subtitle: s.style_name,
-      meta: s.category,
+      meta: s.category ?? undefined,
     });
   }
 
