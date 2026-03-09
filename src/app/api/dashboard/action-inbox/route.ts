@@ -33,7 +33,7 @@ async function getAccountantActions(): Promise<ActionItem[]> {
     const [pendingPurchases, pendingPayments, pendingExpenses, unassignedOrders] = await Promise.all([
         prisma.purchase.findMany({
             where: { status: "INVOICE_SUBMITTED" },
-            include: { vendor: { select: { name: true } }, material_request: { select: { request_no: true, order: { select: { order_no: true } } } } },
+            include: { vendor: { select: { name: true } }, request: { select: { request_no: true, order: { select: { order_no: true } } } } },
             orderBy: { created_at: "asc" },
             take: 20,
         }),
@@ -62,7 +62,7 @@ async function getAccountantActions(): Promise<ActionItem[]> {
         items.push({
             id: p.id, type: "purchase",
             title: `Review Purchase — ${p.vendor.name}`,
-            subtitle: p.material_request?.order?.order_no || p.material_request?.request_no || "",
+            subtitle: p.request?.order?.order_no || p.request?.request_no || "",
             action: "Approve / Reject",
             href: `/dashboard/accountant/purchases-review`,
             priority: priority(days),
@@ -76,7 +76,7 @@ async function getAccountantActions(): Promise<ActionItem[]> {
         items.push({
             id: p.id, type: "purchase",
             title: `Payment Due — ${p.vendor.name}`,
-            subtitle: `₹${p.total_amount.toLocaleString("en-IN")}`,
+            subtitle: `₹${p.invoice_amount.toLocaleString("en-IN")}`,
             action: "Make Payment",
             href: `/dashboard/accountant/payments`,
             priority: priority(days),
@@ -379,14 +379,14 @@ async function getRunnerActions(userId: string): Promise<ActionItem[]> {
 
     const [pendingPurchases, pendingConfirmations] = await Promise.all([
         prisma.materialRequest.findMany({
-            where: { runner_id: userId, status: "PENDING_PURCHASE" },
+            where: { assigned_runner_id: userId, status: "PENDING_PURCHASE" },
             include: { order: { select: { order_no: true } } },
             orderBy: { created_at: "asc" },
             take: 20,
         }),
-        prisma.purchaseLine.findMany({
-            where: { purchase: { runner_id: userId }, confirm_status: "NOT_CONFIRMED" },
-            include: { purchase: { include: { vendor: { select: { name: true } } } }, material: { select: { name: true } } },
+        prisma.vendorConfirmation.findMany({
+            where: { runner_id: userId, status: "NOT_CONFIRMED" },
+            include: { purchase: { include: { vendor: { select: { name: true } } } } },
             orderBy: { created_at: "asc" },
             take: 20,
         }),
@@ -406,16 +406,16 @@ async function getRunnerActions(userId: string): Promise<ActionItem[]> {
         });
     }
 
-    for (const pl of pendingConfirmations) {
-        const days = daysSince(pl.created_at);
+    for (const vc of pendingConfirmations) {
+        const days = daysSince(vc.created_at);
         items.push({
-            id: pl.id, type: "confirmation",
-            title: `Confirm Delivery — ${pl.material.name}`,
-            subtitle: pl.purchase.vendor.name,
+            id: vc.id, type: "confirmation",
+            title: `Confirm Delivery — ${vc.purchase.purchase_no}`,
+            subtitle: vc.purchase.vendor.name,
             action: "Confirm with Vendor",
             href: `/dashboard/runner/my-purchases`,
             priority: priority(days),
-            pending_since: pl.created_at.toISOString(),
+            pending_since: vc.created_at.toISOString(),
             days_pending: days,
         });
     }
