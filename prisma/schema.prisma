@@ -124,6 +124,45 @@ enum ExpenseCategory {
   MISCELLANEOUS
 }
 
+enum BlockerCode {
+  WAITING_PM_ACCEPTANCE
+  WAITING_MERCH_ACCEPTANCE
+  WAITING_TECHPACK_SUBMISSION
+  WAITING_PM_REVIEW
+  WAITING_BUYER_DECISION
+  WAITING_STORE_ACCEPTANCE
+  WAITING_PURCHASE_REQUEST
+  WAITING_RUNNER_ACCEPTANCE
+  WAITING_INVOICE_UPLOAD
+  WAITING_ACCOUNTANT_APPROVAL
+  WAITING_PAYMENT
+  WAITING_VENDOR_CONFIRMATION
+  WAITING_FINAL_TAX_INVOICE
+  WAITING_EXPENSE_COMPLETION
+  WAITING_PRODUCTION_ACCEPTANCE
+  WAITING_FINAL_SIGNOFF
+}
+
+enum ExceptionFlag {
+  MISSING_DOCUMENT
+  OVERDUE_REQUIRED_DATE
+  PENDING_TAX_INVOICE
+  VENDOR_MISMATCH
+  BLOCKED_BY_APPROVAL
+  REOPENED_ITEM
+  HIGH_REVISION_COUNT
+  DELAYED_SHIPPING_RISK
+}
+
+enum CommentEntityType {
+  ORDER
+  TECH_PACK
+  MATERIAL_REQUIREMENT
+  MATERIAL_REQUEST
+  PURCHASE
+  EXPENSE_REQUEST
+}
+
 // ─── MODELS ───
 
 model User {
@@ -168,6 +207,17 @@ model User {
   raised_expenses               ExpenseRequest[]     @relation("ExpenseRaisedBy")
   notifications                 Notification[]       @relation("UserNotification")
   audit_logs                    AuditLog[]           @relation("AuditLogUser")
+  reopened_orders               Order[]              @relation("OrderReopenedBy")
+  next_action_orders            Order[]              @relation("OrderNextActionUser")
+  reopened_tech_packs           TechPack[]           @relation("TechPackReopenedBy")
+  reopened_purchases            Purchase[]           @relation("PurchaseReopenedBy")
+  reopened_expenses             ExpenseRequest[]     @relation("ExpenseReopenedBy")
+  comments                      Comment[]            @relation("CommentAuthor")
+  mentioned_in_comments         CommentMention[]     @relation("MentionedUser")
+  saved_filters                 SavedFilter[]        @relation("UserSavedFilter")
+  recent_items                  RecentItem[]         @relation("UserRecentItem")
+  sent_reminders                Reminder[]           @relation("ReminderSentBy")
+  received_reminders            Reminder[]           @relation("ReminderTargetUser")
 
   @@index([role])
   @@index([is_active])
@@ -291,6 +341,23 @@ model Order {
   production_completed_at     DateTime?
   production_completed_by_id  String?
   production_completion_notes String?
+  // ─── Operational Control Fields ───
+  pending_since_at      DateTime?
+  next_action_role      Role?
+  next_action_user_id   String?
+  next_action_label     String?
+  blocker_code          BlockerCode?
+  blocker_note          String?
+  overdue_flag          Boolean      @default(false)
+  overdue_reason        String?
+  last_activity_at      DateTime?
+  entered_stage_at      DateTime?
+  sla_due_at            DateTime?
+  sla_breached          Boolean      @default(false)
+  exception_flags       ExceptionFlag[]
+  reopened_at           DateTime?
+  reopened_by_id        String?
+  reopen_reason         String?
   created_at                  DateTime    @default(now())
   updated_at                  DateTime    @updatedAt
 
@@ -303,11 +370,14 @@ model Order {
   material_completed_by User?    @relation("OrderMaterialCompletedBy", fields: [material_completed_by_id], references: [id])
   production_started_by User?    @relation("OrderProductionStartedBy", fields: [production_started_by_id], references: [id])
   production_completed_by User?  @relation("OrderProductionCompletedBy", fields: [production_completed_by_id], references: [id])
+  reopened_by           User?    @relation("OrderReopenedBy", fields: [reopened_by_id], references: [id])
+  next_action_user      User?    @relation("OrderNextActionUser", fields: [next_action_user_id], references: [id])
   lines                 OrderLine[]
   tech_packs            TechPack[]
   material_requirements MaterialRequirement[]
   material_requests     MaterialRequest[]
   expenses              ExpenseRequest[]
+  comments              Comment[]  @relation("OrderComments")
 
   @@index([buyer_id])
   @@index([status])
@@ -315,6 +385,9 @@ model Order {
   @@index([created_by])
   @@index([created_at])
   @@index([assigned_merchandiser_id])
+  @@index([blocker_code])
+  @@index([overdue_flag])
+  @@index([sla_breached])
 }
 
 model OrderLine {
@@ -354,16 +427,34 @@ model TechPack {
   pm_rejection_notes      String?
   revision_count          Int            @default(0)
   completed_at            DateTime?
+  // ─── Operational Control Fields ───
+  pending_since_at      DateTime?
+  next_action_role      Role?
+  next_action_label     String?
+  blocker_code          BlockerCode?
+  blocker_note          String?
+  overdue_flag          Boolean        @default(false)
+  last_activity_at      DateTime?
+  entered_stage_at      DateTime?
+  sla_due_at            DateTime?
+  sla_breached          Boolean        @default(false)
+  exception_flags       ExceptionFlag[]
+  reopened_at           DateTime?
+  reopened_by_id        String?
+  reopen_reason         String?
   created_at              DateTime       @default(now())
   updated_at              DateTime       @updatedAt
 
   order        Order             @relation(fields: [order_id], references: [id])
   merchandiser User?             @relation("TechPackMerchandiser", fields: [merchandiser_id], references: [id])
+  reopened_by  User?             @relation("TechPackReopenedBy", fields: [reopened_by_id], references: [id])
   revisions    TechPackRevision[]
+  comments     Comment[]         @relation("TechPackComments")
 
   @@index([order_id])
   @@index([merchandiser_id])
   @@index([status])
+  @@index([blocker_code])
 }
 
 model TechPackRevision {
@@ -396,6 +487,18 @@ model MaterialRequirement {
   special_instructions  String?
   status                MaterialRequirementStatus @default(PENDING_STORE_ACCEPTANCE)
   decline_reason        String?
+  // ─── Operational Control Fields ───
+  pending_since_at      DateTime?
+  next_action_role      Role?
+  next_action_label     String?
+  blocker_code          BlockerCode?
+  blocker_note          String?
+  overdue_flag          Boolean                   @default(false)
+  last_activity_at      DateTime?
+  entered_stage_at      DateTime?
+  sla_due_at            DateTime?
+  sla_breached          Boolean                   @default(false)
+  exception_flags       ExceptionFlag[]
   created_at            DateTime                  @default(now())
   updated_at            DateTime                  @updatedAt
 
@@ -406,6 +509,7 @@ model MaterialRequirement {
   store_manager      User?                     @relation("MaterialRequirementSM", fields: [store_manager_id], references: [id])
   lines              MaterialRequirementLine[]
   requests           MaterialRequest[]
+  comments           Comment[]                 @relation("MaterialRequirementComments")
 
   @@index([order_id])
   @@index([buyer_id])
@@ -413,6 +517,7 @@ model MaterialRequirement {
   @@index([production_manager_id])
   @@index([store_manager_id])
   @@index([status])
+  @@index([blocker_code])
 }
 
 model MaterialRequirementLine {
@@ -443,6 +548,18 @@ model MaterialRequest {
   preferred_vendor_id     String?
   assigned_runner_id      String
   status                  PurchaseStatus @default(PENDING_PURCHASE)
+  // ─── Operational Control Fields ───
+  pending_since_at      DateTime?
+  next_action_role      Role?
+  next_action_label     String?
+  blocker_code          BlockerCode?
+  blocker_note          String?
+  overdue_flag          Boolean        @default(false)
+  last_activity_at      DateTime?
+  entered_stage_at      DateTime?
+  sla_due_at            DateTime?
+  sla_breached          Boolean        @default(false)
+  exception_flags       ExceptionFlag[]
   created_at              DateTime       @default(now())
   updated_at              DateTime       @updatedAt
 
@@ -455,6 +572,7 @@ model MaterialRequest {
   runner           User                 @relation("MaterialRequestRunner", fields: [assigned_runner_id], references: [id])
   lines            MaterialRequestLine[]
   purchases        Purchase[]
+  comments         Comment[]            @relation("MaterialRequestComments")
 
   @@index([manager_id])
   @@index([assigned_runner_id])
@@ -462,6 +580,7 @@ model MaterialRequest {
   @@index([order_id])
   @@index([buyer_id])
   @@index([style_id])
+  @@index([blocker_code])
 }
 
 model MaterialRequestLine {
@@ -498,20 +617,38 @@ model Purchase {
   tax_invoice_path         String?
   accountant_notes         String?
   status                   PurchaseStatus @default(INVOICE_SUBMITTED)
+  // ─── Operational Control Fields ───
+  pending_since_at       DateTime?
+  next_action_role       Role?
+  next_action_label      String?
+  blocker_code           BlockerCode?
+  blocker_note           String?
+  overdue_flag           Boolean        @default(false)
+  last_activity_at       DateTime?
+  entered_stage_at       DateTime?
+  sla_due_at             DateTime?
+  sla_breached           Boolean        @default(false)
+  exception_flags        ExceptionFlag[]
+  reopened_at            DateTime?
+  reopened_by_id         String?
+  reopen_reason          String?
   created_at               DateTime       @default(now())
   updated_at               DateTime       @updatedAt
 
   request      MaterialRequest     @relation(fields: [request_id], references: [id])
   runner       User                @relation("PurchaseRunner", fields: [runner_id], references: [id])
   vendor       Vendor              @relation("PurchaseVendor", fields: [vendor_id], references: [id])
+  reopened_by  User?               @relation("PurchaseReopenedBy", fields: [reopened_by_id], references: [id])
   lines        PurchaseLine[]
   payments     Payment[]
   confirmation VendorConfirmation?
+  comments     Comment[]           @relation("PurchaseComments")
 
   @@index([request_id])
   @@index([runner_id])
   @@index([vendor_id])
   @@index([status])
+  @@index([blocker_code])
 }
 
 model PurchaseLine {
@@ -591,20 +728,38 @@ model ExpenseRequest {
   accountant_notes   String?
   rejection_reason   String?
   status             ExpenseStatus   @default(PENDING_APPROVAL)
+  // ─── Operational Control Fields ───
+  pending_since_at   DateTime?
+  next_action_role   Role?
+  next_action_label  String?
+  blocker_code       BlockerCode?
+  blocker_note       String?
+  overdue_flag       Boolean         @default(false)
+  last_activity_at   DateTime?
+  entered_stage_at   DateTime?
+  sla_due_at         DateTime?
+  sla_breached       Boolean         @default(false)
+  exception_flags    ExceptionFlag[]
+  reopened_at        DateTime?
+  reopened_by_id     String?
+  reopen_reason      String?
   created_at         DateTime        @default(now())
   updated_at         DateTime        @updatedAt
 
-  raised_by User    @relation("ExpenseRaisedBy", fields: [raised_by_id], references: [id])
-  buyer     Buyer   @relation("ExpenseBuyer", fields: [buyer_id], references: [id])
-  order     Order   @relation(fields: [order_id], references: [id])
-  style     Style?  @relation("ExpenseStyle", fields: [style_id], references: [id])
-  vendor    Vendor? @relation("ExpenseVendor", fields: [vendor_id], references: [id])
+  raised_by   User    @relation("ExpenseRaisedBy", fields: [raised_by_id], references: [id])
+  buyer       Buyer   @relation("ExpenseBuyer", fields: [buyer_id], references: [id])
+  order       Order   @relation(fields: [order_id], references: [id])
+  style       Style?  @relation("ExpenseStyle", fields: [style_id], references: [id])
+  vendor      Vendor? @relation("ExpenseVendor", fields: [vendor_id], references: [id])
+  reopened_by User?   @relation("ExpenseReopenedBy", fields: [reopened_by_id], references: [id])
+  comments    Comment[] @relation("ExpenseComments")
 
   @@index([raised_by_id])
   @@index([status])
   @@index([buyer_id])
   @@index([order_id])
   @@index([style_id])
+  @@index([blocker_code])
 }
 
 model Notification {
@@ -640,4 +795,135 @@ model AuditLog {
   @@index([entity_type, entity_id])
   @@index([performed_by])
   @@index([created_at])
+}
+
+// ─── COMMENTS & MENTIONS ───
+
+model Comment {
+  id                      String            @id @default(uuid())
+  entity_type             CommentEntityType
+  author_id               String
+  content                 String
+  // Nullable FK columns — only one is set per comment
+  order_id                String?
+  tech_pack_id            String?
+  material_requirement_id String?
+  material_request_id     String?
+  purchase_id             String?
+  expense_id              String?
+  created_at              DateTime          @default(now())
+  updated_at              DateTime          @updatedAt
+
+  author               User                 @relation("CommentAuthor", fields: [author_id], references: [id])
+  mentions             CommentMention[]
+  order                Order?               @relation("OrderComments", fields: [order_id], references: [id])
+  tech_pack            TechPack?            @relation("TechPackComments", fields: [tech_pack_id], references: [id])
+  material_requirement MaterialRequirement? @relation("MaterialRequirementComments", fields: [material_requirement_id], references: [id])
+  material_request     MaterialRequest?     @relation("MaterialRequestComments", fields: [material_request_id], references: [id])
+  purchase             Purchase?            @relation("PurchaseComments", fields: [purchase_id], references: [id])
+  expense              ExpenseRequest?      @relation("ExpenseComments", fields: [expense_id], references: [id])
+
+  @@index([entity_type, order_id])
+  @@index([entity_type, tech_pack_id])
+  @@index([entity_type, purchase_id])
+  @@index([entity_type, expense_id])
+  @@index([author_id])
+  @@index([created_at])
+}
+
+model CommentMention {
+  id         String   @id @default(uuid())
+  comment_id String
+  user_id    String
+  created_at DateTime @default(now())
+
+  comment Comment @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+  user    User    @relation("MentionedUser", fields: [user_id], references: [id])
+
+  @@unique([comment_id, user_id])
+  @@index([user_id])
+}
+
+// ─── SAVED FILTERS ───
+
+model SavedFilter {
+  id         String   @id @default(uuid())
+  user_id    String
+  page       String   // e.g. "orders", "purchases", "expenses"
+  name       String
+  filter_json String  // JSON serialized filter state
+  is_default Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation("UserSavedFilter", fields: [user_id], references: [id])
+
+  @@index([user_id, page])
+}
+
+// ─── RECENT ITEMS ───
+
+model RecentItem {
+  id          String   @id @default(uuid())
+  user_id     String
+  entity_type String   // "order", "purchase", "expense", "tech_pack"
+  entity_id   String
+  entity_label String  // display label e.g. "ORD-2026-0012"
+  viewed_at   DateTime @default(now())
+
+  user User @relation("UserRecentItem", fields: [user_id], references: [id])
+
+  @@unique([user_id, entity_type, entity_id])
+  @@index([user_id, viewed_at])
+}
+
+// ─── REMINDERS ───
+
+model Reminder {
+  id             String   @id @default(uuid())
+  entity_type    String
+  entity_id      String
+  sent_by_id     String
+  target_user_id String
+  message        String?
+  is_auto        Boolean  @default(false)
+  created_at     DateTime @default(now())
+
+  sent_by     User @relation("ReminderSentBy", fields: [sent_by_id], references: [id])
+  target_user User @relation("ReminderTargetUser", fields: [target_user_id], references: [id])
+
+  @@index([target_user_id])
+  @@index([entity_type, entity_id])
+}
+
+// ─── STAGE DURATION TRACKING ───
+
+model StageDuration {
+  id          String    @id @default(uuid())
+  entity_type String    // "order", "tech_pack", "purchase", etc.
+  entity_id   String
+  stage       String    // status enum value
+  entered_at  DateTime
+  exited_at   DateTime?
+  duration_hours Float?
+
+  @@index([entity_type, entity_id])
+  @@index([entity_type, stage])
+}
+
+// ─── DUPLICATE WARNING LOG ───
+
+model DuplicateWarning {
+  id              String   @id @default(uuid())
+  warning_type    String   // "DUPLICATE_INVOICE", "DUPLICATE_EXPENSE", "DUPLICATE_MATERIAL_REQUEST"
+  entity_type     String
+  entity_id       String
+  duplicate_of_id String?
+  details         String   // JSON with match details
+  dismissed       Boolean  @default(false)
+  dismissed_by_id String?
+  created_at      DateTime @default(now())
+
+  @@index([entity_type, entity_id])
+  @@index([warning_type])
 }
