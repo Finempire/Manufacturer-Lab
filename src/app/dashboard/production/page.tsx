@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ShoppingCart, FileText, ClipboardList, Receipt } from "lucide-react";
+import ActionInbox from "@/components/ActionInbox";
 
 interface DashboardData {
     newOrders: number;
@@ -39,6 +40,7 @@ export default function ProductionDashboard() {
                     </div>
                 ))}
             </div>
+            <ActionInbox />
         </div>
     );
 }

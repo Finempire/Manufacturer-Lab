@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ShoppingCart, FileText, Package, Receipt, Factory } from "lucide-react";
 import Link from "next/link";
+import ActionInbox from "@/components/ActionInbox";
 
 interface DashboardData {
     activeOrders: number;
@@ -49,6 +50,8 @@ export default function SamplePMDashboard() {
                     </Link>
                 ))}
             </div>
+
+            <ActionInbox />
         </div>
     );
 }

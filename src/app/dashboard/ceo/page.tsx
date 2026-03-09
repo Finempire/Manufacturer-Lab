@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BarChart3, ShoppingCart, CreditCard, Receipt } from "lucide-react";
+import ActionInbox from "@/components/ActionInbox";
 
 interface DashboardData { totalOrders: number; activeOrders: number; totalPaid: number; totalExpenses: number; }
 
@@ -31,6 +32,7 @@ export default function CeoDashboard() {
                     </div>
                 ))}
             </div>
+            <ActionInbox />
         </div>
     );
 }

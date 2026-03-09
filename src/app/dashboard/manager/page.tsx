@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ClipboardList, Package, Receipt } from "lucide-react";
+import ActionInbox from "@/components/ActionInbox";
 
 interface DashboardData { materialRequirements: number; pendingRequests: number; myExpenses: number; }
 
@@ -30,6 +31,7 @@ export default function StoreManagerDashboard() {
                     </div>
                 ))}
             </div>
+            <ActionInbox />
         </div>
     );
 }

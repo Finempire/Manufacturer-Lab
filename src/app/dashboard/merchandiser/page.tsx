@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ShoppingCart, FileText, CheckCircle } from "lucide-react";
+import ActionInbox from "@/components/ActionInbox";
 
 interface DashboardData { assignedOrders: number; draftTechPacks: number; completedTechPacks: number; }
 
@@ -30,6 +31,7 @@ export default function MerchandiserDashboard() {
                     </div>
                 ))}
             </div>
+            <ActionInbox />
         </div>
     );
 }
