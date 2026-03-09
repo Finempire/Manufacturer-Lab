@@ -127,7 +127,10 @@ export default function TopBar() {
       {/* Right Actions */}
       <div className="flex items-center gap-3">
         {/* Search Trigger */}
-        <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-slate-400 bg-slate-50 border border-slate-200 rounded-md hover:bg-slate-100 hover:text-slate-500 transition-colors">
+        <button
+          onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }))}
+          className="flex items-center gap-2 px-3 py-1.5 text-sm text-slate-400 bg-slate-50 border border-slate-200 rounded-md hover:bg-slate-100 hover:text-slate-500 transition-colors"
+        >
           <Search className="w-3.5 h-3.5" />
           <span className="hidden lg:inline">Search...</span>
           <kbd className="hidden lg:inline text-[10px] font-mono px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400">Ctrl+K</kbd>

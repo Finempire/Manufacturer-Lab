@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ShoppingCart, CreditCard, Receipt, Package, FileText, Users } from "lucide-react";
+import ActionInbox from "@/components/ActionInbox";
 
 interface DashboardData {
     pendingPurchases: number;
@@ -69,6 +70,9 @@ export default function AccountantDashboard() {
                     );
                 })}
             </div>
+
+            {/* Action Inbox */}
+            <ActionInbox />
         </div>
     );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Truck, ShoppingCart, CheckCircle } from "lucide-react";
+import ActionInbox from "@/components/ActionInbox";
 
 interface DashboardData { pendingPurchases: number; myPurchases: number; pendingConfirmations: number; }
 
@@ -30,6 +31,7 @@ export default function RunnerDashboard() {
                     </div>
                 ))}
             </div>
+            <ActionInbox />
         </div>
     );
 }
