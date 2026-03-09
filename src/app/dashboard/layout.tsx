@@ -1,5 +1,6 @@
 import DashboardSidebar from "@/components/DashboardSidebar";
 import TopBar from "@/components/TopBar";
+import CommandPalette from "@/components/CommandPalette";
 
 export default function DashboardLayout({
     children,
@@ -15,6 +16,7 @@ export default function DashboardLayout({
                     <div className="px-6 py-6 max-w-7xl mx-auto">{children}</div>
                 </main>
             </div>
+            <CommandPalette />
         </div>
     );
 }
