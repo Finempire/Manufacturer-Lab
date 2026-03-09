@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { ArrowLeft, CheckCircle, Clock, Package, FileText, Play, Flag, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import OrderTimeline from "@/components/OrderTimeline";
+import OrderPipelineHeader from "@/components/OrderPipelineHeader";
 
 interface Merchandiser { id: string; name: string; }
 
@@ -128,6 +129,11 @@ export default function ProductionOrderDetail() {
                 <span className={`px-3 py-1.5 text-xs font-bold uppercase rounded-md ${STATUS_COLORS[order.status] || "bg-slate-100 text-slate-800"}`}>
                     {order.status.replace(/_/g, " ")}
                 </span>
+            </div>
+
+            {/* Horizontal Pipeline Timeline */}
+            <div className="bg-white rounded-lg border border-slate-200 px-4 py-3 shadow-sm">
+                <OrderPipelineHeader status={order.status} />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
