@@ -2,13 +2,22 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Plus, Eye, Pencil, X, Trash2 } from "lucide-react";
+import { Plus, Eye, Pencil, X, Trash2, Filter, Download } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { useColumnResize } from "@/hooks/useColumnResize";
 import AddBuyerModal from "@/components/AddBuyerModal";
 import AddStyleModal from "@/components/AddStyleModal";
 import StatusBadge from "@/components/StatusBadge";
+import { SavedFilters } from "@/components/SavedFilters";
+import { DatePresets } from "@/components/DatePresets";
+import { exportToExcel } from "@/lib/exportExcel";
+
+const ORDER_STATUSES = [
+    "ORDER_RECEIVED", "PENDING_PM_ACCEPTANCE", "MERCHANDISER_ASSIGNED", "TECH_PACK_IN_PROGRESS",
+    "TECH_PACK_COMPLETED", "MATERIAL_REQUIREMENT_SENT", "MATERIAL_IN_PROGRESS", "MATERIAL_COMPLETED",
+    "PRODUCTION_ACCEPTED", "UNDER_PRODUCTION", "PRODUCTION_COMPLETED", "COMPLETED", "CANCELLED"
+];
 
 interface Order {
     id: string;
@@ -19,6 +28,9 @@ interface Order {
     total_amount: number;
     status: string;
     merchandiser?: { name: string } | null;
+    blocker_code?: string | null;
+    pending_since_at?: string | null;
+    overdue_flag?: boolean;
 }
 
 interface Buyer { id: string; name: string; brand_code: string; }
@@ -31,6 +43,14 @@ export default function OrdersList() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const [drawerOpen, setDrawerOpen] = useState(false);
+
+    // Filter state
+    const [statusFilter, setStatusFilter] = useState("");
+    const [typeFilter, setTypeFilter] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [datePreset, setDatePreset] = useState("");
+    const [showFilters, setShowFilters] = useState(false);
+    const [currentFilters, setCurrentFilters] = useState<Record<string, unknown>>({});
 
     // New Order form state
     const [buyers, setBuyers] = useState<Buyer[]>([]);
@@ -132,6 +152,43 @@ export default function OrdersList() {
         }
     };
 
+    // Filter logic
+    const filteredOrders = orders.filter((order) => {
+        if (statusFilter && order.status !== statusFilter) return false;
+        if (typeFilter && order.order_type !== typeFilter) return false;
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            if (!order.order_no.toLowerCase().includes(q) &&
+                !order.buyer?.name?.toLowerCase().includes(q) &&
+                !order.merchandiser?.name?.toLowerCase().includes(q)) return false;
+        }
+        return true;
+    });
+
+    const handleApplyFilter = useCallback((filters: Record<string, unknown>) => {
+        setStatusFilter((filters.status as string) || "");
+        setTypeFilter((filters.type as string) || "");
+        setSearchQuery((filters.search as string) || "");
+        setCurrentFilters(filters);
+    }, []);
+
+    const handleDatePreset = (from: string, to: string) => {
+        setDatePreset(from);
+        // In a real app, would pass to API for server-side filtering
+    };
+
+    const handleExport = () => {
+        const exportData = filteredOrders.map(o => ({
+            "Order No": o.order_no,
+            "Date": format(new Date(o.order_date), "dd MMM yyyy"),
+            "Buyer": o.buyer?.name,
+            "Type": o.order_type,
+            "Amount": o.total_amount,
+            "Status": o.status.replace(/_/g, " "),
+        }));
+        exportToExcel(exportData, "Orders_Export");
+    };
+
     const ResizeHandle = ({ colKey }: { colKey: string }) => (
         <div
             onMouseDown={(ev) => startResize(colKey, ev)}
@@ -151,17 +208,68 @@ export default function OrdersList() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-lg font-semibold tracking-tight text-slate-900">Orders</h1>
-                    <p className="text-sm text-slate-500 mt-0.5">{orders.length} orders total</p>
+                    <p className="text-sm text-slate-500 mt-0.5">{filteredOrders.length} of {orders.length} orders</p>
                 </div>
-                <button onClick={openDrawer} className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors">
-                    <Plus className="w-4 h-4" /> New Order
-                </button>
+                <div className="flex items-center gap-2">
+                    <button onClick={handleExport} disabled={filteredOrders.length === 0} className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-md hover:bg-slate-50 disabled:opacity-50">
+                        <Download className="w-4 h-4" /> Export
+                    </button>
+                    <button onClick={openDrawer} className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors">
+                        <Plus className="w-4 h-4" /> New Order
+                    </button>
+                </div>
+            </div>
+
+            {/* Filter Bar */}
+            <div className="bg-white rounded-lg border border-slate-200 p-3 space-y-3">
+                <div className="flex items-center gap-3 flex-wrap">
+                    <input
+                        type="text"
+                        placeholder="Search orders, buyers..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="h-8 px-3 text-sm border border-slate-200 rounded-md w-64 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                    />
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="h-8 px-2 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-blue-500/20"
+                    >
+                        <option value="">All Statuses</option>
+                        {ORDER_STATUSES.map(s => (
+                            <option key={s} value={s}>{s.replace(/_/g, " ")}</option>
+                        ))}
+                    </select>
+                    <select
+                        value={typeFilter}
+                        onChange={(e) => setTypeFilter(e.target.value)}
+                        className="h-8 px-2 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-blue-500/20"
+                    >
+                        <option value="">All Types</option>
+                        <option value="PRODUCTION">Production</option>
+                        <option value="SAMPLE">Sample</option>
+                    </select>
+                    <DatePresets onSelect={handleDatePreset} activePreset={datePreset} />
+                    {(statusFilter || typeFilter || searchQuery) && (
+                        <button
+                            onClick={() => { setStatusFilter(""); setTypeFilter(""); setSearchQuery(""); }}
+                            className="text-xs text-slate-500 hover:text-slate-700 underline"
+                        >
+                            Clear all
+                        </button>
+                    )}
+                </div>
+                <SavedFilters
+                    page="orders"
+                    currentFilters={{ status: statusFilter, type: typeFilter, search: searchQuery }}
+                    onApplyFilter={handleApplyFilter}
+                />
             </div>
 
             <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-slate-200">
-                        <thead className="bg-slate-50">
+                        <thead className="bg-slate-50 sticky top-0 z-10">
                             <tr>
                                 <th className="px-3 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Order No</th>
                                 <th className="px-3 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
@@ -175,15 +283,22 @@ export default function OrdersList() {
                         <tbody className="divide-y divide-slate-100">
                             {loading ? (
                                 <tr><td colSpan={7} className="px-3 py-12 text-center text-sm text-slate-400">Loading...</td></tr>
-                            ) : orders.length === 0 ? (
-                                <tr><td colSpan={7} className="px-3 py-12 text-center text-sm text-slate-400">No orders found. Create one to get started.</td></tr>
+                            ) : filteredOrders.length === 0 ? (
+                                <tr><td colSpan={7} className="px-3 py-12 text-center text-sm text-slate-400">{orders.length > 0 ? "No orders match your filters" : "No orders found. Create one to get started."}</td></tr>
                             ) : (
-                                orders.map((order) => (
-                                    <tr key={order.id} className="hover:bg-slate-50 transition-colors h-10">
-                                        <td className="px-3 py-2.5 text-sm font-medium font-mono text-slate-900">{order.order_no}</td>
+                                filteredOrders.map((order) => (
+                                    <tr key={order.id} className={`hover:bg-slate-50 transition-colors h-10 ${order.overdue_flag ? "bg-red-50/50" : ""}`}>
+                                        <td className="px-3 py-2.5">
+                                            <span className="text-sm font-medium font-mono text-slate-900">{order.order_no}</span>
+                                            {order.overdue_flag && <span className="ml-1 inline-block w-1.5 h-1.5 rounded-full bg-red-500" title="Overdue" />}
+                                        </td>
                                         <td className="px-3 py-2.5 text-sm text-slate-500">{format(new Date(order.order_date), "dd MMM yyyy")}</td>
                                         <td className="px-3 py-2.5 text-sm text-slate-700">{order.buyer?.name}</td>
-                                        <td className="px-3 py-2.5 text-sm text-slate-500">{order.order_type}</td>
+                                        <td className="px-3 py-2.5">
+                                            <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${order.order_type === "SAMPLE" ? "bg-violet-50 text-violet-700" : "bg-slate-100 text-slate-600"}`}>
+                                                {order.order_type}
+                                            </span>
+                                        </td>
                                         <td className="px-3 py-2.5 text-sm text-slate-900 text-right font-medium tabular-nums font-mono">
                                             {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(order.total_amount)}
                                         </td>

@@ -4,16 +4,8 @@ import { useSession, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Bell, Search, ChevronRight, LogOut, User } from "lucide-react";
-
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  is_read: boolean;
-  created_at: string;
-  entity_type?: string;
-}
+import { Search, ChevronRight, LogOut, User } from "lucide-react";
+import NotificationCenter from "./NotificationCenter";
 
 const ROLE_DASHBOARDS: Record<string, string> = {
   ACCOUNTANT: "/dashboard/accountant",
@@ -47,54 +39,16 @@ function getBreadcrumbs(pathname: string, role: string) {
   return crumbs;
 }
 
-function formatRelativeTime(dateStr: string) {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "Just now";
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  return `${days}d ago`;
-}
-
 export default function TopBar() {
   const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [showNotifs, setShowNotifs] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const notifRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const fetchNotifs = async () => {
-      try {
-        const [countRes, listRes] = await Promise.all([
-          fetch("/api/notifications?unread=true"),
-          fetch("/api/notifications?limit=10"),
-        ]);
-        if (countRes.ok) {
-          const data = await countRes.json();
-          setUnreadCount(data.count || 0);
-        }
-        if (listRes.ok) {
-          const data = await listRes.json();
-          setNotifications(Array.isArray(data) ? data.slice(0, 10) : data.notifications?.slice(0, 10) || []);
-        }
-      } catch { /* silent */ }
-    };
-    fetchNotifs();
-    const interval = setInterval(fetchNotifs, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Close popovers on outside click
+  // Close user menu on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (notifRef.current && !notifRef.current.contains(e.target as Node)) setShowNotifs(false);
       if (userRef.current && !userRef.current.contains(e.target as Node)) setShowUserMenu(false);
     };
     document.addEventListener("mousedown", handleClick);
@@ -136,56 +90,13 @@ export default function TopBar() {
           <kbd className="hidden lg:inline text-[10px] font-mono px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400">Ctrl+K</kbd>
         </button>
 
-        {/* Notification Bell */}
-        <div ref={notifRef} className="relative">
-          <button
-            onClick={() => { setShowNotifs(!showNotifs); setShowUserMenu(false); }}
-            className="relative p-1.5 text-slate-400 hover:text-slate-600 rounded-md hover:bg-slate-100 transition-colors"
-          >
-            <Bell className="w-[18px] h-[18px]" />
-            {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                {unreadCount > 9 ? "9+" : unreadCount}
-              </span>
-            )}
-          </button>
-
-          {showNotifs && (
-            <div className="absolute right-0 top-full mt-2 w-[380px] max-h-[480px] bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden z-50">
-              <div className="px-4 py-3 border-b border-slate-100">
-                <h3 className="text-sm font-semibold text-slate-900">Notifications</h3>
-              </div>
-              <div className="overflow-y-auto max-h-[400px]">
-                {notifications.length === 0 ? (
-                  <p className="px-4 py-8 text-center text-sm text-slate-400">No notifications</p>
-                ) : (
-                  notifications.map(n => (
-                    <div
-                      key={n.id}
-                      className={`px-4 py-3 border-b border-slate-50 hover:bg-slate-50 cursor-pointer ${
-                        !n.is_read ? "bg-blue-50/50 border-l-2 border-l-blue-400" : ""
-                      }`}
-                    >
-                      <p className="text-sm font-medium text-slate-900 line-clamp-1">{n.title}</p>
-                      <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">{n.message}</p>
-                      <p className="text-xs text-slate-400 mt-1">{formatRelativeTime(n.created_at)}</p>
-                    </div>
-                  ))
-                )}
-              </div>
-              <div className="px-4 py-2.5 border-t border-slate-100 bg-slate-50">
-                <button onClick={() => { setShowNotifs(false); }} className="text-xs font-medium text-blue-600 hover:text-blue-700">
-                  View All Notifications
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Notification Center */}
+        <NotificationCenter />
 
         {/* User Avatar */}
         <div ref={userRef} className="relative">
           <button
-            onClick={() => { setShowUserMenu(!showUserMenu); setShowNotifs(false); }}
+            onClick={() => { setShowUserMenu(!showUserMenu); }}
             className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-semibold hover:bg-slate-300 transition-colors"
           >
             {session.user.name?.charAt(0).toUpperCase()}
