@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Package } from "lucide-react";
 import { toast } from "sonner";
+import { SavedFilters } from "@/components/SavedFilters";
 
 interface Requirement {
     id: string;
@@ -29,6 +30,8 @@ const STATUS_COLORS: Record<string, string> = {
 export default function AccountantMaterialNeedsPage() {
     const [requirements, setRequirements] = useState<Requirement[]>([]);
     const [loading, setLoading] = useState(true);
+    const [statusFilter, setStatusFilter] = useState("");
+    const [filters, setFilters] = useState<Record<string, unknown>>({});
 
     useEffect(() => {
         fetch("/api/material-requirements")
@@ -37,11 +40,36 @@ export default function AccountantMaterialNeedsPage() {
             .catch(() => { toast.error("Failed to load"); setLoading(false); });
     }, []);
 
+    const handleApplyFilter = (f: Record<string, unknown>) => {
+        setFilters(f);
+        if (f.status) setStatusFilter(f.status as string);
+        else setStatusFilter("");
+    };
+
+    const displayed = requirements.filter(r => {
+        if (statusFilter && r.status !== statusFilter) return false;
+        return true;
+    });
+
     return (
         <div className="space-y-4">
             <div>
                 <h1 className="text-lg font-semibold tracking-tight text-slate-900">Material Needs</h1>
                 <p className="text-sm text-slate-500 mt-1">Overview of all material requirements across orders</p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+                <select
+                    value={statusFilter}
+                    onChange={(e) => { setStatusFilter(e.target.value); setFilters(prev => ({ ...prev, status: e.target.value || undefined })); }}
+                    className="h-9 px-3 text-sm border border-slate-300 rounded-lg bg-white"
+                >
+                    <option value="">All Statuses</option>
+                    {Object.keys(STATUS_COLORS).map(s => (
+                        <option key={s} value={s}>{s.replace(/_/g, " ")}</option>
+                    ))}
+                </select>
+                <SavedFilters page="accountant-material-needs" currentFilters={filters} onApplyFilter={handleApplyFilter} />
             </div>
 
             <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
@@ -60,12 +88,12 @@ export default function AccountantMaterialNeedsPage() {
                     <tbody className="divide-y divide-slate-100">
                         {loading ? (
                             <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-400">Loading...</td></tr>
-                        ) : requirements.length === 0 ? (
+                        ) : displayed.length === 0 ? (
                             <tr><td colSpan={7} className="px-4 py-12 text-center">
                                 <Package className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                                 <p className="text-sm text-slate-500">No material requirements</p>
                             </td></tr>
-                        ) : requirements.map(req => (
+                        ) : displayed.map(req => (
                             <tr key={req.id} className="hover:bg-slate-50">
                                 <td className="px-4 py-3 text-sm font-medium text-slate-900">{req.order.order_no}</td>
                                 <td className="px-4 py-3 text-sm text-slate-600">{req.buyer.name}</td>

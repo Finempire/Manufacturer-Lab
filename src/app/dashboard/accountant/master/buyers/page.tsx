@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
+import ExcelImport from "@/components/ExcelImport";
 
 interface Buyer {
     id: string;
@@ -60,9 +61,12 @@ export default function BuyersPage() {
                     <h1 className="text-lg font-semibold tracking-tight text-slate-900">Buyers</h1>
                     <p className="text-sm text-slate-500 mt-1">{buyers.length} buyers</p>
                 </div>
-                <button onClick={() => setShowModal(true)} className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
-                    <Plus className="w-4 h-4" /> Add Buyer
-                </button>
+                <div className="flex items-center gap-2">
+                    <ExcelImport entityType="buyers" onComplete={fetchBuyers} />
+                    <button onClick={() => setShowModal(true)} className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
+                        <Plus className="w-4 h-4" /> Add Buyer
+                    </button>
+                </div>
             </div>
 
             {/* Filter */}

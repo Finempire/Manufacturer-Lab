@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
+import ExcelImport from "@/components/ExcelImport";
 
 interface Material { id: string; sku_code: string | null; description: string; category: string; unit_of_measure: string; default_rate: number | null; }
 
@@ -34,9 +35,12 @@ export default function MaterialsPage() {
                     <h1 className="text-lg font-semibold tracking-tight text-slate-900">Materials</h1>
                     <p className="text-sm text-slate-500 mt-1">{materials.length} materials</p>
                 </div>
-                <button onClick={() => setShowModal(true)} className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm">
-                    <Plus className="w-4 h-4" /> Add Material
-                </button>
+                <div className="flex items-center gap-2">
+                    <ExcelImport entityType="materials" onComplete={fetchMaterials} />
+                    <button onClick={() => setShowModal(true)} className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm">
+                        <Plus className="w-4 h-4" /> Add Material
+                    </button>
+                </div>
             </div>
 
             <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">

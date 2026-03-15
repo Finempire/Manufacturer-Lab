@@ -1,6 +1,7 @@
 import DashboardSidebar from "@/components/DashboardSidebar";
 import TopBar from "@/components/TopBar";
 import CommandPalette from "@/components/CommandPalette";
+import SessionTimeoutWarning from "@/components/SessionTimeoutWarning";
 
 export default function DashboardLayout({
     children,
@@ -17,6 +18,7 @@ export default function DashboardLayout({
                 </main>
             </div>
             <CommandPalette />
+            <SessionTimeoutWarning />
         </div>
     );
 }

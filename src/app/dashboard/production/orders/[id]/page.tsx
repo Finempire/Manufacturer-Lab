@@ -7,6 +7,8 @@ import { ArrowLeft, CheckCircle, Clock, Package, FileText, Play, Flag, UserPlus 
 import { toast } from "sonner";
 import OrderTimeline from "@/components/OrderTimeline";
 import OrderPipelineHeader from "@/components/OrderPipelineHeader";
+import ProductionReadinessChecklist from "@/components/ProductionReadinessChecklist";
+import ReminderButton from "@/components/ReminderButton";
 
 interface Merchandiser { id: string; name: string; }
 
@@ -252,6 +254,13 @@ export default function ProductionOrderDetail() {
                             </div>
                         )}
 
+                        {/* Reminder button for blocked stages */}
+                        {["MATERIAL_IN_PROGRESS", "TECH_PACK_IN_PROGRESS", "MERCHANDISER_ASSIGNED"].includes(order.status) && (
+                            <div className="pt-2 border-t border-slate-100">
+                                <ReminderButton entityType="ORDER" entityId={order.id} label="Send Reminder" size="md" />
+                            </div>
+                        )}
+
                         {order.status === "COMPLETED" && (
                             <div className="flex items-center gap-2 py-2 px-3 bg-green-50 rounded-lg border border-green-200">
                                 <CheckCircle className="w-4 h-4 text-green-600" />
@@ -259,6 +268,16 @@ export default function ProductionOrderDetail() {
                             </div>
                         )}
                     </div>
+
+                    {/* Production Readiness Checklist */}
+                    {["MATERIAL_IN_PROGRESS", "MATERIAL_COMPLETED", "TECH_PACK_COMPLETED", "MATERIAL_REQUIREMENT_SENT"].includes(order.status) && (
+                        <div className="bg-white rounded-lg border border-slate-200 p-4">
+                            <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3">
+                                Production Readiness
+                            </h4>
+                            <ProductionReadinessChecklist orderId={order.id} showActions={false} />
+                        </div>
+                    )}
 
                     {/* Timeline */}
                     <div className="bg-white rounded-lg border border-slate-200 p-4">

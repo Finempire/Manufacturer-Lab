@@ -12,7 +12,17 @@ const TABS = [
     { id: "cogs", label: "Buyer & Order Cost (COGS)" },
     { id: "runner-performance", label: "Runner Boy Performance" },
     { id: "expense-report", label: "Expense Report" },
-    { id: "style-wise", label: "Style-Wise Cost" }
+    { id: "style-wise", label: "Style-Wise Cost" },
+    { id: "order-aging", label: "Order Aging" },
+    { id: "stage-turnaround", label: "Stage Turnaround" },
+    { id: "techpack-revision", label: "Tech Pack Revision" },
+    { id: "material-cycle-time", label: "Material Cycle Time" },
+    { id: "pending-provisional", label: "Pending Provisional Invoice" },
+    { id: "expense-approval-tat", label: "Expense Approval TAT" },
+    { id: "production-lead-time", label: "Production Lead Time" },
+    { id: "shipping-risk", label: "Shipping Risk" },
+    { id: "audit-exception", label: "Audit Exception" },
+    { id: "runner-performance-v2", label: "Runner Performance V2" },
 ];
 
 export default function ReportsPage() {

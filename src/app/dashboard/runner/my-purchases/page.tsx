@@ -62,14 +62,14 @@ export default function MyPurchasesPage() {
     const totalAmount = purchases.reduce((sum, p) => sum + p.invoice_amount, 0);
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="space-y-6 pb-4">
+            <div className="flex items-center justify-between gap-3">
                 <div>
                     <h1 className="text-lg font-semibold tracking-tight text-slate-900">My Purchases</h1>
                     <p className="text-sm text-slate-500 mt-1">View all purchases you have made</p>
                 </div>
                 {purchases.length > 0 && (
-                    <div className="text-right">
+                    <div className="text-right shrink-0">
                         <p className="text-xs text-slate-500">Total Invoiced</p>
                         <p className="text-lg font-bold text-slate-900">₹{totalAmount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</p>
                     </div>
@@ -78,14 +78,14 @@ export default function MyPurchasesPage() {
 
             {/* Summary cards */}
             {purchases.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {[
                         { label: "Total", count: purchases.length, color: "bg-slate-50 border-slate-200" },
                         { label: "Pending Review", count: purchases.filter(p => p.status === "INVOICE_SUBMITTED").length, color: "bg-amber-50 border-amber-200" },
                         { label: "Approved", count: purchases.filter(p => p.status === "APPROVED").length, color: "bg-green-50 border-green-200" },
                         { label: "Paid", count: purchases.filter(p => ["PAID", "PARTIALLY_PAID", "COMPLETED"].includes(p.status)).length, color: "bg-blue-50 border-blue-200" },
                     ].map((card) => (
-                        <div key={card.label} className={`p-4 rounded-lg border ${card.color}`}>
+                        <div key={card.label} className={`p-3 md:p-4 rounded-lg border min-h-[44px] ${card.color}`}>
                             <p className="text-2xl font-bold text-slate-900">{card.count}</p>
                             <p className="text-xs text-slate-500 mt-1">{card.label}</p>
                         </div>
@@ -102,57 +102,99 @@ export default function MyPurchasesPage() {
                     <p className="text-slate-400 text-xs mt-1">When you submit purchase invoices, they will appear here</p>
                 </div>
             ) : (
-                <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-slate-200">
-                            <thead className="bg-slate-50">
-                                <tr>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Purchase #</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Request #</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Vendor</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Invoice</th>
-                                    <th className="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase">Amount</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Type</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Status</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date</th>
-                                    <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">View</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100">
-                                {purchases.map((p) => (
-                                    <tr key={p.id} className="hover:bg-slate-50">
-                                        <td className="px-4 py-3 text-sm font-medium text-slate-900">{p.purchase_no}</td>
-                                        <td className="px-4 py-3 text-sm text-slate-600">{p.request?.request_no || "—"}</td>
-                                        <td className="px-4 py-3 text-sm text-slate-600">{p.vendor?.name}</td>
-                                        <td className="px-4 py-3 text-sm text-slate-600">{p.invoice_no}</td>
-                                        <td className="px-4 py-3 text-sm text-right font-medium tabular-nums">
-                                            ₹{p.invoice_amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <span className="text-xs font-medium text-slate-600">
-                                                {p.invoice_type_submitted === "PROVISIONAL" ? "Provisional" : "Tax Invoice"}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <span className={`px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded-md ${STATUS_COLORS[p.status] || "bg-slate-100 text-slate-600"}`}>
-                                                {p.status.replace(/_/g, " ")}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(p.created_at), "dd MMM yyyy")}</td>
-                                        <td className="px-4 py-3 text-center">
-                                            <button
-                                                onClick={() => setSelectedPurchase(p)}
-                                                className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50 rounded transition"
-                                            >
-                                                <Eye className="w-3.5 h-3.5" />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                <>
+                    {/* Mobile card view */}
+                    <div className="space-y-3 md:hidden">
+                        {purchases.map((p) => (
+                            <button
+                                key={p.id}
+                                onClick={() => setSelectedPurchase(p)}
+                                className="w-full bg-white border border-slate-200 rounded-lg p-4 text-left hover:shadow-md active:scale-[0.99] transition-all min-h-[44px]"
+                            >
+                                <div className="flex items-start justify-between mb-2">
+                                    <div>
+                                        <p className="text-sm font-bold text-slate-900">{p.purchase_no}</p>
+                                        <p className="text-xs text-slate-500">{p.vendor?.name}</p>
+                                    </div>
+                                    <span className={`px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded-md shrink-0 ${STATUS_COLORS[p.status] || "bg-slate-100 text-slate-600"}`}>
+                                        {p.status.replace(/_/g, " ")}
+                                    </span>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2 text-sm">
+                                    <div>
+                                        <p className="text-xs text-slate-400">Invoice</p>
+                                        <p className="text-slate-700">{p.invoice_no}</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-xs text-slate-400">Amount</p>
+                                        <p className="font-semibold text-slate-900 tabular-nums">₹{p.invoice_amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-slate-400">Type</p>
+                                        <p className="text-slate-700">{p.invoice_type_submitted === "PROVISIONAL" ? "Provisional" : "Tax Invoice"}</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-xs text-slate-400">Date</p>
+                                        <p className="text-slate-700">{format(new Date(p.created_at), "dd MMM yyyy")}</p>
+                                    </div>
+                                </div>
+                            </button>
+                        ))}
                     </div>
-                </div>
+
+                    {/* Desktop table view */}
+                    <div className="bg-white rounded-lg border border-slate-200 overflow-hidden hidden md:block">
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-slate-200">
+                                <thead className="bg-slate-50">
+                                    <tr>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Purchase #</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Request #</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Vendor</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Invoice</th>
+                                        <th className="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase">Amount</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Type</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Status</th>
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date</th>
+                                        <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">View</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {purchases.map((p) => (
+                                        <tr key={p.id} className="hover:bg-slate-50">
+                                            <td className="px-4 py-3 text-sm font-medium text-slate-900">{p.purchase_no}</td>
+                                            <td className="px-4 py-3 text-sm text-slate-600">{p.request?.request_no || "—"}</td>
+                                            <td className="px-4 py-3 text-sm text-slate-600">{p.vendor?.name}</td>
+                                            <td className="px-4 py-3 text-sm text-slate-600">{p.invoice_no}</td>
+                                            <td className="px-4 py-3 text-sm text-right font-medium tabular-nums">
+                                                ₹{p.invoice_amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <span className="text-xs font-medium text-slate-600">
+                                                    {p.invoice_type_submitted === "PROVISIONAL" ? "Provisional" : "Tax Invoice"}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <span className={`px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded-md ${STATUS_COLORS[p.status] || "bg-slate-100 text-slate-600"}`}>
+                                                    {p.status.replace(/_/g, " ")}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(p.created_at), "dd MMM yyyy")}</td>
+                                            <td className="px-4 py-3 text-center">
+                                                <button
+                                                    onClick={() => setSelectedPurchase(p)}
+                                                    className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] text-xs font-medium text-blue-600 hover:bg-blue-50 rounded transition"
+                                                >
+                                                    <Eye className="w-4 h-4" />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
             )}
 
             {/* Detail Drawer */}
@@ -165,7 +207,7 @@ export default function MyPurchasesPage() {
                                 <h2 className="text-lg font-bold text-slate-900">{selectedPurchase.purchase_no}</h2>
                                 <p className="text-xs text-slate-500">Invoice: {selectedPurchase.invoice_no}</p>
                             </div>
-                            <button onClick={() => setSelectedPurchase(null)} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg">
+                            <button onClick={() => setSelectedPurchase(null)} className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg">
                                 &times;
                             </button>
                         </div>
@@ -188,14 +230,14 @@ export default function MyPurchasesPage() {
                             {(selectedPurchase.provisional_invoice_path || selectedPurchase.tax_invoice_path) && (
                                 <div>
                                     <h3 className="text-sm font-semibold text-slate-900 mb-2">Documents</h3>
-                                    <div className="flex gap-3">
+                                    <div className="flex flex-wrap gap-3">
                                         {selectedPurchase.provisional_invoice_path && (
-                                            <a href={`/api/files/${selectedPurchase.provisional_invoice_path}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-blue-600 hover:bg-slate-100 transition">
+                                            <a href={`/api/files/${selectedPurchase.provisional_invoice_path}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium text-blue-600 hover:bg-slate-100 active:bg-slate-200 transition">
                                                 <FileText className="w-4 h-4" /> Provisional Invoice
                                             </a>
                                         )}
                                         {selectedPurchase.tax_invoice_path && (
-                                            <a href={`/api/files/${selectedPurchase.tax_invoice_path}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-blue-600 hover:bg-slate-100 transition">
+                                            <a href={`/api/files/${selectedPurchase.tax_invoice_path}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium text-blue-600 hover:bg-slate-100 active:bg-slate-200 transition">
                                                 <FileText className="w-4 h-4" /> Tax Invoice
                                             </a>
                                         )}
