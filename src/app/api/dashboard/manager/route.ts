@@ -41,7 +41,7 @@ export async function GET() {
             where: {
                 role: "RUNNER",
                 is_active: true,
-                runner_requests: {
+                assigned_requests: {
                     some: { status: { in: ["PENDING_PURCHASE", "INVOICE_SUBMITTED"] } },
                 },
             },
@@ -51,7 +51,7 @@ export async function GET() {
             where: {
                 role: "RUNNER",
                 is_active: true,
-                runner_requests: {
+                assigned_requests: {
                     none: { status: { in: ["PENDING_PURCHASE", "INVOICE_SUBMITTED"] } },
                 },
             },

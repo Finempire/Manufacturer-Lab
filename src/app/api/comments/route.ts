@@ -94,7 +94,7 @@ export async function POST(req: Request) {
     }
 
     // Deduplicate
-    const uniqueMentionedUserIds = [...new Set(mentionedUserIds)];
+    const uniqueMentionedUserIds = Array.from(new Set(mentionedUserIds));
 
     const authorId = (session.user as { id: string }).id;
     const authorName = session.user.name ?? "Someone";

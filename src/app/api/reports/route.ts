@@ -319,7 +319,7 @@ export async function GET(req: Request) {
                 });
 
                 // Load related orders for grouping
-                const entityIds = [...new Set(stages.map((s) => s.entity_id))];
+                const entityIds = Array.from(new Set(stages.map((s) => s.entity_id)));
                 const orders = await prisma.order.findMany({
                     where: { id: { in: entityIds } },
                     select: {
