@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { ClipboardList, CheckCircle2, XCircle, Eye, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { SavedFilters } from "@/components/SavedFilters";
+import ReminderButton from "@/components/ReminderButton";
 
 interface Purchase {
     id: string;
@@ -53,6 +55,14 @@ export default function PurchasesReviewPage() {
     const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null);
     const [actionNotes, setActionNotes] = useState("");
     const [acting, setActing] = useState(false);
+    const [vendorFilter, setVendorFilter] = useState("");
+    const [filters, setFilters] = useState<Record<string, unknown>>({});
+
+    const handleApplyFilter = (f: Record<string, unknown>) => {
+        setFilters(f);
+        if (f.vendor) setVendorFilter(f.vendor as string);
+        else setVendorFilter("");
+    };
 
     const loadPurchases = useCallback(() => {
         setLoading(true);
@@ -101,7 +111,10 @@ export default function PurchasesReviewPage() {
                 <p className="text-sm text-slate-500 mt-1">Review and approve submitted purchase invoices</p>
             </div>
 
-            {/* Tabs */}
+            {/* Tabs + Filters */}
+            <div className="flex flex-wrap items-center gap-3">
+              <SavedFilters page="accountant-purchases" currentFilters={filters} onApplyFilter={handleApplyFilter} />
+            </div>
             <div className="flex gap-1 bg-slate-100 p-1 rounded-lg w-fit">
                 {tabs.map((t) => (
                     <button

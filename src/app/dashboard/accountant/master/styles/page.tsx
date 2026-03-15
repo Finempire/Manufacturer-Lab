@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Plus, Search, Pencil, ToggleLeft, ToggleRight, X } from "lucide-react";
+import ExcelImport from "@/components/ExcelImport";
 import { toast } from "sonner";
 
 interface Style {
@@ -110,6 +111,7 @@ export default function StylesMasterPage() {
                     <h1 className="text-lg font-semibold tracking-tight text-slate-900">Styles</h1>
                     <p className="text-sm text-slate-500 mt-1">{styles.length} styles total</p>
                 </div>
+                <ExcelImport entityType="styles" onComplete={fetchStyles} />
                 <button onClick={openAdd} className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
                     <Plus className="w-4 h-4" /> Add Style
                 </button>

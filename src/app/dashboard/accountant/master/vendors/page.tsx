@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
+import ExcelImport from "@/components/ExcelImport";
 
 interface Vendor { id: string; name: string; gstin: string | null; contact_person: string | null; phone: string | null; is_active: boolean; created_inline: boolean; }
 
@@ -34,9 +35,12 @@ export default function VendorsPage() {
                     <h1 className="text-lg font-semibold tracking-tight text-slate-900">Vendors</h1>
                     <p className="text-sm text-slate-500 mt-1">{vendors.length} vendors</p>
                 </div>
-                <button onClick={() => setShowModal(true)} className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
-                    <Plus className="w-4 h-4" /> Add Vendor
-                </button>
+                <div className="flex items-center gap-2">
+                    <ExcelImport entityType="vendors" onComplete={fetchVendors} />
+                    <button onClick={() => setShowModal(true)} className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
+                        <Plus className="w-4 h-4" /> Add Vendor
+                    </button>
+                </div>
             </div>
 
             <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">

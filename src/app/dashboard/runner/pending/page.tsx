@@ -174,7 +174,7 @@ export default function PendingPurchasesPage() {
     const linesTotalAmount = purchaseLines.reduce((s, l) => s + l.amount, 0);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 pb-4">
             <div>
                 <h1 className="text-lg font-semibold tracking-tight text-slate-900">Pending Purchases</h1>
                 <p className="text-sm text-slate-500 mt-1">Material requests assigned to you for purchase</p>
@@ -210,15 +210,17 @@ export default function PendingPurchasesPage() {
                                     <p className="text-sm font-medium text-slate-900">{format(new Date(req.expected_date), "dd MMM yyyy")}</p>
                                 </div>
                                 {req.preferred_vendor && (
-                                    <div className="p-2 bg-blue-50 rounded text-xs text-blue-800 border-l-2 border-blue-400">
-                                        <span className="font-bold block mb-0.5">Preferred Vendor:</span>
-                                        {req.preferred_vendor.name}
+                                    <div className="p-2.5 bg-blue-50 rounded text-xs text-blue-800 border-l-2 border-blue-400 min-h-[44px] flex items-center">
+                                        <div>
+                                            <span className="font-bold block mb-0.5">Preferred Vendor:</span>
+                                            {req.preferred_vendor.name}
+                                        </div>
                                     </div>
                                 )}
                                 <div className="mt-4 pt-4 border-t border-slate-100 border-dashed">
                                     <p className="text-xs text-center text-slate-500 mb-2">{req.lines.length} items to purchase</p>
-                                    <button onClick={() => openDrawer(req)} className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition">
-                                        <Upload className="w-4 h-4" /> Upload Invoice
+                                    <button onClick={() => openDrawer(req)} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 active:scale-[0.97] transition-all min-h-[48px]">
+                                        <Upload className="w-5 h-5" /> Upload Invoice
                                     </button>
                                 </div>
                             </div>
@@ -241,7 +243,7 @@ export default function PendingPurchasesPage() {
                                 <h2 className="text-lg font-bold text-slate-900">Submit Purchase Info</h2>
                                 <p className="text-xs text-slate-500">{selectedReq.request_no}</p>
                             </div>
-                            <button onClick={closeDrawer} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+                            <button onClick={closeDrawer} className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
@@ -264,7 +266,7 @@ export default function PendingPurchasesPage() {
                                     <label className="block text-xs font-medium text-slate-700 mb-1">Actual Vendor *</label>
                                     <select
                                         required
-                                        className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                                        className="w-full h-11 md:h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
                                         value={formData.vendor_id}
                                         onChange={(e) => {
                                             if (e.target.value === "ADD_NEW") setShowVendorModal(true);
@@ -281,11 +283,11 @@ export default function PendingPurchasesPage() {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-xs font-medium text-slate-700 mb-1">Invoice Number *</label>
-                                        <input type="text" required placeholder="e.g. INV-123" className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_no} onChange={(e) => setFormData({ ...formData, invoice_no: e.target.value })} />
+                                        <input type="text" required placeholder="e.g. INV-123" className="w-full h-11 md:h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_no} onChange={(e) => setFormData({ ...formData, invoice_no: e.target.value })} />
                                     </div>
                                     <div>
                                         <label className="block text-xs font-medium text-slate-700 mb-1">Invoice Date *</label>
-                                        <input type="date" required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_date} onChange={(e) => setFormData({ ...formData, invoice_date: e.target.value })} />
+                                        <input type="date" required className="w-full h-11 md:h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_date} onChange={(e) => setFormData({ ...formData, invoice_date: e.target.value })} />
                                     </div>
                                 </div>
 
@@ -293,14 +295,14 @@ export default function PendingPurchasesPage() {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-xs font-medium text-slate-700 mb-1">Invoice Type *</label>
-                                        <select required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_type_submitted} onChange={(e) => setFormData({ ...formData, invoice_type_submitted: e.target.value })}>
+                                        <select required className="w-full h-11 md:h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_type_submitted} onChange={(e) => setFormData({ ...formData, invoice_type_submitted: e.target.value })}>
                                             <option value="PROVISIONAL">Provisional Slip (Kacha Bill)</option>
                                             <option value="TAX">Final Tax Invoice</option>
                                         </select>
                                     </div>
                                     <div>
                                         <label className="block text-xs font-medium text-slate-700 mb-1">Total Invoice Amount (₹) *</label>
-                                        <input type="number" required min="1" step="0.01" className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm text-right font-medium tabular-nums focus:ring-2 focus:ring-blue-500" value={formData.invoice_amount} onChange={(e) => setFormData({ ...formData, invoice_amount: e.target.value })} />
+                                        <input type="number" required min="1" step="0.01" className="w-full h-11 md:h-10 px-3 border border-slate-300 rounded-lg text-sm text-right font-medium tabular-nums focus:ring-2 focus:ring-blue-500" value={formData.invoice_amount} onChange={(e) => setFormData({ ...formData, invoice_amount: e.target.value })} />
                                     </div>
                                 </div>
 
@@ -348,7 +350,7 @@ export default function PendingPurchasesPage() {
                                                         </td>
                                                         <td className="px-3 py-2 text-right text-sm font-medium tabular-nums" style={{ width: widths.amount }}>₹{line.amount.toFixed(2)}</td>
                                                         <td className="px-3 py-2 text-center" style={{ width: 32 }}>
-                                                            <button type="button" onClick={() => setPurchaseLines(purchaseLines.filter((_, idx) => idx !== i))} disabled={purchaseLines.length === 1} className="text-red-400 hover:text-red-600 disabled:opacity-30">
+                                                            <button type="button" onClick={() => setPurchaseLines(purchaseLines.filter((_, idx) => idx !== i))} disabled={purchaseLines.length === 1} className="p-1.5 min-w-[32px] min-h-[32px] flex items-center justify-center text-red-400 hover:text-red-600 disabled:opacity-30 rounded">
                                                                 <Trash2 className="w-4 h-4" />
                                                             </button>
                                                         </td>
@@ -370,10 +372,10 @@ export default function PendingPurchasesPage() {
                         </div>
 
                         <div className="p-4 border-t border-slate-100 bg-slate-50 flex gap-3 pb-8 md:pb-4">
-                            <button type="button" onClick={closeDrawer} className="flex-1 py-3 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition">
+                            <button type="button" onClick={closeDrawer} className="flex-1 py-3 min-h-[48px] bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition">
                                 Cancel
                             </button>
-                            <button type="submit" form="purchase-form" disabled={submitting} className="flex-1 py-3 bg-blue-600 rounded-lg text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition flex items-center justify-center gap-2">
+                            <button type="submit" form="purchase-form" disabled={submitting} className="flex-1 py-3 min-h-[48px] bg-blue-600 rounded-lg text-sm font-semibold text-white hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 transition flex items-center justify-center gap-2">
                                 {submitting ? "Submitting..." : "Submit Purchase"} <ChevronRight className="w-4 h-4" />
                             </button>
                         </div>

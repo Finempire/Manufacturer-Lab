@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
@@ -14,6 +14,11 @@ import {
   X,
   Loader2,
   ArrowRight,
+  Plus,
+  FileText,
+  LayoutDashboard,
+  BarChart3,
+  Package,
 } from "lucide-react";
 
 interface SearchResult {
@@ -22,6 +27,16 @@ interface SearchResult {
   title: string;
   subtitle: string;
   meta?: string;
+}
+
+interface CommandItem {
+  id: string;
+  label: string;
+  description: string;
+  icon: typeof Plus;
+  iconColor: string;
+  href: string;
+  section: "action" | "navigation";
 }
 
 const TYPE_CONFIG: Record<
@@ -69,6 +84,115 @@ function getResultHref(result: SearchResult, role: string): string {
   }
 }
 
+function getCommandsForRole(role: string): CommandItem[] {
+  const base = ROLE_PATHS[role] || "/dashboard";
+  const commands: CommandItem[] = [];
+
+  // Quick Actions (role-aware)
+  if (role === "ACCOUNTANT") {
+    commands.push({
+      id: "action-create-order",
+      label: "Create Order",
+      description: "Create a new order",
+      icon: Plus,
+      iconColor: "text-blue-600 bg-blue-50",
+      href: `${base}/orders/new`,
+      section: "action",
+    });
+  }
+
+  if (role === "PRODUCTION_MANAGER" || role === "SAMPLE_PRODUCTION_MANAGER") {
+    commands.push({
+      id: "action-raise-material-need",
+      label: "Raise Material Need",
+      description: "Create a new material need request",
+      icon: Plus,
+      iconColor: "text-amber-600 bg-amber-50",
+      href: `${base}/material-needs`,
+      section: "action",
+    });
+  }
+
+  if (role === "STORE_MANAGER") {
+    commands.push({
+      id: "action-create-purchase",
+      label: "Create Purchase Request",
+      description: "Create a new purchase request",
+      icon: Plus,
+      iconColor: "text-cyan-600 bg-cyan-50",
+      href: `${base}/requests/new`,
+      section: "action",
+    });
+  }
+
+  if (
+    role === "PRODUCTION_MANAGER" ||
+    role === "SAMPLE_PRODUCTION_MANAGER" ||
+    role === "STORE_MANAGER"
+  ) {
+    commands.push({
+      id: "action-raise-expense",
+      label: "Raise Expense",
+      description: "Create a new expense request",
+      icon: Plus,
+      iconColor: "text-red-600 bg-red-50",
+      href: `${base}/expense-requests`,
+      section: "action",
+    });
+  }
+
+  // Navigation Commands (all roles)
+  commands.push({
+    id: "nav-dashboard",
+    label: "Go to Dashboard",
+    description: "Open your dashboard",
+    icon: LayoutDashboard,
+    iconColor: "text-slate-600 bg-slate-100",
+    href: base,
+    section: "navigation",
+  });
+
+  if (role === "ACCOUNTANT" || role === "CEO") {
+    commands.push({
+      id: "nav-reports",
+      label: "Go to Reports",
+      description: "Open reports",
+      icon: BarChart3,
+      iconColor: "text-indigo-600 bg-indigo-50",
+      href: `${base}/reports`,
+      section: "navigation",
+    });
+  }
+
+  commands.push({
+    id: "nav-orders",
+    label: "Go to Orders",
+    description: "View all orders",
+    icon: Package,
+    iconColor: "text-blue-600 bg-blue-50",
+    href: `${base}/orders`,
+    section: "navigation",
+  });
+
+  if (
+    role === "PRODUCTION_MANAGER" ||
+    role === "SAMPLE_PRODUCTION_MANAGER" ||
+    role === "MERCHANDISER"
+  ) {
+    commands.push({
+      id: "nav-techpacks",
+      label: "Go to Tech Packs",
+      description: "View tech packs",
+      icon: FileText,
+      iconColor: "text-purple-600 bg-purple-50",
+      href: `${base}/tech-packs`,
+      section: "navigation",
+    });
+  }
+
+  return commands;
+}
+
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -82,6 +206,34 @@ export default function CommandPalette() {
   const { data: session } = useSession();
 
   const role = session?.user?.role || "";
+
+  const commands = useMemo(() => getCommandsForRole(role), [role]);
+
+  // Determine if we should show commands vs search results
+  const isCommandMode = query === "" || query.startsWith(">");
+  const commandQuery = query.startsWith(">") ? query.slice(1).trim().toLowerCase() : "";
+
+  const filteredCommands = useMemo(() => {
+    if (!isCommandMode) return [];
+    if (!commandQuery) return commands;
+    return commands.filter(
+      (cmd) =>
+        cmd.label.toLowerCase().includes(commandQuery) ||
+        cmd.description.toLowerCase().includes(commandQuery)
+    );
+  }, [isCommandMode, commandQuery, commands]);
+
+  const actionCommands = useMemo(
+    () => filteredCommands.filter((c) => c.section === "action"),
+    [filteredCommands]
+  );
+  const navigationCommands = useMemo(
+    () => filteredCommands.filter((c) => c.section === "navigation"),
+    [filteredCommands]
+  );
+
+  // Total navigable items count for keyboard navigation
+  const totalItems = isCommandMode ? filteredCommands.length : results.length;
 
   // Ctrl+K to open
   useEffect(() => {
@@ -136,7 +288,15 @@ export default function CommandPalette() {
 
   const handleInputChange = (val: string) => {
     setQuery(val);
-    doSearch(val);
+    setActiveIndex(0);
+    // Only trigger search for non-command queries with 2+ chars
+    if (!val.startsWith(">") && val.length >= 2) {
+      doSearch(val);
+    } else if (!val.startsWith(">")) {
+      // Clear search results when below threshold
+      setResults([]);
+      setLoading(false);
+    }
   };
 
   const navigateTo = (result: SearchResult) => {
@@ -145,38 +305,51 @@ export default function CommandPalette() {
     router.push(href);
   };
 
+  const navigateToCommand = (cmd: CommandItem) => {
+    setOpen(false);
+    router.push(cmd.href);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIndex((i) => Math.min(i + 1, results.length - 1));
+      setActiveIndex((i) => Math.min(i + 1, totalItems - 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setActiveIndex((i) => Math.max(i - 1, 0));
-    } else if (e.key === "Enter" && results[activeIndex]) {
+    } else if (e.key === "Enter") {
       e.preventDefault();
-      navigateTo(results[activeIndex]);
+      if (isCommandMode && filteredCommands[activeIndex]) {
+        navigateToCommand(filteredCommands[activeIndex]);
+      } else if (!isCommandMode && results[activeIndex]) {
+        navigateTo(results[activeIndex]);
+      }
     }
   };
 
   // Scroll active item into view
   useEffect(() => {
     if (listRef.current) {
-      const activeEl = listRef.current.children[activeIndex] as HTMLElement;
+      const items = listRef.current.querySelectorAll("[data-command-item]");
+      const activeEl = items[activeIndex] as HTMLElement;
       activeEl?.scrollIntoView({ block: "nearest" });
     }
   }, [activeIndex]);
 
   if (!open) return null;
 
-  // Group results by type
+  // Group search results by type
   const grouped = results.reduce<Record<string, SearchResult[]>>((acc, r) => {
     if (!acc[r.type]) acc[r.type] = [];
     acc[r.type].push(r);
     return acc;
   }, {});
 
-  // Flatten for keyboard navigation index
+  // Flatten for keyboard navigation index (search results only)
   let flatIndex = 0;
+
+  // Track command flat index for keyboard navigation
+  let commandFlatIndex = 0;
 
   return (
     <>
@@ -198,7 +371,7 @@ export default function CommandPalette() {
               value={query}
               onChange={(e) => handleInputChange(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Search orders, buyers, styles, vendors..."
+              placeholder='Search or type ">" for commands...'
               className="flex-1 text-sm text-slate-900 placeholder:text-slate-400 outline-none bg-transparent"
             />
             {loading && <Loader2 className="w-4 h-4 text-slate-400 animate-spin shrink-0" />}
@@ -210,22 +383,132 @@ export default function CommandPalette() {
             </button>
           </div>
 
-          {/* Results */}
+          {/* Content Area */}
           <div ref={listRef} className="max-h-[360px] overflow-y-auto">
-            {query.length < 2 ? (
+            {isCommandMode ? (
+              /* Command Mode: show quick actions and navigation */
+              filteredCommands.length === 0 ? (
+                <div className="px-4 py-10 text-center">
+                  <p className="text-sm text-slate-400">
+                    No matching commands
+                  </p>
+                </div>
+              ) : (
+                <>
+                  {/* Quick Actions Section */}
+                  {actionCommands.length > 0 && (
+                    <div>
+                      <div className="px-4 py-1.5 bg-slate-50 border-b border-slate-100">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                          Quick Actions
+                        </span>
+                      </div>
+                      {actionCommands.map((cmd) => {
+                        const idx = commandFlatIndex++;
+                        const Icon = cmd.icon;
+                        return (
+                          <button
+                            key={cmd.id}
+                            data-command-item
+                            onClick={() => navigateToCommand(cmd)}
+                            className={`flex items-center gap-3 w-full px-4 py-2.5 text-left transition-colors ${
+                              idx === activeIndex
+                                ? "bg-blue-50"
+                                : "hover:bg-slate-50"
+                            }`}
+                          >
+                            <div
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${cmd.iconColor}`}
+                            >
+                              <Icon className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-slate-900 truncate">
+                                {cmd.label}
+                              </p>
+                              <p className="text-xs text-slate-500 truncate">
+                                {cmd.description}
+                              </p>
+                            </div>
+                            <ArrowRight
+                              className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                                idx === activeIndex
+                                  ? "text-blue-400"
+                                  : "text-slate-300"
+                              }`}
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Navigation Section */}
+                  {navigationCommands.length > 0 && (
+                    <div>
+                      <div className="px-4 py-1.5 bg-slate-50 border-b border-slate-100">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                          Navigation
+                        </span>
+                      </div>
+                      {navigationCommands.map((cmd) => {
+                        const idx = commandFlatIndex++;
+                        const Icon = cmd.icon;
+                        return (
+                          <button
+                            key={cmd.id}
+                            data-command-item
+                            onClick={() => navigateToCommand(cmd)}
+                            className={`flex items-center gap-3 w-full px-4 py-2.5 text-left transition-colors ${
+                              idx === activeIndex
+                                ? "bg-blue-50"
+                                : "hover:bg-slate-50"
+                            }`}
+                          >
+                            <div
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${cmd.iconColor}`}
+                            >
+                              <Icon className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-slate-900 truncate">
+                                {cmd.label}
+                              </p>
+                              <p className="text-xs text-slate-500 truncate">
+                                {cmd.description}
+                              </p>
+                            </div>
+                            <ArrowRight
+                              className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                                idx === activeIndex
+                                  ? "text-blue-400"
+                                  : "text-slate-300"
+                              }`}
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </>
+              )
+            ) : !loading && query.length >= 2 && results.length === 0 ? (
+              /* Search mode: no results */
+              <div className="px-4 py-10 text-center">
+                <p className="text-sm text-slate-400">
+                  No results for &quot;{query}&quot;
+                </p>
+              </div>
+            ) : query.length < 2 && query.length > 0 ? (
+              /* Search mode: too short */
               <div className="px-4 py-10 text-center">
                 <Search className="w-8 h-8 text-slate-200 mx-auto mb-2" />
                 <p className="text-sm text-slate-400">
                   Type at least 2 characters to search
                 </p>
               </div>
-            ) : !loading && results.length === 0 ? (
-              <div className="px-4 py-10 text-center">
-                <p className="text-sm text-slate-400">
-                  No results for &quot;{query}&quot;
-                </p>
-              </div>
             ) : (
+              /* Search mode: show grouped results */
               Object.entries(grouped).map(([type, items]) => {
                 const config = TYPE_CONFIG[type];
                 return (
@@ -243,6 +526,7 @@ export default function CommandPalette() {
                       return (
                         <button
                           key={result.id}
+                          data-command-item
                           onClick={() => navigateTo(result)}
                           className={`flex items-center gap-3 w-full px-4 py-2.5 text-left transition-colors ${
                             idx === activeIndex
@@ -303,6 +587,12 @@ export default function CommandPalette() {
                 esc
               </kbd>
               Close
+            </span>
+            <span className="ml-auto flex items-center gap-1">
+              <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-mono">
+                &gt;
+              </kbd>
+              Commands
             </span>
           </div>
         </div>

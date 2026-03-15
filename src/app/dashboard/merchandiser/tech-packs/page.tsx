@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { FileText, Eye } from "lucide-react";
+import { FileText, Eye, Filter } from "lucide-react";
 import { toast } from "sonner";
+import { SavedFilters } from "@/components/SavedFilters";
 
 interface TechPack {
     id: string;
@@ -28,6 +29,8 @@ const STATUS_COLORS: Record<string, string> = {
 export default function MerchandiserTechPacksPage() {
     const [techPacks, setTechPacks] = useState<TechPack[]>([]);
     const [loading, setLoading] = useState(true);
+    const [statusFilter, setStatusFilter] = useState("");
+    const [filters, setFilters] = useState<Record<string, unknown>>({});
 
     useEffect(() => {
         fetch("/api/techpacks")
@@ -36,11 +39,37 @@ export default function MerchandiserTechPacksPage() {
             .catch(() => { toast.error("Failed to load tech packs"); setLoading(false); });
     }, []);
 
+    const handleApplyFilter = (f: Record<string, unknown>) => {
+        setFilters(f);
+        if (f.status) setStatusFilter(f.status as string);
+        else setStatusFilter("");
+    };
+
+    const filteredTechPacks = techPacks.filter(tp => {
+        if (statusFilter && tp.status !== statusFilter) return false;
+        return true;
+    });
+
     return (
         <div className="space-y-4">
             <div>
                 <h1 className="text-lg font-semibold tracking-tight text-slate-900">Tech Packs</h1>
                 <p className="text-sm text-slate-500 mt-1">View and manage your assigned tech packs</p>
+            </div>
+
+            {/* Filters */}
+            <div className="flex flex-wrap items-center gap-3">
+                <select
+                    value={statusFilter}
+                    onChange={(e) => { setStatusFilter(e.target.value); setFilters(prev => ({ ...prev, status: e.target.value || undefined })); }}
+                    className="h-9 px-3 text-sm border border-slate-300 rounded-lg bg-white"
+                >
+                    <option value="">All Statuses</option>
+                    {Object.keys(STATUS_COLORS).map(s => (
+                        <option key={s} value={s}>{s.replace(/_/g, " ")}</option>
+                    ))}
+                </select>
+                <SavedFilters page="merchandiser-techpacks" currentFilters={filters} onApplyFilter={handleApplyFilter} />
             </div>
 
             <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
@@ -60,12 +89,12 @@ export default function MerchandiserTechPacksPage() {
                         <tbody className="divide-y divide-slate-100">
                             {loading ? (
                                 <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-400">Loading...</td></tr>
-                            ) : techPacks.length === 0 ? (
+                            ) : filteredTechPacks.length === 0 ? (
                                 <tr><td colSpan={7} className="px-4 py-12 text-center">
                                     <FileText className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                                     <p className="text-sm text-slate-500">No tech packs assigned to you</p>
                                 </td></tr>
-                            ) : techPacks.map(tp => (
+                            ) : filteredTechPacks.map(tp => (
                                 <tr key={tp.id} className="hover:bg-slate-50 transition-colors">
                                     <td className="px-4 py-3 text-sm font-semibold text-slate-900">{tp.tech_pack_no}</td>
                                     <td className="px-4 py-3 text-sm text-slate-600">{tp.order.order_no}</td>
