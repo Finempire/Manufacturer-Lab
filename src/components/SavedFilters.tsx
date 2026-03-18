@@ -98,8 +98,8 @@ export function SavedFilters({ page, currentFilters, onApplyFilter }: SavedFilte
             onClick={() => handleApply(f)}
             className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-md border transition-colors ${
               activeId === f.id
-                ? "bg-blue-50 border-blue-300 text-blue-700"
-                : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
+                ? "bg-brand-muted border-brand/30 text-brand"
+                : "bg-surface-1 border-border-secondary text-foreground-secondary hover:bg-surface-3"
             }`}
           >
             {f.is_default && <Star className="w-3 h-3 text-amber-500 fill-amber-500" />}
@@ -108,14 +108,14 @@ export function SavedFilters({ page, currentFilters, onApplyFilter }: SavedFilte
           <button
             onClick={() => handleSetDefault(f.id)}
             title="Set as default"
-            className="p-0.5 text-gray-400 hover:text-amber-500"
+            className="p-0.5 text-foreground-muted hover:text-amber-500"
           >
             <BookmarkCheck className="w-3 h-3" />
           </button>
           <button
             onClick={() => handleDelete(f.id)}
             title="Delete filter"
-            className="p-0.5 text-gray-400 hover:text-red-500"
+            className="p-0.5 text-foreground-muted hover:text-red-500"
           >
             <Trash2 className="w-3 h-3" />
           </button>
@@ -125,7 +125,7 @@ export function SavedFilters({ page, currentFilters, onApplyFilter }: SavedFilte
       {!showSave ? (
         <button
           onClick={() => setShowSave(true)}
-          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-md border border-dashed border-gray-300 text-gray-500 hover:bg-gray-50"
+          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-md border border-dashed border-border-accent text-foreground-tertiary hover:bg-surface-3"
         >
           <Bookmark className="w-3 h-3" />
           Save Filter
@@ -137,11 +137,11 @@ export function SavedFilters({ page, currentFilters, onApplyFilter }: SavedFilte
             value={filterName}
             onChange={(e) => setFilterName(e.target.value)}
             placeholder="Filter name"
-            className="px-2 py-1 text-xs border border-gray-300 rounded w-32"
+            className="px-2 py-1 text-xs border border-border-secondary bg-surface-0 text-foreground rounded w-32"
             autoFocus
             onKeyDown={(e) => e.key === "Enter" && handleSave()}
           />
-          <label className="flex items-center gap-1 text-xs text-gray-500">
+          <label className="flex items-center gap-1 text-xs text-foreground-tertiary">
             <input
               type="checkbox"
               checked={isDefault}
@@ -152,13 +152,13 @@ export function SavedFilters({ page, currentFilters, onApplyFilter }: SavedFilte
           </label>
           <button
             onClick={handleSave}
-            className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-2 py-1 text-xs bg-brand text-white rounded hover:bg-brand-hover"
           >
             Save
           </button>
           <button
             onClick={() => { setShowSave(false); setFilterName(""); }}
-            className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700"
+            className="px-2 py-1 text-xs text-foreground-tertiary hover:text-foreground-secondary"
           >
             Cancel
           </button>
@@ -168,7 +168,7 @@ export function SavedFilters({ page, currentFilters, onApplyFilter }: SavedFilte
       {activeId && (
         <button
           onClick={() => { setActiveId(null); onApplyFilter({}); }}
-          className="text-xs text-gray-400 hover:text-gray-600 underline"
+          className="text-xs text-foreground-muted hover:text-foreground-secondary underline"
         >
           Clear filter
         </button>

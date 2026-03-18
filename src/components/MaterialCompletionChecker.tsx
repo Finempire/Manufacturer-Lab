@@ -79,12 +79,12 @@ export default function MaterialCompletionChecker({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
-      <h3 className="text-lg font-semibold text-slate-900 mb-1">
+    <div className="bg-surface-1 rounded-xl shadow-premium-sm border border-border-secondary p-4">
+      <h3 className="text-lg font-semibold text-foreground mb-1">
         Material and Expense Completion
       </h3>
       {styleName && (
-        <p className="text-sm text-slate-500 mb-4">Style: {styleName}</p>
+        <p className="text-sm text-foreground-tertiary mb-4">Style: {styleName}</p>
       )}
 
       {/* Summary cards */}
@@ -93,19 +93,19 @@ export default function MaterialCompletionChecker({
         <div
           className={`rounded-md border p-3 ${
             allMaterialsDone
-              ? "border-green-200 bg-green-50"
-              : "border-amber-200 bg-amber-50"
+              ? "border-green-500/20 bg-green-500/10"
+              : "border-amber-500/20 bg-amber-500/10"
           }`}
         >
           <div className="flex items-center gap-2 mb-1">
             <Package
-              className={`w-4 h-4 ${allMaterialsDone ? "text-green-600" : "text-amber-600"}`}
+              className={`w-4 h-4 ${allMaterialsDone ? "text-green-400" : "text-amber-400"}`}
             />
-            <span className="text-sm font-medium text-slate-900">
+            <span className="text-sm font-medium text-foreground">
               Material Requests
             </span>
           </div>
-          <p className="text-xs text-slate-600">
+          <p className="text-xs text-foreground-secondary">
             {completedMaterials.length} / {materialRequests.length} completed
           </p>
         </div>
@@ -114,19 +114,19 @@ export default function MaterialCompletionChecker({
         <div
           className={`rounded-md border p-3 ${
             allExpensesDone
-              ? "border-green-200 bg-green-50"
-              : "border-amber-200 bg-amber-50"
+              ? "border-green-500/20 bg-green-500/10"
+              : "border-amber-500/20 bg-amber-500/10"
           }`}
         >
           <div className="flex items-center gap-2 mb-1">
             <Receipt
-              className={`w-4 h-4 ${allExpensesDone ? "text-green-600" : "text-amber-600"}`}
+              className={`w-4 h-4 ${allExpensesDone ? "text-green-400" : "text-amber-400"}`}
             />
-            <span className="text-sm font-medium text-slate-900">
+            <span className="text-sm font-medium text-foreground">
               Expense Requests
             </span>
           </div>
-          <p className="text-xs text-slate-600">
+          <p className="text-xs text-foreground-secondary">
             {completedExpenses.length} / {expenseRequests.length} completed
           </p>
         </div>
@@ -136,14 +136,14 @@ export default function MaterialCompletionChecker({
       {(pendingMaterials.length > 0 || pendingExpenses.length > 0) && (
         <div className="mb-4 space-y-2">
           {pendingMaterials.length > 0 && (
-            <div className="rounded-md bg-amber-50 border border-amber-200 px-3 py-2">
+            <div className="rounded-md bg-amber-500/10 border border-amber-500/20 px-3 py-2">
               <div className="flex items-center gap-1.5 mb-1">
-                <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
-                <span className="text-xs font-medium text-amber-700">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-xs font-medium text-amber-300">
                   Pending Materials
                 </span>
               </div>
-              <ul className="text-xs text-amber-700 space-y-0.5 ml-5 list-disc">
+              <ul className="text-xs text-amber-300 space-y-0.5 ml-5 list-disc">
                 {pendingMaterials.map((m) => (
                   <li key={m.id}>
                     {m.materialName}
@@ -158,14 +158,14 @@ export default function MaterialCompletionChecker({
           )}
 
           {pendingExpenses.length > 0 && (
-            <div className="rounded-md bg-amber-50 border border-amber-200 px-3 py-2">
+            <div className="rounded-md bg-amber-500/10 border border-amber-500/20 px-3 py-2">
               <div className="flex items-center gap-1.5 mb-1">
-                <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
-                <span className="text-xs font-medium text-amber-700">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-xs font-medium text-amber-300">
                   Pending Expenses
                 </span>
               </div>
-              <ul className="text-xs text-amber-700 space-y-0.5 ml-5 list-disc">
+              <ul className="text-xs text-amber-300 space-y-0.5 ml-5 list-disc">
                 {pendingExpenses.map((e) => (
                   <li key={e.id}>
                     {e.description}
@@ -181,8 +181,8 @@ export default function MaterialCompletionChecker({
 
       {/* Error */}
       {error && (
-        <div className="rounded-md bg-red-50 border border-red-200 px-3 py-2 mb-4">
-          <p className="text-sm text-red-700">{error}</p>
+        <div className="rounded-md bg-red-500/10 border border-red-500/20 px-3 py-2 mb-4">
+          <p className="text-sm text-red-400">{error}</p>
         </div>
       )}
 
@@ -204,8 +204,8 @@ export default function MaterialCompletionChecker({
             : "Mark All Materials & Expenses Completed"}
         </button>
       ) : (
-        <div className="flex items-center gap-2 text-sm text-slate-500">
-          <AlertCircle className="w-4 h-4 text-slate-400" />
+        <div className="flex items-center gap-2 text-sm text-foreground-tertiary">
+          <AlertCircle className="w-4 h-4 text-foreground-muted" />
           <span>
             All material requests and expenses must be completed before marking
             this order.

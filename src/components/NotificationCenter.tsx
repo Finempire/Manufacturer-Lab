@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Bell, Check, CheckCheck, Filter, Inbox } from "lucide-react";
+import { Bell, Check, CheckCheck, Inbox } from "lucide-react";
 
 interface Notification {
   id: string;
@@ -135,7 +135,6 @@ export default function NotificationCenter() {
     return () => clearInterval(interval);
   }, [fetchNotifications]);
 
-  // Close on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (
@@ -202,7 +201,7 @@ export default function NotificationCenter() {
       {/* Bell Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-1.5 text-slate-400 hover:text-slate-600 rounded-md hover:bg-slate-100 transition-colors"
+        className="relative p-1.5 text-foreground-tertiary hover:text-foreground-secondary rounded-lg hover:bg-surface-3 transition-colors"
         aria-label="Notifications"
       >
         <Bell className="w-[18px] h-[18px]" />
@@ -215,16 +214,16 @@ export default function NotificationCenter() {
 
       {/* Dropdown Panel */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-[420px] max-h-[540px] bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden z-50 flex flex-col">
+        <div className="absolute right-0 top-full mt-2 w-[420px] max-h-[540px] bg-surface-2 border border-border rounded-xl shadow-premium-xl overflow-hidden z-50 flex flex-col animate-fade-in">
           {/* Header */}
-          <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between shrink-0">
-            <h3 className="text-sm font-semibold text-slate-900">
+          <div className="px-4 py-3 border-b border-border-secondary flex items-center justify-between shrink-0">
+            <h3 className="text-sm font-semibold text-foreground">
               Notifications
             </h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700"
+                className="flex items-center gap-1 text-xs font-medium text-brand-hover hover:text-brand transition-colors"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
                 Mark all read
@@ -233,15 +232,15 @@ export default function NotificationCenter() {
           </div>
 
           {/* Filter Tabs */}
-          <div className="px-3 py-2 border-b border-slate-100 flex gap-1 shrink-0 overflow-x-auto">
+          <div className="px-3 py-2 border-b border-border-secondary flex gap-1 shrink-0 overflow-x-auto">
             {FILTER_TABS.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`px-2.5 py-1 text-xs font-medium rounded-md whitespace-nowrap transition-colors ${
+                className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-colors ${
                   activeTab === tab.key
-                    ? "bg-slate-800 text-white"
-                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+                    ? "bg-brand text-white"
+                    : "text-foreground-tertiary hover:text-foreground-secondary hover:bg-surface-3"
                 }`}
               >
                 {tab.label}
@@ -256,9 +255,9 @@ export default function NotificationCenter() {
           <div className="overflow-y-auto flex-1">
             {filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 px-4">
-                <Inbox className="w-8 h-8 text-slate-300 mb-2" />
-                <p className="text-sm text-slate-400">No notifications</p>
-                <p className="text-xs text-slate-300 mt-1">
+                <Inbox className="w-8 h-8 text-foreground-muted mb-2" />
+                <p className="text-sm text-foreground-tertiary">No notifications</p>
+                <p className="text-xs text-foreground-muted mt-1">
                   {activeTab !== "all"
                     ? "Try switching to a different filter"
                     : "You're all caught up"}
@@ -267,58 +266,53 @@ export default function NotificationCenter() {
             ) : (
               grouped.map((group) => (
                 <div key={group.group}>
-                  {/* Group Header */}
-                  <div className="px-4 py-1.5 bg-slate-50 border-b border-slate-100">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                  <div className="px-4 py-1.5 bg-surface-3 border-b border-border-secondary">
+                    <span className="text-[10px] font-semibold text-foreground-muted uppercase tracking-wider">
                       {group.group}
                     </span>
                   </div>
 
-                  {/* Group Items */}
                   {group.items.map((n) => (
                     <div
                       key={n.id}
                       onClick={() => handleNotificationClick(n)}
-                      className={`group px-4 py-2.5 border-b border-slate-50 hover:bg-slate-50 cursor-pointer flex items-start gap-3 transition-colors ${
-                        !n.is_read ? "bg-blue-50/40" : ""
+                      className={`group px-4 py-2.5 border-b border-border-secondary hover:bg-surface-3 cursor-pointer flex items-start gap-3 transition-colors ${
+                        !n.is_read ? "bg-brand-muted" : ""
                       }`}
                     >
-                      {/* Read/Unread Indicator */}
                       <div className="mt-1.5 shrink-0">
                         {!n.is_read ? (
-                          <div className="w-2 h-2 rounded-full bg-blue-500" />
+                          <div className="w-2 h-2 rounded-full bg-brand" />
                         ) : (
                           <div className="w-2 h-2 rounded-full bg-transparent" />
                         )}
                       </div>
 
-                      {/* Content */}
                       <div className="flex-1 min-w-0">
                         <p
                           className={`text-sm line-clamp-1 ${
                             !n.is_read
-                              ? "font-semibold text-slate-900"
-                              : "font-medium text-slate-700"
+                              ? "font-semibold text-foreground"
+                              : "font-medium text-foreground-secondary"
                           }`}
                         >
                           {n.title}
                         </p>
-                        <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">
+                        <p className="text-xs text-foreground-tertiary line-clamp-2 mt-0.5">
                           {n.message}
                         </p>
-                        <p className="text-[11px] text-slate-400 mt-1">
+                        <p className="text-[11px] text-foreground-muted mt-1">
                           {formatRelativeTime(n.created_at)}
                         </p>
                       </div>
 
-                      {/* Mark Read Button */}
                       {!n.is_read && (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             markAsRead(n.id);
                           }}
-                          className="mt-1 p-1 rounded text-slate-300 hover:text-blue-500 hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="mt-1 p-1 rounded text-foreground-muted hover:text-brand-hover hover:bg-brand-muted opacity-0 group-hover:opacity-100 transition-opacity"
                           title="Mark as read"
                         >
                           <Check className="w-3.5 h-3.5" />
@@ -333,8 +327,8 @@ export default function NotificationCenter() {
 
           {/* Footer */}
           {filtered.length > 0 && (
-            <div className="px-4 py-2.5 border-t border-slate-100 bg-slate-50 shrink-0">
-              <span className="text-xs text-slate-400">
+            <div className="px-4 py-2.5 border-t border-border-secondary bg-surface-3 shrink-0">
+              <span className="text-xs text-foreground-muted">
                 Showing {filtered.length} notification
                 {filtered.length !== 1 ? "s" : ""}
               </span>

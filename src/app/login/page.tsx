@@ -115,8 +115,8 @@ function GlobeBackground() {
           ctx.beginPath();
           ctx.arc(x2d, y2d, p.baseSize * scale, 0, Math.PI * 2);
           ctx.fillStyle = p.isLand
-            ? `rgba(16, 185, 129, ${depthAlpha * 0.8})`
-            : `rgba(96, 165, 250, ${depthAlpha * 0.3})`;
+            ? `rgba(99, 102, 241, ${depthAlpha * 0.6})`
+            : `rgba(59, 130, 246, ${depthAlpha * 0.2})`;
           ctx.fill();
         }
       });
@@ -157,7 +157,7 @@ function GlobeBackground() {
           ctx.strokeStyle =
             route.type === "air"
               ? `rgba(239, 68, 68, ${Math.sin(route.progress * Math.PI) * 0.3})`
-              : `rgba(30, 64, 175, ${Math.sin(route.progress * Math.PI) * 0.4})`;
+              : `rgba(99, 102, 241, ${Math.sin(route.progress * Math.PI) * 0.4})`;
           ctx.lineWidth = route.type === "air" ? 1.5 : 1;
           ctx.stroke();
 
@@ -173,7 +173,7 @@ function GlobeBackground() {
             ctx.lineTo(-4 * scale, -4 * scale);
             ctx.fill();
           } else {
-            ctx.fillStyle = `rgba(30, 58, 138, ${Math.sin(route.progress * Math.PI)})`;
+            ctx.fillStyle = `rgba(99, 102, 241, ${Math.sin(route.progress * Math.PI)})`;
             ctx.fillRect(-3 * scale, -1.5 * scale, 6 * scale, 3 * scale);
           }
 
@@ -254,7 +254,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-slate-50 flex items-center justify-center font-sans overflow-hidden selection:bg-blue-200">
+    <div className="relative min-h-screen w-full bg-surface-0 flex items-center justify-center font-sans overflow-hidden selection:bg-brand-muted">
       {/* 3D Globe Background */}
       <GlobeBackground />
 
@@ -264,36 +264,36 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-[420px] px-4">
         {/* Header / Brand */}
         <div className="flex flex-col items-center mb-8 text-center">
-          <h1 className="text-2xl font-bold text-slate-800 tracking-tight">
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">
             The Manufacturer Club
           </h1>
-          <p className="text-sm text-slate-600 font-medium mt-1 flex items-center gap-1.5">
+          <p className="text-sm text-foreground-secondary font-medium mt-1 flex items-center gap-1.5">
             <Factory className="w-4 h-4" /> Global Production Tracking
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-transparent backdrop-blur-[2px] border border-slate-400/40 shadow-2xl shadow-slate-300/20 rounded-3xl p-8">
-          <h2 className="text-lg font-semibold text-slate-800 mb-6">
+        <div className="bg-surface-1/80 backdrop-blur-md border border-border rounded-2xl p-8 shadow-premium-xl">
+          <h2 className="text-lg font-semibold text-foreground mb-6">
             Sign in to your account
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email Field */}
             <div className="space-y-1.5">
-              <label htmlFor="email" className="text-sm font-medium text-slate-700 block">
+              <label htmlFor="email" className="text-sm font-medium text-foreground-secondary block">
                 Email Address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                  <Mail className="h-4 w-4 text-slate-500" />
+                  <Mail className="h-4 w-4 text-foreground-tertiary" />
                 </div>
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-transparent border border-slate-400/50 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:bg-white/10 focus:ring-2 focus:ring-blue-500/30 transition-all duration-200"
+                  className="w-full bg-surface-2 border border-border rounded-xl py-2.5 pl-10 pr-4 text-sm text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/30 transition-all duration-200"
                   placeholder="you@manufacturer.club"
                   required
                 />
@@ -302,19 +302,19 @@ export default function LoginPage() {
 
             {/* Password Field */}
             <div className="space-y-1.5">
-              <label htmlFor="password" className="text-sm font-medium text-slate-700 block">
+              <label htmlFor="password" className="text-sm font-medium text-foreground-secondary block">
                 Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                  <Lock className="h-4 w-4 text-slate-500" />
+                  <Lock className="h-4 w-4 text-foreground-tertiary" />
                 </div>
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-transparent border border-slate-400/50 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:bg-white/10 focus:ring-2 focus:ring-blue-500/30 transition-all duration-200"
+                  className="w-full bg-surface-2 border border-border rounded-xl py-2.5 pl-10 pr-4 text-sm text-foreground placeholder:text-foreground-muted focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/30 transition-all duration-200"
                   placeholder="Enter your password"
                   required
                 />
@@ -325,7 +325,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-medium py-2.5 rounded-xl shadow-lg shadow-blue-600/20 transition-all duration-200 flex items-center justify-center gap-2 group"
+              className="w-full mt-2 bg-brand hover:bg-brand-hover disabled:bg-brand/50 disabled:cursor-not-allowed text-white font-medium py-2.5 rounded-xl shadow-premium-lg shadow-brand/20 transition-all duration-200 flex items-center justify-center gap-2 group"
             >
               {loading ? (
                 <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
@@ -342,8 +342,8 @@ export default function LoginPage() {
           </form>
 
           {/* Demo Credentials */}
-          <div className="mt-8 pt-6 border-t border-slate-400/30">
-            <p className="text-xs font-medium text-slate-600 text-center mb-4 uppercase tracking-wider">
+          <div className="mt-8 pt-6 border-t border-border-secondary">
+            <p className="text-xs font-medium text-foreground-tertiary text-center mb-4 uppercase tracking-wider">
               Demo Roles (pw: Change@123)
             </p>
             <div className="grid grid-cols-2 gap-2">
@@ -352,7 +352,7 @@ export default function LoginPage() {
                   key={cred.email}
                   onClick={() => setDemoRole(cred.email)}
                   type="button"
-                  className="text-xs font-medium text-slate-700 bg-transparent hover:bg-slate-300/30 border border-slate-400/50 py-2.5 rounded-lg transition-colors"
+                  className="text-xs font-medium text-foreground-secondary bg-surface-2 hover:bg-surface-3 border border-border py-2.5 rounded-lg transition-colors"
                 >
                   {cred.label}
                 </button>
@@ -360,7 +360,7 @@ export default function LoginPage() {
               <button
                 onClick={() => setDemoRole("ceo@cashflow.com")}
                 type="button"
-                className="col-span-2 text-xs font-medium text-blue-700 bg-transparent hover:bg-blue-500/10 border border-blue-400/50 py-2.5 rounded-lg transition-colors"
+                className="col-span-2 text-xs font-medium text-brand-hover bg-brand-muted hover:bg-brand/20 border border-brand/30 py-2.5 rounded-lg transition-colors"
               >
                 CEO
               </button>
@@ -369,7 +369,7 @@ export default function LoginPage() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-xs text-slate-500 mt-8 font-medium">
+        <p className="text-center text-xs text-foreground-muted mt-8 font-medium">
           &copy; 2026 The Manufacturer Club Systems
         </p>
       </div>

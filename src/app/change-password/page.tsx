@@ -70,28 +70,28 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+    <div className="min-h-screen flex items-center justify-center bg-surface-0">
       <div className="w-full max-w-md mx-4">
-        <div className="bg-white/[0.08] backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
-          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 mb-6 mx-auto">
+        <div className="bg-surface-1 backdrop-blur-xl border border-border rounded-2xl p-8 shadow-premium-xl">
+          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-amber-500/15 text-amber-400 mb-6 mx-auto">
             <KeyRound className="w-6 h-6" />
           </div>
 
-          <h2 className="text-xl font-bold text-white text-center mb-2">Change Password Required</h2>
-          <p className="text-sm text-blue-200/60 text-center mb-8">
+          <h2 className="text-xl font-bold text-foreground text-center mb-2">Change Password Required</h2>
+          <p className="text-sm text-foreground-tertiary text-center mb-8">
             For security reasons, you must change your temporary password before accessing your dashboard.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs font-medium text-blue-200/70 mb-1.5">
+              <label className="block text-xs font-medium text-foreground-secondary mb-1.5">
                 New Password
               </label>
               <input
                 type="password"
                 required
                 minLength={8}
-                className="w-full h-11 px-4 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/25 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                className="w-full h-11 px-4 bg-surface-2 border border-border rounded-lg text-foreground placeholder:text-foreground-muted text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
                 placeholder="Min 8 chars, 1 uppercase, 1 number"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -99,20 +99,20 @@ export default function ChangePasswordPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-blue-200/70 mb-1.5">
+              <label className="block text-xs font-medium text-foreground-secondary mb-1.5">
                 Confirm Password
               </label>
               <input
                 type="password"
                 required
-                className="w-full h-11 px-4 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/25 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                className="w-full h-11 px-4 bg-surface-2 border border-border rounded-lg text-foreground placeholder:text-foreground-muted text-sm focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand transition-all"
                 placeholder="Confirm your new password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
 
-            <div className="bg-white/5 rounded-lg p-3 text-xs text-blue-200/50 space-y-1">
+            <div className="bg-surface-2 rounded-lg p-3 text-xs text-foreground-muted space-y-1">
               <p className={password.length >= 8 ? "text-green-400" : ""}>
                 {password.length >= 8 ? "+" : "-"} Minimum 8 characters
               </p>
@@ -130,7 +130,7 @@ export default function ChangePasswordPage() {
             <button
               type="submit"
               disabled={loading || !password || !confirmPassword}
-              className="w-full h-11 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-medium text-sm rounded-lg transition-all duration-200 flex items-center justify-center shadow-lg shadow-blue-600/25"
+              className="w-full h-11 bg-brand hover:bg-brand-hover disabled:bg-brand/50 disabled:cursor-not-allowed text-white font-medium text-sm rounded-lg transition-all duration-200 flex items-center justify-center shadow-premium-lg"
             >
               {loading ? "Updating..." : "Set New Password"}
             </button>

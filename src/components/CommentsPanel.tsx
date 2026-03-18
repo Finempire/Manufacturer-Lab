@@ -39,7 +39,7 @@ function renderContent(content: string) {
       parts.push(content.slice(lastIndex, match.index));
     }
     parts.push(
-      <span key={match.index} className="font-semibold text-blue-600">
+      <span key={match.index} className="font-semibold text-brand">
         @{match[1]}
       </span>
     );
@@ -184,10 +184,10 @@ export default function CommentsPanel({ entityType, entityId }: CommentsPanelPro
         {[1, 2, 3].map((i) => (
           <div key={i} className="animate-pulse space-y-2">
             <div className="flex items-center gap-2">
-              <div className="h-3 w-20 rounded bg-slate-200" />
-              <div className="h-3 w-12 rounded bg-slate-100" />
+              <div className="h-3 w-20 rounded bg-surface-3" />
+              <div className="h-3 w-12 rounded bg-surface-3" />
             </div>
-            <div className="h-4 w-full rounded bg-slate-100" />
+            <div className="h-4 w-full rounded bg-surface-3" />
           </div>
         ))}
       </div>
@@ -198,17 +198,17 @@ export default function CommentsPanel({ entityType, entityId }: CommentsPanelPro
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {comments.length === 0 ? (
-          <p className="text-sm text-slate-400 text-center py-8">No comments yet</p>
+          <p className="text-sm text-foreground-muted text-center py-8">No comments yet</p>
         ) : (
           comments.map((comment) => (
             <div key={comment.id} className="text-sm">
               <div className="flex items-baseline gap-2 mb-0.5">
-                <span className="font-medium text-slate-900">{comment.author_name}</span>
-                <span className="text-xs text-slate-400">
+                <span className="font-medium text-foreground">{comment.author_name}</span>
+                <span className="text-xs text-foreground-muted">
                   {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
                 </span>
               </div>
-              <p className="text-slate-700 whitespace-pre-wrap leading-relaxed">
+              <p className="text-foreground-secondary whitespace-pre-wrap leading-relaxed">
                 {renderContent(comment.content)}
               </p>
             </div>
@@ -216,15 +216,15 @@ export default function CommentsPanel({ entityType, entityId }: CommentsPanelPro
         )}
       </div>
 
-      <div className="border-t border-slate-200 p-3 relative">
+      <div className="border-t border-border-secondary p-3 relative">
         {showMentions && filteredUsers.length > 0 && (
-          <div className="absolute bottom-full left-3 right-3 mb-1 max-h-40 overflow-y-auto rounded-md border border-slate-200 bg-white shadow-lg z-10">
+          <div className="absolute bottom-full left-3 right-3 mb-1 max-h-40 overflow-y-auto rounded-md border border-border-secondary bg-surface-2 shadow-premium-lg z-10">
             {filteredUsers.slice(0, 8).map((user, i) => (
               <button
                 key={user.id}
                 type="button"
                 className={`w-full text-left px-3 py-1.5 text-sm ${
-                  i === mentionIndex ? "bg-blue-50 text-blue-700" : "text-slate-700 hover:bg-slate-50"
+                  i === mentionIndex ? "bg-brand-muted text-brand" : "text-foreground-secondary hover:bg-surface-3"
                 }`}
                 onMouseDown={(e) => {
                   e.preventDefault();
@@ -243,14 +243,14 @@ export default function CommentsPanel({ entityType, entityId }: CommentsPanelPro
           onKeyDown={handleKeyDown}
           placeholder="Add a comment... Use @ to mention"
           rows={2}
-          className="w-full resize-none rounded-md border border-slate-300 px-3 py-2 text-sm placeholder:text-slate-400 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
+          className="w-full resize-none rounded-md border border-border-secondary bg-surface-0 px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
         />
         <div className="flex justify-end mt-2">
           <button
             type="button"
             onClick={handleSubmit}
             disabled={!content.trim() || submitting}
-            className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="rounded-md bg-brand px-3 py-1.5 text-xs font-medium text-white hover:bg-brand-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {submitting ? "Posting..." : "Post Comment"}
           </button>

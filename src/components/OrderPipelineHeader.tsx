@@ -87,22 +87,22 @@ export default function OrderPipelineHeader({ status }: OrderPipelineHeaderProps
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
                   isCompleted
-                    ? "bg-blue-600 text-white"
+                    ? "bg-brand text-white"
                     : isCurrent
-                      ? "bg-white text-blue-600 ring-2 ring-blue-600"
-                      : "bg-white text-slate-300 ring-1 ring-slate-200"
+                      ? "bg-surface-1 text-brand ring-2 ring-brand"
+                      : "bg-surface-1 text-foreground-muted border border-border-secondary"
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
               </div>
 
               {/* Tooltip */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-md whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 pointer-events-none">
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 bg-surface-2 text-foreground text-xs font-medium rounded-md whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 pointer-events-none shadow-premium-md">
                 {step.label}
                 {isCompleted && <span className="text-green-400 ml-1">Done</span>}
-                {isCurrent && <span className="text-blue-300 ml-1">Current</span>}
+                {isCurrent && <span className="text-brand ml-1">Current</span>}
                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
-                  <div className="w-2 h-2 bg-slate-900 rotate-45 -translate-y-1" />
+                  <div className="w-2 h-2 bg-surface-2 rotate-45 -translate-y-1" />
                 </div>
               </div>
             </div>
@@ -112,12 +112,12 @@ export default function OrderPipelineHeader({ status }: OrderPipelineHeaderProps
               <div
                 className={`h-0.5 w-4 shrink-0 ${
                   isCompleted && !isCancelled && index < currentStepIndex - 1
-                    ? "bg-blue-600"
+                    ? "bg-brand"
                     : isCompleted
-                      ? "bg-blue-600"
+                      ? "bg-brand"
                       : isUpcoming
-                        ? "bg-slate-200"
-                        : "bg-slate-200"
+                        ? "bg-border-secondary"
+                        : "bg-border-secondary"
                 }`}
               />
             )}

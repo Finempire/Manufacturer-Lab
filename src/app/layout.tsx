@@ -16,11 +16,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <body className="font-sans antialiased">
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} dark`}>
+      <body className="font-sans antialiased bg-surface-0 text-foreground">
         <AuthProvider>
           {children}
-          <Toaster position="bottom-right" duration={3000} richColors />
+          <Toaster
+            position="bottom-right"
+            duration={3000}
+            richColors
+            theme="dark"
+            toastOptions={{
+              style: {
+                background: 'var(--surface-2)',
+                border: '1px solid var(--border-primary)',
+                color: 'var(--text-primary)',
+              },
+            }}
+          />
         </AuthProvider>
       </body>
     </html>

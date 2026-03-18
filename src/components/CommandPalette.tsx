@@ -19,6 +19,10 @@ import {
   LayoutDashboard,
   BarChart3,
   Package,
+  ClipboardList,
+  ListChecks,
+  Clock,
+  History,
 } from "lucide-react";
 
 interface SearchResult {
@@ -29,6 +33,14 @@ interface SearchResult {
   meta?: string;
 }
 
+interface RecentItem {
+  id: string;
+  type: string;
+  title: string;
+  subtitle: string;
+  viewedAt: string;
+}
+
 interface CommandItem {
   id: string;
   label: string;
@@ -36,19 +48,19 @@ interface CommandItem {
   icon: typeof Plus;
   iconColor: string;
   href: string;
-  section: "action" | "navigation";
+  section: "action" | "navigation" | "master";
 }
 
 const TYPE_CONFIG: Record<
   string,
   { icon: typeof ShoppingCart; label: string; color: string }
 > = {
-  order: { icon: ShoppingCart, label: "Order", color: "text-blue-600 bg-blue-50" },
-  buyer: { icon: Users, label: "Buyer", color: "text-emerald-600 bg-emerald-50" },
-  style: { icon: Palette, label: "Style", color: "text-purple-600 bg-purple-50" },
-  vendor: { icon: Truck, label: "Vendor", color: "text-orange-600 bg-orange-50" },
-  purchase: { icon: CreditCard, label: "Purchase", color: "text-cyan-600 bg-cyan-50" },
-  expense: { icon: Receipt, label: "Expense", color: "text-red-600 bg-red-50" },
+  order: { icon: ShoppingCart, label: "Order", color: "text-blue-400 bg-blue-500/15" },
+  buyer: { icon: Users, label: "Buyer", color: "text-emerald-400 bg-emerald-500/15" },
+  style: { icon: Palette, label: "Style", color: "text-purple-400 bg-purple-500/15" },
+  vendor: { icon: Truck, label: "Vendor", color: "text-orange-400 bg-orange-500/15" },
+  purchase: { icon: CreditCard, label: "Purchase", color: "text-cyan-400 bg-cyan-500/15" },
+  expense: { icon: Receipt, label: "Expense", color: "text-red-400 bg-red-500/15" },
 };
 
 const ROLE_PATHS: Record<string, string> = {
@@ -84,18 +96,38 @@ function getResultHref(result: SearchResult, role: string): string {
   }
 }
 
+function getRecentItemHref(item: RecentItem, role: string): string {
+  const base = ROLE_PATHS[role] || "/dashboard";
+
+  switch (item.type) {
+    case "order":
+      return `${base}/orders/${item.id}`;
+    case "purchase":
+      if (role === "RUNNER") return `${base}/my-purchases`;
+      if (role === "ACCOUNTANT") return `${base}/purchases-review`;
+      return base;
+    case "expense":
+      return `${base}/expense-requests/${item.id}`;
+    case "tech_pack":
+      return `${base}/tech-packs`;
+    default:
+      return base;
+  }
+}
+
 function getCommandsForRole(role: string): CommandItem[] {
   const base = ROLE_PATHS[role] || "/dashboard";
   const commands: CommandItem[] = [];
 
-  // Quick Actions (role-aware)
+  // --- Quick Actions ---
+
   if (role === "ACCOUNTANT") {
     commands.push({
       id: "action-create-order",
       label: "Create Order",
       description: "Create a new order",
       icon: Plus,
-      iconColor: "text-blue-600 bg-blue-50",
+      iconColor: "text-blue-400 bg-blue-500/15",
       href: `${base}/orders/new`,
       section: "action",
     });
@@ -107,7 +139,7 @@ function getCommandsForRole(role: string): CommandItem[] {
       label: "Raise Material Need",
       description: "Create a new material need request",
       icon: Plus,
-      iconColor: "text-amber-600 bg-amber-50",
+      iconColor: "text-amber-400 bg-amber-500/15",
       href: `${base}/material-needs`,
       section: "action",
     });
@@ -119,7 +151,7 @@ function getCommandsForRole(role: string): CommandItem[] {
       label: "Create Purchase Request",
       description: "Create a new purchase request",
       icon: Plus,
-      iconColor: "text-cyan-600 bg-cyan-50",
+      iconColor: "text-cyan-400 bg-cyan-500/15",
       href: `${base}/requests/new`,
       section: "action",
     });
@@ -135,19 +167,20 @@ function getCommandsForRole(role: string): CommandItem[] {
       label: "Raise Expense",
       description: "Create a new expense request",
       icon: Plus,
-      iconColor: "text-red-600 bg-red-50",
+      iconColor: "text-red-400 bg-red-500/15",
       href: `${base}/expense-requests`,
       section: "action",
     });
   }
 
-  // Navigation Commands (all roles)
+  // --- Navigation ---
+
   commands.push({
     id: "nav-dashboard",
     label: "Go to Dashboard",
     description: "Open your dashboard",
     icon: LayoutDashboard,
-    iconColor: "text-slate-600 bg-slate-100",
+    iconColor: "text-foreground-secondary bg-surface-3",
     href: base,
     section: "navigation",
   });
@@ -158,7 +191,7 @@ function getCommandsForRole(role: string): CommandItem[] {
       label: "Go to Reports",
       description: "Open reports",
       icon: BarChart3,
-      iconColor: "text-indigo-600 bg-indigo-50",
+      iconColor: "text-indigo-400 bg-indigo-500/15",
       href: `${base}/reports`,
       section: "navigation",
     });
@@ -169,7 +202,7 @@ function getCommandsForRole(role: string): CommandItem[] {
     label: "Go to Orders",
     description: "View all orders",
     icon: Package,
-    iconColor: "text-blue-600 bg-blue-50",
+    iconColor: "text-blue-400 bg-blue-500/15",
     href: `${base}/orders`,
     section: "navigation",
   });
@@ -184,10 +217,154 @@ function getCommandsForRole(role: string): CommandItem[] {
       label: "Go to Tech Packs",
       description: "View tech packs",
       icon: FileText,
-      iconColor: "text-purple-600 bg-purple-50",
+      iconColor: "text-purple-400 bg-purple-500/15",
       href: `${base}/tech-packs`,
       section: "navigation",
     });
+  }
+
+  // Role-specific navigation commands
+
+  if (role === "ACCOUNTANT") {
+    commands.push(
+      {
+        id: "nav-purchases-review",
+        label: "Review Purchases",
+        description: "Review and approve purchase requests",
+        icon: ClipboardList,
+        iconColor: "text-cyan-400 bg-cyan-500/15",
+        href: `${base}/purchases-review`,
+        section: "navigation",
+      },
+      {
+        id: "nav-payments",
+        label: "Manage Payments",
+        description: "View and manage payments",
+        icon: CreditCard,
+        iconColor: "text-emerald-400 bg-emerald-500/15",
+        href: `${base}/payments`,
+        section: "navigation",
+      },
+      {
+        id: "nav-all-transactions",
+        label: "All Transactions",
+        description: "View all transactions",
+        icon: Receipt,
+        iconColor: "text-amber-400 bg-amber-500/15",
+        href: `${base}/all-transactions`,
+        section: "navigation",
+      },
+      {
+        id: "nav-users",
+        label: "Manage Users",
+        description: "Manage system users",
+        icon: Users,
+        iconColor: "text-violet-400 bg-violet-500/15",
+        href: `${base}/users`,
+        section: "navigation",
+      }
+    );
+  }
+
+  if (role === "STORE_MANAGER") {
+    commands.push(
+      {
+        id: "nav-requirements",
+        label: "View Requirements",
+        description: "View material requirements",
+        icon: ListChecks,
+        iconColor: "text-amber-400 bg-amber-500/15",
+        href: `${base}/requirements`,
+        section: "navigation",
+      },
+      {
+        id: "nav-requests",
+        label: "View Requests",
+        description: "View purchase requests",
+        icon: ClipboardList,
+        iconColor: "text-cyan-400 bg-cyan-500/15",
+        href: `${base}/requests`,
+        section: "navigation",
+      }
+    );
+  }
+
+  if (role === "RUNNER") {
+    commands.push(
+      {
+        id: "nav-my-purchases",
+        label: "My Purchases",
+        description: "View assigned purchases",
+        icon: ShoppingCart,
+        iconColor: "text-cyan-400 bg-cyan-500/15",
+        href: `${base}/my-purchases`,
+        section: "navigation",
+      },
+      {
+        id: "nav-pending",
+        label: "Pending Tasks",
+        description: "View pending tasks",
+        icon: Clock,
+        iconColor: "text-amber-400 bg-amber-500/15",
+        href: `${base}/pending`,
+        section: "navigation",
+      }
+    );
+  }
+
+  if (role === "MERCHANDISER") {
+    commands.push({
+      id: "nav-my-techpacks",
+      label: "My Tech Packs",
+      description: "View assigned tech packs",
+      icon: FileText,
+      iconColor: "text-purple-400 bg-purple-500/15",
+      href: `${base}/tech-packs`,
+      section: "navigation",
+    });
+  }
+
+  // --- Master Data (Accountant only) ---
+
+  if (role === "ACCOUNTANT") {
+    commands.push(
+      {
+        id: "master-buyers",
+        label: "Manage Buyers",
+        description: "View and manage buyers",
+        icon: Users,
+        iconColor: "text-emerald-400 bg-emerald-500/15",
+        href: `${base}/master/buyers`,
+        section: "master",
+      },
+      {
+        id: "master-vendors",
+        label: "Manage Vendors",
+        description: "View and manage vendors",
+        icon: Truck,
+        iconColor: "text-orange-400 bg-orange-500/15",
+        href: `${base}/master/vendors`,
+        section: "master",
+      },
+      {
+        id: "master-materials",
+        label: "Manage Materials",
+        description: "View and manage materials",
+        icon: Package,
+        iconColor: "text-teal-400 bg-teal-500/15",
+        href: `${base}/master/materials`,
+        section: "master",
+      },
+      {
+        id: "master-styles",
+        label: "Manage Styles",
+        description: "View and manage styles",
+        icon: Palette,
+        iconColor: "text-purple-400 bg-purple-500/15",
+        href: `${base}/master/styles`,
+        section: "master",
+      }
+    );
   }
 
   return commands;
@@ -197,6 +374,8 @@ export default function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [recentItems, setRecentItems] = useState<RecentItem[]>([]);
+  const [recentLoading, setRecentLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -209,7 +388,6 @@ export default function CommandPalette() {
 
   const commands = useMemo(() => getCommandsForRole(role), [role]);
 
-  // Determine if we should show commands vs search results
   const isCommandMode = query === "" || query.startsWith(">");
   const commandQuery = query.startsWith(">") ? query.slice(1).trim().toLowerCase() : "";
 
@@ -231,11 +409,36 @@ export default function CommandPalette() {
     () => filteredCommands.filter((c) => c.section === "navigation"),
     [filteredCommands]
   );
+  const masterCommands = useMemo(
+    () => filteredCommands.filter((c) => c.section === "master"),
+    [filteredCommands]
+  );
 
-  // Total navigable items count for keyboard navigation
-  const totalItems = isCommandMode ? filteredCommands.length : results.length;
+  // Show recent items when palette opens with empty query and no command query
+  const showRecent = isCommandMode && !commandQuery && recentItems.length > 0;
 
-  // Ctrl+K to open
+  const totalItems = isCommandMode
+    ? filteredCommands.length + (showRecent ? recentItems.length : 0)
+    : results.length;
+
+  // Fetch recent items when palette opens
+  useEffect(() => {
+    if (open) {
+      setRecentLoading(true);
+      fetch("/api/recent-items")
+        .then((res) => res.json())
+        .then((data) => {
+          setRecentItems((data.items || []).slice(0, 5));
+        })
+        .catch(() => {
+          setRecentItems([]);
+        })
+        .finally(() => {
+          setRecentLoading(false);
+        });
+    }
+  }, [open]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -250,7 +453,6 @@ export default function CommandPalette() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Focus input when opened
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 50);
@@ -260,7 +462,6 @@ export default function CommandPalette() {
     }
   }, [open]);
 
-  // Debounced search
   const doSearch = useCallback(
     (q: string) => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -289,11 +490,9 @@ export default function CommandPalette() {
   const handleInputChange = (val: string) => {
     setQuery(val);
     setActiveIndex(0);
-    // Only trigger search for non-command queries with 2+ chars
     if (!val.startsWith(">") && val.length >= 2) {
       doSearch(val);
     } else if (!val.startsWith(">")) {
-      // Clear search results when below threshold
       setResults([]);
       setLoading(false);
     }
@@ -301,6 +500,12 @@ export default function CommandPalette() {
 
   const navigateTo = (result: SearchResult) => {
     const href = getResultHref(result, role);
+    setOpen(false);
+    router.push(href);
+  };
+
+  const navigateToRecentItem = (item: RecentItem) => {
+    const href = getRecentItemHref(item, role);
     setOpen(false);
     router.push(href);
   };
@@ -319,15 +524,22 @@ export default function CommandPalette() {
       setActiveIndex((i) => Math.max(i - 1, 0));
     } else if (e.key === "Enter") {
       e.preventDefault();
-      if (isCommandMode && filteredCommands[activeIndex]) {
-        navigateToCommand(filteredCommands[activeIndex]);
+      if (isCommandMode) {
+        // Recent items come after commands in the flat index
+        if (showRecent && activeIndex >= filteredCommands.length) {
+          const recentIdx = activeIndex - filteredCommands.length;
+          if (recentItems[recentIdx]) {
+            navigateToRecentItem(recentItems[recentIdx]);
+          }
+        } else if (filteredCommands[activeIndex]) {
+          navigateToCommand(filteredCommands[activeIndex]);
+        }
       } else if (!isCommandMode && results[activeIndex]) {
         navigateTo(results[activeIndex]);
       }
     }
   };
 
-  // Scroll active item into view
   useEffect(() => {
     if (listRef.current) {
       const items = listRef.current.querySelectorAll("[data-command-item]");
@@ -338,33 +550,29 @@ export default function CommandPalette() {
 
   if (!open) return null;
 
-  // Group search results by type
   const grouped = results.reduce<Record<string, SearchResult[]>>((acc, r) => {
     if (!acc[r.type]) acc[r.type] = [];
     acc[r.type].push(r);
     return acc;
   }, {});
 
-  // Flatten for keyboard navigation index (search results only)
   let flatIndex = 0;
-
-  // Track command flat index for keyboard navigation
   let commandFlatIndex = 0;
 
   return (
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
+        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
         onClick={() => setOpen(false)}
       />
 
       {/* Dialog */}
       <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4">
-        <div className="w-full max-w-xl bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+        <div className="w-full max-w-xl bg-surface-2 rounded-xl shadow-premium-xl border border-border overflow-hidden animate-fade-in">
           {/* Search Input */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-200">
-            <Search className="w-4 h-4 text-slate-400 shrink-0" />
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-border-secondary">
+            <Search className="w-4 h-4 text-foreground-tertiary shrink-0" />
             <input
               ref={inputRef}
               type="text"
@@ -372,12 +580,12 @@ export default function CommandPalette() {
               onChange={(e) => handleInputChange(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder='Search or type ">" for commands...'
-              className="flex-1 text-sm text-slate-900 placeholder:text-slate-400 outline-none bg-transparent"
+              className="flex-1 text-sm text-foreground placeholder:text-foreground-muted outline-none bg-transparent"
             />
-            {loading && <Loader2 className="w-4 h-4 text-slate-400 animate-spin shrink-0" />}
+            {(loading || recentLoading) && <Loader2 className="w-4 h-4 text-foreground-tertiary animate-spin shrink-0" />}
             <button
               onClick={() => setOpen(false)}
-              className="p-1 text-slate-400 hover:text-slate-600 rounded"
+              className="p-1 text-foreground-muted hover:text-foreground-secondary rounded transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -386,20 +594,18 @@ export default function CommandPalette() {
           {/* Content Area */}
           <div ref={listRef} className="max-h-[360px] overflow-y-auto">
             {isCommandMode ? (
-              /* Command Mode: show quick actions and navigation */
-              filteredCommands.length === 0 ? (
+              filteredCommands.length === 0 && !showRecent ? (
                 <div className="px-4 py-10 text-center">
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-foreground-muted">
                     No matching commands
                   </p>
                 </div>
               ) : (
                 <>
-                  {/* Quick Actions Section */}
                   {actionCommands.length > 0 && (
                     <div>
-                      <div className="px-4 py-1.5 bg-slate-50 border-b border-slate-100">
-                        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                      <div className="px-4 py-1.5 bg-surface-3 border-b border-border-secondary">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground-muted">
                           Quick Actions
                         </span>
                       </div>
@@ -413,8 +619,8 @@ export default function CommandPalette() {
                             onClick={() => navigateToCommand(cmd)}
                             className={`flex items-center gap-3 w-full px-4 py-2.5 text-left transition-colors ${
                               idx === activeIndex
-                                ? "bg-blue-50"
-                                : "hover:bg-slate-50"
+                                ? "bg-brand-muted"
+                                : "hover:bg-surface-3"
                             }`}
                           >
                             <div
@@ -423,18 +629,18 @@ export default function CommandPalette() {
                               <Icon className="w-4 h-4" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-slate-900 truncate">
+                              <p className="text-sm font-medium text-foreground truncate">
                                 {cmd.label}
                               </p>
-                              <p className="text-xs text-slate-500 truncate">
+                              <p className="text-xs text-foreground-tertiary truncate">
                                 {cmd.description}
                               </p>
                             </div>
                             <ArrowRight
                               className={`w-3.5 h-3.5 shrink-0 transition-colors ${
                                 idx === activeIndex
-                                  ? "text-blue-400"
-                                  : "text-slate-300"
+                                  ? "text-brand-hover"
+                                  : "text-foreground-muted"
                               }`}
                             />
                           </button>
@@ -443,11 +649,10 @@ export default function CommandPalette() {
                     </div>
                   )}
 
-                  {/* Navigation Section */}
                   {navigationCommands.length > 0 && (
                     <div>
-                      <div className="px-4 py-1.5 bg-slate-50 border-b border-slate-100">
-                        <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                      <div className="px-4 py-1.5 bg-surface-3 border-b border-border-secondary">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground-muted">
                           Navigation
                         </span>
                       </div>
@@ -461,8 +666,8 @@ export default function CommandPalette() {
                             onClick={() => navigateToCommand(cmd)}
                             className={`flex items-center gap-3 w-full px-4 py-2.5 text-left transition-colors ${
                               idx === activeIndex
-                                ? "bg-blue-50"
-                                : "hover:bg-slate-50"
+                                ? "bg-brand-muted"
+                                : "hover:bg-surface-3"
                             }`}
                           >
                             <div
@@ -471,18 +676,115 @@ export default function CommandPalette() {
                               <Icon className="w-4 h-4" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-slate-900 truncate">
+                              <p className="text-sm font-medium text-foreground truncate">
                                 {cmd.label}
                               </p>
-                              <p className="text-xs text-slate-500 truncate">
+                              <p className="text-xs text-foreground-tertiary truncate">
                                 {cmd.description}
                               </p>
                             </div>
                             <ArrowRight
                               className={`w-3.5 h-3.5 shrink-0 transition-colors ${
                                 idx === activeIndex
-                                  ? "text-blue-400"
-                                  : "text-slate-300"
+                                  ? "text-brand-hover"
+                                  : "text-foreground-muted"
+                              }`}
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {masterCommands.length > 0 && (
+                    <div>
+                      <div className="px-4 py-1.5 bg-surface-3 border-b border-border-secondary">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground-muted">
+                          Master Data
+                        </span>
+                      </div>
+                      {masterCommands.map((cmd) => {
+                        const idx = commandFlatIndex++;
+                        const Icon = cmd.icon;
+                        return (
+                          <button
+                            key={cmd.id}
+                            data-command-item
+                            onClick={() => navigateToCommand(cmd)}
+                            className={`flex items-center gap-3 w-full px-4 py-2.5 text-left transition-colors ${
+                              idx === activeIndex
+                                ? "bg-brand-muted"
+                                : "hover:bg-surface-3"
+                            }`}
+                          >
+                            <div
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${cmd.iconColor}`}
+                            >
+                              <Icon className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-foreground truncate">
+                                {cmd.label}
+                              </p>
+                              <p className="text-xs text-foreground-tertiary truncate">
+                                {cmd.description}
+                              </p>
+                            </div>
+                            <ArrowRight
+                              className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                                idx === activeIndex
+                                  ? "text-brand-hover"
+                                  : "text-foreground-muted"
+                              }`}
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {showRecent && (
+                    <div>
+                      <div className="px-4 py-1.5 bg-surface-3 border-b border-border-secondary">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground-muted">
+                          Recent
+                        </span>
+                      </div>
+                      {recentItems.map((item, i) => {
+                        const idx = filteredCommands.length + i;
+                        const config = TYPE_CONFIG[item.type];
+                        const Icon = config?.icon || History;
+                        const color = config?.color || "text-foreground-secondary bg-surface-3";
+                        return (
+                          <button
+                            key={`recent-${item.id}-${item.type}`}
+                            data-command-item
+                            onClick={() => navigateToRecentItem(item)}
+                            className={`flex items-center gap-3 w-full px-4 py-2.5 text-left transition-colors ${
+                              idx === activeIndex
+                                ? "bg-brand-muted"
+                                : "hover:bg-surface-3"
+                            }`}
+                          >
+                            <div
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${color}`}
+                            >
+                              <Icon className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-foreground truncate">
+                                {item.title}
+                              </p>
+                              <p className="text-xs text-foreground-tertiary truncate">
+                                {item.subtitle}
+                              </p>
+                            </div>
+                            <History className="w-3 h-3 text-foreground-muted shrink-0" />
+                            <ArrowRight
+                              className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                                idx === activeIndex
+                                  ? "text-brand-hover"
+                                  : "text-foreground-muted"
                               }`}
                             />
                           </button>
@@ -493,33 +795,28 @@ export default function CommandPalette() {
                 </>
               )
             ) : !loading && query.length >= 2 && results.length === 0 ? (
-              /* Search mode: no results */
               <div className="px-4 py-10 text-center">
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-foreground-muted">
                   No results for &quot;{query}&quot;
                 </p>
               </div>
             ) : query.length < 2 && query.length > 0 ? (
-              /* Search mode: too short */
               <div className="px-4 py-10 text-center">
-                <Search className="w-8 h-8 text-slate-200 mx-auto mb-2" />
-                <p className="text-sm text-slate-400">
+                <Search className="w-8 h-8 text-foreground-muted mx-auto mb-2" />
+                <p className="text-sm text-foreground-muted">
                   Type at least 2 characters to search
                 </p>
               </div>
             ) : (
-              /* Search mode: show grouped results */
               Object.entries(grouped).map(([type, items]) => {
                 const config = TYPE_CONFIG[type];
                 return (
                   <div key={type}>
-                    {/* Section Header */}
-                    <div className="px-4 py-1.5 bg-slate-50 border-b border-slate-100">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                    <div className="px-4 py-1.5 bg-surface-3 border-b border-border-secondary">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground-muted">
                         {config?.label || type}
                       </span>
                     </div>
-                    {/* Items */}
                     {items.map((result) => {
                       const idx = flatIndex++;
                       const Icon = config?.icon || ShoppingCart;
@@ -530,8 +827,8 @@ export default function CommandPalette() {
                           onClick={() => navigateTo(result)}
                           className={`flex items-center gap-3 w-full px-4 py-2.5 text-left transition-colors ${
                             idx === activeIndex
-                              ? "bg-blue-50"
-                              : "hover:bg-slate-50"
+                              ? "bg-brand-muted"
+                              : "hover:bg-surface-3"
                           }`}
                         >
                           <div
@@ -540,23 +837,23 @@ export default function CommandPalette() {
                             <Icon className="w-4 h-4" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-slate-900 truncate">
+                            <p className="text-sm font-medium text-foreground truncate">
                               {result.title}
                             </p>
-                            <p className="text-xs text-slate-500 truncate">
+                            <p className="text-xs text-foreground-tertiary truncate">
                               {result.subtitle}
                             </p>
                           </div>
                           {result.meta && (
-                            <span className="text-xs text-slate-400 shrink-0">
+                            <span className="text-xs text-foreground-muted shrink-0">
                               {result.meta}
                             </span>
                           )}
                           <ArrowRight
                             className={`w-3.5 h-3.5 shrink-0 transition-colors ${
                               idx === activeIndex
-                                ? "text-blue-400"
-                                : "text-slate-300"
+                                ? "text-brand-hover"
+                                : "text-foreground-muted"
                             }`}
                           />
                         </button>
@@ -569,27 +866,27 @@ export default function CommandPalette() {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center gap-4 px-4 py-2 border-t border-slate-100 bg-slate-50 text-[11px] text-slate-400">
+          <div className="flex items-center gap-4 px-4 py-2 border-t border-border-secondary bg-surface-3 text-[11px] text-foreground-muted">
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-mono">
+              <kbd className="px-1.5 py-0.5 bg-surface-1 border border-border rounded text-[10px] font-mono">
                 ↑↓
               </kbd>
               Navigate
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-mono">
+              <kbd className="px-1.5 py-0.5 bg-surface-1 border border-border rounded text-[10px] font-mono">
                 ↵
               </kbd>
               Open
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-mono">
+              <kbd className="px-1.5 py-0.5 bg-surface-1 border border-border rounded text-[10px] font-mono">
                 esc
               </kbd>
               Close
             </span>
             <span className="ml-auto flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-mono">
+              <kbd className="px-1.5 py-0.5 bg-surface-1 border border-border rounded text-[10px] font-mono">
                 &gt;
               </kbd>
               Commands

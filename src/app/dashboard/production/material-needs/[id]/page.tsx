@@ -42,33 +42,33 @@ export default function ProductionMaterialNeedDetailPage() {
             .catch(() => { toast.error("Failed to load"); setLoading(false); });
     }, [params.id]);
 
-    if (loading) return <div className="text-center py-12 text-slate-400">Loading...</div>;
-    if (!req) return <div className="text-center py-12 text-slate-400">Not found</div>;
+    if (loading) return <div className="text-center py-12 text-foreground-muted">Loading...</div>;
+    if (!req) return <div className="text-center py-12 text-foreground-muted">Not found</div>;
 
     return (
         <div className="space-y-6 max-w-3xl mx-auto pb-10">
             <div className="flex items-center gap-4">
-                <button onClick={() => router.back()} className="p-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition">
-                    <ArrowLeft className="w-5 h-5 text-slate-600" />
+                <button onClick={() => router.back()} className="p-2 bg-surface-1 border border-border rounded-lg hover:bg-surface-2 transition">
+                    <ArrowLeft className="w-5 h-5 text-foreground-secondary" />
                 </button>
                 <div className="flex-1">
-                    <h1 className="text-lg font-semibold tracking-tight text-slate-900">Material Requirement</h1>
-                    <p className="text-sm text-slate-500 mt-0.5">{req.order.order_no} &bull; {req.style.style_code}</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-foreground">Material Requirement</h1>
+                    <p className="text-sm text-foreground-tertiary mt-0.5">{req.order.order_no} &bull; {req.style.style_code}</p>
                 </div>
-                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border ${STATUS_COLORS[req.status] || "bg-slate-100 text-slate-800 border-slate-200"}`}>
+                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border ${STATUS_COLORS[req.status] || "bg-surface-3 text-foreground border-border"}`}>
                     {req.status.replace(/_/g, " ")}
                 </span>
             </div>
 
-            <div className="bg-white rounded-lg border border-slate-200 p-5">
-                <h3 className="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wide border-b pb-2">Details</h3>
+            <div className="bg-surface-1 rounded-lg border border-border p-5">
+                <h3 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wide border-b pb-2">Details</h3>
                 <div className="grid grid-cols-2 gap-y-4 gap-x-6">
-                    <div><p className="text-xs text-slate-500 mb-1">Buyer</p><p className="text-sm font-medium">{req.buyer.name}</p></div>
-                    <div><p className="text-xs text-slate-500 mb-1">Style</p><p className="text-sm font-medium">{req.style.style_code} — {req.style.style_name}</p></div>
-                    <div><p className="text-xs text-slate-500 mb-1">Required By</p><p className="text-sm font-medium">{format(new Date(req.required_by_date), "dd MMM yyyy")}</p></div>
-                    <div><p className="text-xs text-slate-500 mb-1">PM</p><p className="text-sm font-medium">{req.production_manager.name}</p></div>
-                    {req.store_manager && <div><p className="text-xs text-slate-500 mb-1">Store Manager</p><p className="text-sm font-medium">{req.store_manager.name}</p></div>}
-                    {req.special_instructions && <div className="col-span-2"><p className="text-xs text-slate-500 mb-1">Special Instructions</p><p className="text-sm text-slate-700">{req.special_instructions}</p></div>}
+                    <div><p className="text-xs text-foreground-tertiary mb-1">Buyer</p><p className="text-sm font-medium">{req.buyer.name}</p></div>
+                    <div><p className="text-xs text-foreground-tertiary mb-1">Style</p><p className="text-sm font-medium">{req.style.style_code} — {req.style.style_name}</p></div>
+                    <div><p className="text-xs text-foreground-tertiary mb-1">Required By</p><p className="text-sm font-medium">{format(new Date(req.required_by_date), "dd MMM yyyy")}</p></div>
+                    <div><p className="text-xs text-foreground-tertiary mb-1">PM</p><p className="text-sm font-medium">{req.production_manager.name}</p></div>
+                    {req.store_manager && <div><p className="text-xs text-foreground-tertiary mb-1">Store Manager</p><p className="text-sm font-medium">{req.store_manager.name}</p></div>}
+                    {req.special_instructions && <div className="col-span-2"><p className="text-xs text-foreground-tertiary mb-1">Special Instructions</p><p className="text-sm text-foreground-secondary">{req.special_instructions}</p></div>}
                 </div>
             </div>
 
@@ -79,26 +79,26 @@ export default function ProductionMaterialNeedDetailPage() {
                 </div>
             )}
 
-            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
-                <div className="px-5 py-3 border-b border-slate-100 bg-slate-50">
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Material Lines</h3>
+            <div className="bg-surface-1 rounded-lg border border-border overflow-hidden">
+                <div className="px-5 py-3 border-b border-border-secondary bg-surface-2">
+                    <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Material Lines</h3>
                 </div>
-                <table className="min-w-full divide-y divide-slate-100">
-                    <thead className="bg-slate-50/50">
+                <table className="min-w-full divide-y divide-border-secondary">
+                    <thead className="bg-surface-2">
                         <tr>
-                            <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase">Material</th>
-                            <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase">Description</th>
-                            <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase">Qty</th>
-                            <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase">Unit</th>
+                            <th className="px-4 py-2.5 text-left text-xs font-semibold text-foreground-tertiary uppercase">Material</th>
+                            <th className="px-4 py-2.5 text-left text-xs font-semibold text-foreground-tertiary uppercase">Description</th>
+                            <th className="px-4 py-2.5 text-right text-xs font-semibold text-foreground-tertiary uppercase">Qty</th>
+                            <th className="px-4 py-2.5 text-left text-xs font-semibold text-foreground-tertiary uppercase">Unit</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-50">
+                    <tbody className="divide-y divide-border-secondary">
                         {req.lines.map(line => (
                             <tr key={line.id}>
-                                <td className="px-4 py-2.5 text-sm font-medium text-slate-900">{line.material_name}</td>
-                                <td className="px-4 py-2.5 text-sm text-slate-500">{line.description || "—"}</td>
+                                <td className="px-4 py-2.5 text-sm font-medium text-foreground">{line.material_name}</td>
+                                <td className="px-4 py-2.5 text-sm text-foreground-tertiary">{line.description || "—"}</td>
                                 <td className="px-4 py-2.5 text-sm text-right tabular-nums">{line.quantity}</td>
-                                <td className="px-4 py-2.5 text-sm text-slate-600">{line.unit}</td>
+                                <td className="px-4 py-2.5 text-sm text-foreground-secondary">{line.unit}</td>
                             </tr>
                         ))}
                     </tbody>
