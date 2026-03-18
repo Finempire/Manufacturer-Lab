@@ -42,17 +42,17 @@ interface Props {
 }
 
 const STATUS_ICON = {
-  complete: <CheckCircle2 className="w-5 h-5 text-green-600" />,
-  incomplete: <XCircle className="w-5 h-5 text-red-500" />,
-  warning: <AlertTriangle className="w-5 h-5 text-amber-500" />,
-  na: <Minus className="w-5 h-5 text-slate-400" />,
+  complete: <CheckCircle2 className="w-5 h-5 text-green-400" />,
+  incomplete: <XCircle className="w-5 h-5 text-red-400" />,
+  warning: <AlertTriangle className="w-5 h-5 text-amber-400" />,
+  na: <Minus className="w-5 h-5 text-foreground-muted" />,
 };
 
 const STATUS_BG = {
-  complete: "bg-green-50 border-green-200",
-  incomplete: "bg-red-50 border-red-200",
-  warning: "bg-amber-50 border-amber-200",
-  na: "bg-slate-50 border-slate-200",
+  complete: "bg-green-500/10 border-green-500/20",
+  incomplete: "bg-red-500/10 border-red-500/20",
+  warning: "bg-amber-500/10 border-amber-500/20",
+  na: "bg-surface-3 border-border-secondary",
 };
 
 export default function ProductionReadinessChecklist({
@@ -80,8 +80,8 @@ export default function ProductionReadinessChecklist({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
-        <span className="ml-2 text-sm text-slate-500">
+        <Loader2 className="w-5 h-5 animate-spin text-foreground-muted" />
+        <span className="ml-2 text-sm text-foreground-tertiary">
           Checking production readiness...
         </span>
       </div>
@@ -90,7 +90,7 @@ export default function ProductionReadinessChecklist({
 
   if (!data) {
     return (
-      <div className="text-center py-6 text-sm text-slate-400">
+      <div className="text-center py-6 text-sm text-foreground-muted">
         Unable to load readiness data
       </div>
     );
@@ -100,31 +100,31 @@ export default function ProductionReadinessChecklist({
     <div className="space-y-4">
       {/* Header */}
       <div
-        className={`flex items-center gap-3 p-4 rounded-lg border ${
+        className={`flex items-center gap-3 p-4 rounded-xl border ${
           data.isReady
-            ? "bg-green-50 border-green-200"
+            ? "bg-green-500/10 border-green-500/20"
             : data.hasWarnings
-            ? "bg-amber-50 border-amber-200"
-            : "bg-red-50 border-red-200"
+            ? "bg-amber-500/10 border-amber-500/20"
+            : "bg-red-500/10 border-red-500/20"
         }`}
       >
         <Factory
           className={`w-6 h-6 ${
             data.isReady
-              ? "text-green-600"
+              ? "text-green-400"
               : data.hasWarnings
-              ? "text-amber-600"
-              : "text-red-600"
+              ? "text-amber-400"
+              : "text-red-400"
           }`}
         />
         <div className="flex-1">
           <p
             className={`text-sm font-semibold ${
               data.isReady
-                ? "text-green-900"
+                ? "text-green-300"
                 : data.hasWarnings
-                ? "text-amber-900"
-                : "text-red-900"
+                ? "text-amber-300"
+                : "text-red-300"
             }`}
           >
             {data.isReady
@@ -136,10 +136,10 @@ export default function ProductionReadinessChecklist({
           <p
             className={`text-xs mt-0.5 ${
               data.isReady
-                ? "text-green-700"
+                ? "text-green-400"
                 : data.hasWarnings
-                ? "text-amber-700"
-                : "text-red-700"
+                ? "text-amber-400"
+                : "text-red-400"
             }`}
           >
             {data.isReady
@@ -156,7 +156,7 @@ export default function ProductionReadinessChecklist({
         {data.checklist.map((item) => (
           <div
             key={item.id}
-            className={`rounded-lg border ${STATUS_BG[item.status]}`}
+            className={`rounded-xl border ${STATUS_BG[item.status]}`}
           >
             <button
               onClick={() => item.blockers.length > 0 && toggleExpand(item.id)}
@@ -164,13 +164,13 @@ export default function ProductionReadinessChecklist({
             >
               {STATUS_ICON[item.status]}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-slate-900">
+                <p className="text-sm font-medium text-foreground">
                   {item.label}
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">{item.detail}</p>
+                <p className="text-xs text-foreground-tertiary mt-0.5">{item.detail}</p>
               </div>
               {item.blockers.length > 0 && (
-                <span className="text-slate-400">
+                <span className="text-foreground-muted">
                   {expanded[item.id] ? (
                     <ChevronDown className="w-4 h-4" />
                   ) : (
@@ -186,9 +186,9 @@ export default function ProductionReadinessChecklist({
                 {item.blockers.map((blocker) => (
                   <div
                     key={blocker.id}
-                    className="flex items-center gap-2 text-xs text-slate-600 py-1"
+                    className="flex items-center gap-2 text-xs text-foreground-secondary py-1"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-foreground-muted shrink-0" />
                     {blocker.label}
                   </div>
                 ))}
@@ -202,7 +202,7 @@ export default function ProductionReadinessChecklist({
       {showActions && data.isReady && onReadyConfirm && (
         <button
           onClick={onReadyConfirm}
-          className="w-full flex items-center justify-center gap-2 py-3 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition"
+          className="w-full flex items-center justify-center gap-2 py-3 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition"
         >
           <Factory className="w-4 h-4" />
           Accept for Production
@@ -210,7 +210,7 @@ export default function ProductionReadinessChecklist({
       )}
 
       {showActions && !data.isReady && (
-        <p className="text-xs text-center text-red-600 font-medium">
+        <p className="text-xs text-center text-red-400 font-medium">
           Resolve all incomplete items before accepting production
         </p>
       )}

@@ -21,19 +21,19 @@ export function DraftIndicator({
   const timeAgo = formatDistanceToNow(lastSaved, { addSuffix: true });
 
   return (
-    <div className="flex items-center gap-3 text-xs text-gray-500">
+    <div className="flex items-center gap-3 text-xs text-foreground-tertiary">
       <span>Draft saved {timeAgo}</span>
       <button
         type="button"
         onClick={onRestore}
-        className="text-blue-600 hover:text-blue-800 font-medium underline-offset-2 hover:underline"
+        className="text-brand hover:text-brand-hover font-medium underline-offset-2 hover:underline"
       >
         Restore draft
       </button>
       <button
         type="button"
         onClick={onDiscard}
-        className="text-gray-400 hover:text-red-600 font-medium underline-offset-2 hover:underline"
+        className="text-foreground-muted hover:text-red-400 font-medium underline-offset-2 hover:underline"
       >
         Discard draft
       </button>

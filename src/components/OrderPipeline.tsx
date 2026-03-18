@@ -112,63 +112,63 @@ function PipelineSection({
     !!onMarkCompleted;
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200">
+    <div className="bg-surface-1 rounded-xl shadow-premium-sm border border-border-secondary">
       <button
         type="button"
         onClick={() => setExpanded((prev) => !prev)}
-        className="w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 transition-colors"
+        className="w-full flex items-center justify-between p-4 text-left hover:bg-surface-3 transition-colors"
       >
         <div className="flex items-center gap-2">
           {expanded ? (
-            <ChevronDown className="w-4 h-4 text-slate-500" />
+            <ChevronDown className="w-4 h-4 text-foreground-tertiary" />
           ) : (
-            <ChevronRight className="w-4 h-4 text-slate-500" />
+            <ChevronRight className="w-4 h-4 text-foreground-tertiary" />
           )}
-          <h3 className="text-sm font-semibold text-slate-900">
+          <h3 className="text-sm font-semibold text-foreground">
             {section.title}
           </h3>
-          <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-medium rounded-full bg-slate-100 text-slate-700">
+          <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-medium rounded-full bg-surface-3 text-foreground-secondary">
             {count}
           </span>
         </div>
       </button>
 
       {expanded && (
-        <div className="border-t border-slate-100">
+        <div className="border-t border-border-secondary">
           {count === 0 ? (
-            <div className="p-4 text-sm text-slate-400 text-center">
+            <div className="p-4 text-sm text-foreground-muted text-center">
               No orders in this stage.
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50">
+                  <tr className="border-b border-border-secondary bg-surface-0">
                     {section.columns.map((col) => (
                       <th
                         key={col.key}
-                        className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider"
+                        className="px-4 py-2 text-left text-xs font-medium text-foreground-tertiary uppercase tracking-wider"
                       >
                         {col.label}
                       </th>
                     ))}
                     {showMarkCompleted && (
-                      <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      <th className="px-4 py-2 text-left text-xs font-medium text-foreground-tertiary uppercase tracking-wider">
                         Action
                       </th>
                     )}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
+                <tbody className="divide-y divide-border-secondary">
                   {sectionOrders.map((order) => (
                     <tr
                       key={order.id}
-                      className="hover:bg-slate-50 transition-colors"
+                      className="hover:bg-surface-3 transition-colors"
                     >
                       {section.columns.map((col) => (
                         <td
                           key={col.key}
-                          className="px-4 py-3 text-sm text-slate-700 whitespace-nowrap"
+                          className="px-4 py-3 text-sm text-foreground-secondary whitespace-nowrap"
                         >
                           {col.render
                             ? col.render(order)
@@ -211,7 +211,7 @@ export default function OrderPipeline({
 }: OrderPipelineProps) {
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-slate-900">
+      <h2 className="text-lg font-semibold text-foreground">
         Live Order Pipeline
       </h2>
       {SECTIONS.map((section) => (

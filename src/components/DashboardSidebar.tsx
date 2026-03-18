@@ -135,39 +135,39 @@ export default function DashboardSidebar() {
   const sidebarContent = (
     <>
       {/* Header */}
-      <div className="flex items-center justify-between h-12 px-4 border-b border-slate-200 shrink-0">
+      <div className="flex items-center justify-between h-14 px-4 border-b border-border-secondary shrink-0">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
-            <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
+            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
             </svg>
           </div>
-          <span className="text-base font-bold text-slate-900 tracking-tight">CashFlow</span>
+          <span className="text-base font-bold text-foreground tracking-tight">CashFlow</span>
         </div>
-        <button onClick={() => setSidebarOpen(false)} className="md:hidden text-slate-400 hover:text-slate-600">
+        <button onClick={() => setSidebarOpen(false)} className="md:hidden text-foreground-tertiary hover:text-foreground-secondary">
           <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* Role Badge */}
-      <div className="px-4 py-2 border-b border-slate-100">
+      <div className="px-4 py-2.5 border-b border-border-secondary">
         <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></div>
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">{ROLE_LABELS[role] || role}</span>
+          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></div>
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground-tertiary">{ROLE_LABELS[role] || role}</span>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-2">
+      <nav className="flex-1 overflow-y-auto py-3">
         {Object.entries(sections).map(([sectionName, items]) => (
           <div key={sectionName}>
             {sectionName !== "Main" && (
               <button
                 onClick={() => toggleSection(sectionName)}
-                className="w-full flex items-center justify-between px-4 py-1.5 mt-4 mb-1"
+                className="w-full flex items-center justify-between px-4 py-1.5 mt-5 mb-1"
               >
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">{sectionName}</span>
-                <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${collapsedSections[sectionName] ? '-rotate-90' : ''}`} />
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground-muted">{sectionName}</span>
+                <ChevronDown className={`w-3 h-3 text-foreground-muted transition-transform duration-200 ${collapsedSections[sectionName] ? '-rotate-90' : ''}`} />
               </button>
             )}
             {!collapsedSections[sectionName] && (
@@ -180,13 +180,13 @@ export default function DashboardSidebar() {
                       key={item.path}
                       href={item.path}
                       onClick={() => setSidebarOpen(false)}
-                      className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 ${
+                      className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
                         isActive
-                          ? "bg-slate-100 text-slate-900 border-l-2 border-blue-600 ml-0 pl-[10px]"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                          ? "bg-brand-muted text-brand-hover border-l-2 border-brand ml-0 pl-[10px]"
+                          : "text-foreground-secondary hover:bg-surface-3 hover:text-foreground"
                       }`}
                     >
-                      <span className={`shrink-0 ${isActive ? "text-slate-900" : "text-slate-400"}`}>{item.icon}</span>
+                      <span className={`shrink-0 ${isActive ? "text-brand-hover" : "text-foreground-tertiary"}`}>{item.icon}</span>
                       <span className="truncate">{item.label}</span>
                     </Link>
                   );
@@ -198,18 +198,18 @@ export default function DashboardSidebar() {
       </nav>
 
       {/* User Footer */}
-      <div className="border-t border-slate-200 p-3 shrink-0">
+      <div className="border-t border-border-secondary p-3 shrink-0">
         <div className="flex items-center gap-2.5 px-1">
-          <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-semibold shrink-0">
+          <div className="w-8 h-8 rounded-full bg-surface-3 text-foreground-secondary flex items-center justify-center text-xs font-semibold shrink-0">
             {session.user.name?.charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-slate-900 truncate leading-tight">{session.user.name}</p>
-            <p className="text-[11px] text-slate-400 truncate">{session.user.email}</p>
+            <p className="text-sm font-medium text-foreground truncate leading-tight">{session.user.name}</p>
+            <p className="text-[11px] text-foreground-tertiary truncate">{session.user.email}</p>
           </div>
           <button
             onClick={handleLogout}
-            className="text-slate-400 hover:text-red-500 transition-colors p-1"
+            className="text-foreground-tertiary hover:text-red-400 transition-colors p-1"
             title="Sign out"
           >
             <LogOut className="w-4 h-4" />
@@ -222,13 +222,13 @@ export default function DashboardSidebar() {
   return (
     <>
       {/* Mobile header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-12 bg-white border-b border-slate-200 flex items-center px-4">
-        <button onClick={() => setSidebarOpen(true)} className="text-slate-600 hover:text-slate-900">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 h-12 bg-surface-1 border-b border-border-secondary flex items-center px-4">
+        <button onClick={() => setSidebarOpen(true)} className="text-foreground-secondary hover:text-foreground">
           <Menu className="w-5 h-5" />
         </button>
-        <span className="ml-3 text-sm font-bold text-slate-900 tracking-tight">CashFlow</span>
+        <span className="ml-3 text-sm font-bold text-foreground tracking-tight">CashFlow</span>
         <div className="ml-auto flex items-center gap-2">
-          <button className="text-slate-400 hover:text-slate-600 relative p-1">
+          <button className="text-foreground-tertiary hover:text-foreground-secondary relative p-1">
             <Bell className="w-[18px] h-[18px]" />
             {unreadCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
@@ -242,14 +242,14 @@ export default function DashboardSidebar() {
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar — 240px as per spec */}
+      {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[240px] bg-white border-r border-slate-200 flex flex-col transition-transform duration-200 ease-in-out md:relative md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-[240px] bg-surface-1 border-r border-border-secondary flex flex-col transition-transform duration-200 ease-in-out md:relative md:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

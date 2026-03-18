@@ -25,8 +25,8 @@ export function DatePresets({ onSelect, activePreset }: DatePresetsProps) {
           onClick={() => onSelect(format(p.from(), "yyyy-MM-dd"), format(p.to(), "yyyy-MM-dd"))}
           className={`px-2 py-1 text-xs rounded transition-colors ${
             activePreset === p.key
-              ? "bg-blue-100 text-blue-700 font-medium"
-              : "text-gray-500 hover:bg-gray-100"
+              ? "bg-brand-muted text-brand font-medium"
+              : "text-foreground-tertiary hover:bg-surface-3"
           }`}
         >
           {p.label}

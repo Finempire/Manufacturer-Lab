@@ -236,8 +236,8 @@ export default function OrderTimeline({ status, orderType, order }: OrderTimelin
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
-      <h3 className="text-lg font-semibold text-slate-900 mb-4">
+    <div className="bg-surface-1 rounded-xl shadow-premium-sm border border-border-secondary p-4">
+      <h3 className="text-lg font-semibold text-foreground mb-4">
         Order Timeline
       </h3>
       <div className="relative">
@@ -257,10 +257,10 @@ export default function OrderTimeline({ status, orderType, order }: OrderTimelin
                 <div
                   className={`absolute left-4 top-8 w-0.5 h-full -translate-x-1/2 ${
                     stepStatus === "completed"
-                      ? "bg-green-300"
+                      ? "bg-green-500/40"
                       : stepStatus === "current"
-                        ? "bg-blue-300"
-                        : "border-l border-dashed border-slate-300"
+                        ? "bg-brand/40"
+                        : "border-l border-dashed border-border-secondary"
                   }`}
                 />
               )}
@@ -269,10 +269,10 @@ export default function OrderTimeline({ status, orderType, order }: OrderTimelin
               <div
                 className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-full shrink-0 ${
                   stepStatus === "completed"
-                    ? "bg-green-100 text-green-600"
+                    ? "bg-green-500/15 text-green-400"
                     : stepStatus === "current"
-                      ? "bg-blue-100 text-blue-600 ring-2 ring-blue-300"
-                      : "bg-slate-100 text-slate-400"
+                      ? "bg-brand-muted text-brand ring-2 ring-brand/40"
+                      : "bg-surface-3 text-foreground-muted"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -283,10 +283,10 @@ export default function OrderTimeline({ status, orderType, order }: OrderTimelin
                 <p
                   className={`text-sm font-medium ${
                     stepStatus === "completed"
-                      ? "text-slate-900"
+                      ? "text-foreground"
                       : stepStatus === "current"
-                        ? "text-blue-700"
-                        : "text-slate-400"
+                        ? "text-brand"
+                        : "text-foreground-muted"
                   }`}
                 >
                   {step.label}
@@ -294,17 +294,17 @@ export default function OrderTimeline({ status, orderType, order }: OrderTimelin
                 {stepStatus === "completed" && (
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5">
                     {timestamp && (
-                      <span className="text-xs text-slate-500">{timestamp}</span>
+                      <span className="text-xs text-foreground-tertiary">{timestamp}</span>
                     )}
                     {actor && (
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-foreground-tertiary">
                         by {actor}
                       </span>
                     )}
                   </div>
                 )}
                 {stepStatus === "current" && (
-                  <span className="text-xs text-blue-500 mt-0.5 inline-block">
+                  <span className="text-xs text-brand mt-0.5 inline-block">
                     Pending
                   </span>
                 )}

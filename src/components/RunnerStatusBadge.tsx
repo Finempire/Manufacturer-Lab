@@ -10,11 +10,11 @@ interface RunnerStatusConfig {
 const RUNNER_STATUS_MAP: Record<string, RunnerStatusConfig> = {
   AVAILABLE: {
     label: "Available",
-    classes: "bg-green-50 text-green-700 border border-green-200",
+    classes: "bg-green-500/10 text-green-400 border border-green-500/20",
   },
   ON_TASK: {
     label: "On Task",
-    classes: "bg-amber-50 text-amber-700 border border-amber-200",
+    classes: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
   },
 };
 
@@ -25,7 +25,7 @@ interface RunnerStatusBadgeProps {
 export default function RunnerStatusBadge({ status }: RunnerStatusBadgeProps) {
   const config = RUNNER_STATUS_MAP[status] ?? {
     label: status.replace(/_/g, " "),
-    classes: "bg-slate-50 text-slate-600 border border-slate-200",
+    classes: "bg-surface-3 text-foreground-secondary border border-border-secondary",
   };
 
   return (

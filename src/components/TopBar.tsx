@@ -61,16 +61,16 @@ export default function TopBar() {
   const breadcrumbs = getBreadcrumbs(pathname, role);
 
   return (
-    <header className="hidden md:flex h-12 shrink-0 items-center justify-between px-6 bg-white border-b border-slate-200 sticky top-0 z-30">
+    <header className="hidden md:flex h-12 shrink-0 items-center justify-between px-6 bg-surface-1 border-b border-border-secondary sticky top-0 z-30">
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-1 text-sm">
         {breadcrumbs.map((crumb, i) => (
           <span key={crumb.href} className="flex items-center gap-1">
-            {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-300" />}
+            {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-foreground-muted" />}
             {i === breadcrumbs.length - 1 ? (
-              <span className="font-medium text-slate-900">{crumb.label}</span>
+              <span className="font-medium text-foreground">{crumb.label}</span>
             ) : (
-              <Link href={crumb.href} className="text-slate-500 hover:text-slate-700">
+              <Link href={crumb.href} className="text-foreground-tertiary hover:text-foreground-secondary transition-colors">
                 {crumb.label}
               </Link>
             )}
@@ -83,11 +83,11 @@ export default function TopBar() {
         {/* Search Trigger */}
         <button
           onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }))}
-          className="flex items-center gap-2 px-3 py-1.5 text-sm text-slate-400 bg-slate-50 border border-slate-200 rounded-md hover:bg-slate-100 hover:text-slate-500 transition-colors"
+          className="flex items-center gap-2 px-3 py-1.5 text-sm text-foreground-tertiary bg-surface-2 border border-border rounded-lg hover:border-border-accent hover:text-foreground-secondary transition-all"
         >
           <Search className="w-3.5 h-3.5" />
           <span className="hidden lg:inline">Search...</span>
-          <kbd className="hidden lg:inline text-[10px] font-mono px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400">Ctrl+K</kbd>
+          <kbd className="hidden lg:inline text-[10px] font-mono px-1.5 py-0.5 bg-surface-3 border border-border rounded text-foreground-muted">Ctrl+K</kbd>
         </button>
 
         {/* Notification Center */}
@@ -97,26 +97,26 @@ export default function TopBar() {
         <div ref={userRef} className="relative">
           <button
             onClick={() => { setShowUserMenu(!showUserMenu); }}
-            className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-semibold hover:bg-slate-300 transition-colors"
+            className="w-8 h-8 rounded-full bg-surface-3 text-foreground-secondary flex items-center justify-center text-xs font-semibold hover:bg-border-accent transition-colors"
           >
             {session.user.name?.charAt(0).toUpperCase()}
           </button>
 
           {showUserMenu && (
-            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden z-50">
-              <div className="px-4 py-3 border-b border-slate-100">
-                <p className="text-sm font-medium text-slate-900">{session.user.name}</p>
-                <p className="text-xs text-slate-400">{session.user.email}</p>
+            <div className="absolute right-0 top-full mt-2 w-48 bg-surface-2 border border-border rounded-lg shadow-premium-lg overflow-hidden z-50 animate-fade-in">
+              <div className="px-4 py-3 border-b border-border-secondary">
+                <p className="text-sm font-medium text-foreground">{session.user.name}</p>
+                <p className="text-xs text-foreground-tertiary">{session.user.email}</p>
               </div>
               <div className="py-1">
-                <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                  <User className="w-4 h-4 text-slate-400" /> Profile
+                <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-foreground-secondary hover:bg-surface-3 transition-colors">
+                  <User className="w-4 h-4 text-foreground-tertiary" /> Profile
                 </button>
                 <button
                   onClick={async () => { await signOut({ redirect: false }); router.push("/login"); }}
-                  className="flex items-center gap-2 w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                  className="flex items-center gap-2 w-full px-4 py-2 text-sm text-foreground-secondary hover:bg-surface-3 transition-colors"
                 >
-                  <LogOut className="w-4 h-4 text-slate-400" /> Sign out
+                  <LogOut className="w-4 h-4 text-foreground-tertiary" /> Sign out
                 </button>
               </div>
             </div>

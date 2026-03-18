@@ -79,38 +79,38 @@ export default function ResetPasswordModal({ isOpen, onClose, user }: ResetPassw
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden border border-amber-500/20">
-                <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-amber-50/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+            <div className="bg-surface-2 rounded-2xl w-full max-w-md shadow-premium-xl overflow-hidden border border-amber-500/20">
+                <div className="flex items-center justify-between p-5 border-b border-border-secondary bg-amber-500/10">
                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
                             <KeyRound className="w-4 h-4" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-semibold text-slate-900">Reset Password</h2>
-                            <p className="text-[11px] font-medium text-slate-500">For {user.name} ({user.email})</p>
+                            <h2 className="text-xl font-semibold text-foreground">Reset Password</h2>
+                            <p className="text-[11px] font-medium text-foreground-tertiary">For {user.name} ({user.email})</p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-white rounded-lg transition-colors"
+                        className="p-1.5 text-foreground-muted hover:text-foreground-secondary hover:bg-surface-3 rounded-lg transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-5 space-y-4">
-                    <div className="bg-blue-50 text-blue-700 text-xs p-3 rounded-lg border border-blue-100 mb-4">
+                    <div className="bg-blue-500/10 text-blue-300 text-xs p-3 rounded-lg border border-blue-500/20 mb-4">
                         Resetting the password will send an email to the user with their new temporary credentials and invalidate their current session login.
                     </div>
 
                     <div>
                         <div className="flex items-center justify-between mb-1.5">
-                            <label className="block text-sm font-medium text-slate-700">New Temporary Password *</label>
+                            <label className="block text-sm font-medium text-foreground-secondary">New Temporary Password *</label>
                             <button
                                 type="button"
                                 onClick={generatePassword}
-                                className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center"
+                                className="text-xs text-brand hover:text-brand-hover font-medium flex items-center"
                             >
                                 <RefreshCw className="w-3 h-3 mr-1" /> Generate
                             </button>
@@ -122,13 +122,13 @@ export default function ResetPasswordModal({ isOpen, onClose, user }: ResetPassw
                                 minLength={8}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full h-10 pl-3 pr-10 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full h-10 pl-3 pr-10 bg-surface-1 border border-border rounded-lg text-sm focus:ring-2 focus:ring-brand focus:border-brand"
                                 placeholder="Min 8 chars, 1 uppercase, 1 number"
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted hover:text-foreground-secondary"
                             >
                                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
@@ -140,16 +140,16 @@ export default function ResetPasswordModal({ isOpen, onClose, user }: ResetPassw
                             type="checkbox"
                             checked={mustChangePassword}
                             onChange={(e) => setMustChangePassword(e.target.checked)}
-                            className="w-4 h-4 text-amber-600 border-slate-300 rounded focus:ring-amber-500"
+                            className="w-4 h-4 text-amber-600 border-border rounded focus:ring-amber-500"
                         />
-                        <span className="text-sm font-medium text-slate-700">Force Password Change on Next Login</span>
+                        <span className="text-sm font-medium text-foreground-secondary">Force Password Change on Next Login</span>
                     </label>
 
-                    <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 mt-6">
+                    <div className="flex items-center justify-end gap-3 pt-4 border-t border-border-secondary mt-6">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
+                            className="px-4 py-2 text-sm font-medium text-foreground-secondary bg-surface-2 border border-border rounded-lg hover:bg-surface-3 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
                         >
                             Cancel
                         </button>

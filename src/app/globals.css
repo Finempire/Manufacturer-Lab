@@ -3,13 +3,51 @@
 @tailwind utilities;
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  /* Surface System - Dark Mode First */
+  --surface-0: #0a0a0f;      /* App shell background */
+  --surface-1: #111118;      /* Cards / tables / sections */
+  --surface-2: #1a1a24;      /* Elevated: drawers / modals / command palette */
+  --surface-3: #222230;      /* Hover states, active items */
+
+  /* Borders */
+  --border-primary: #2a2a3a;
+  --border-secondary: #1e1e2e;
+  --border-accent: #3a3a4f;
+
+  /* Text */
+  --text-primary: #f0f0f5;
+  --text-secondary: #a0a0b5;
+  --text-tertiary: #6b6b80;
+  --text-muted: #4a4a5f;
+
+  /* Brand */
+  --brand-primary: #6366f1;    /* Indigo */
+  --brand-hover: #818cf8;
+  --brand-muted: rgba(99, 102, 241, 0.15);
+  --brand-ring: rgba(99, 102, 241, 0.3);
+
+  /* Semantic Status */
+  --status-success: #22c55e;
+  --status-success-muted: rgba(34, 197, 94, 0.12);
+  --status-warning: #f59e0b;
+  --status-warning-muted: rgba(245, 158, 11, 0.12);
+  --status-danger: #ef4444;
+  --status-danger-muted: rgba(239, 68, 68, 0.12);
+  --status-info: #3b82f6;
+  --status-info-muted: rgba(59, 130, 246, 0.12);
+  --status-neutral: #6b7280;
+  --status-neutral-muted: rgba(107, 114, 128, 0.12);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--text-primary);
+  background: var(--surface-0);
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -17,7 +55,7 @@ body {
 
 @layer base {
   * {
-    @apply border-slate-200;
+    border-color: var(--border-primary);
   }
 }
 
@@ -30,7 +68,7 @@ body {
   }
 }
 
-/* Scrollbar styling */
+/* Scrollbar styling - dark premium */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -39,11 +77,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--border-accent);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--text-tertiary);
 }
 
 /* Table resizable columns */
@@ -59,8 +97,64 @@ body {
 }
 .resize-handle:hover,
 .resize-handle.resizing {
-  background: #3b82f6;
+  background: var(--brand-primary);
   opacity: 0.5;
+}
+
+/* Premium surface classes */
+.surface-0 {
+  background: var(--surface-0);
+}
+.surface-1 {
+  background: var(--surface-1);
+  border: 1px solid var(--border-secondary);
+}
+.surface-2 {
+  background: var(--surface-2);
+  border: 1px solid var(--border-primary);
+}
+.surface-3 {
+  background: var(--surface-3);
+}
+
+/* Premium card hover */
+.card-hover {
+  transition: all 0.2s ease;
+}
+.card-hover:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Skeleton loading animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-1) 25%, var(--surface-2) 50%, var(--surface-1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+/* Slide-in animation for drawers */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.animate-slide-in-right {
+  animation: slide-in-right 0.2s ease-out;
+}
+
+/* Fade-in animation */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fade-in 0.15s ease-out;
 }
 
 /* Print styles */
@@ -68,4 +162,32 @@ body {
   .no-print {
     display: none !important;
   }
+}
+
+/* Selection color */
+::selection {
+  background: var(--brand-muted);
+  color: var(--text-primary);
+}
+
+/* Focus ring style */
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  box-shadow: 0 0 0 2px var(--surface-0), 0 0 0 4px var(--brand-primary);
+}
+
+/* Premium input styles */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+textarea,
+select {
+  color-scheme: dark;
 }
