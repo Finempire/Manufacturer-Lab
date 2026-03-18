@@ -53,8 +53,8 @@ export default function MerchandiserTechPacksPage() {
     return (
         <div className="space-y-4">
             <div>
-                <h1 className="text-lg font-semibold tracking-tight text-slate-900">Tech Packs</h1>
-                <p className="text-sm text-slate-500 mt-1">View and manage your assigned tech packs</p>
+                <h1 className="text-lg font-semibold tracking-tight text-foreground">Tech Packs</h1>
+                <p className="text-sm text-foreground-tertiary mt-1">View and manage your assigned tech packs</p>
             </div>
 
             {/* Filters */}
@@ -62,7 +62,7 @@ export default function MerchandiserTechPacksPage() {
                 <select
                     value={statusFilter}
                     onChange={(e) => { setStatusFilter(e.target.value); setFilters(prev => ({ ...prev, status: e.target.value || undefined })); }}
-                    className="h-9 px-3 text-sm border border-slate-300 rounded-lg bg-white"
+                    className="h-9 px-3 text-sm border border-border rounded-lg bg-surface-1"
                 >
                     <option value="">All Statuses</option>
                     {Object.keys(STATUS_COLORS).map(s => (
@@ -72,41 +72,41 @@ export default function MerchandiserTechPacksPage() {
                 <SavedFilters page="merchandiser-techpacks" currentFilters={filters} onApplyFilter={handleApplyFilter} />
             </div>
 
-            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+            <div className="bg-surface-1 rounded-lg border border-border overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-slate-200">
-                        <thead className="bg-slate-50">
+                        <thead className="bg-surface-2">
                             <tr>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Tech Pack No</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Order</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Buyer</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Fabric</th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Revisions</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Created</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Tech Pack No</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Order</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Buyer</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Fabric</th>
+                                <th className="px-4 py-3 text-center text-xs font-semibold text-foreground-tertiary uppercase">Revisions</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Status</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Created</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody className="divide-y divide-border-secondary">
                             {loading ? (
-                                <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-400">Loading...</td></tr>
+                                <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-foreground-muted">Loading...</td></tr>
                             ) : filteredTechPacks.length === 0 ? (
                                 <tr><td colSpan={7} className="px-4 py-12 text-center">
                                     <FileText className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-                                    <p className="text-sm text-slate-500">No tech packs assigned to you</p>
+                                    <p className="text-sm text-foreground-tertiary">No tech packs assigned to you</p>
                                 </td></tr>
                             ) : filteredTechPacks.map(tp => (
-                                <tr key={tp.id} className="hover:bg-slate-50 transition-colors">
-                                    <td className="px-4 py-3 text-sm font-semibold text-slate-900">{tp.tech_pack_no}</td>
-                                    <td className="px-4 py-3 text-sm text-slate-600">{tp.order.order_no}</td>
-                                    <td className="px-4 py-3 text-sm text-slate-600">{tp.order.buyer.name}</td>
-                                    <td className="px-4 py-3 text-sm text-slate-500 max-w-[200px] truncate">{tp.fabric_details || "—"}</td>
-                                    <td className="px-4 py-3 text-sm text-slate-600 text-center">{tp.revision_count}</td>
+                                <tr key={tp.id} className="hover:bg-surface-2 transition-colors">
+                                    <td className="px-4 py-3 text-sm font-semibold text-foreground">{tp.tech_pack_no}</td>
+                                    <td className="px-4 py-3 text-sm text-foreground-secondary">{tp.order.order_no}</td>
+                                    <td className="px-4 py-3 text-sm text-foreground-secondary">{tp.order.buyer.name}</td>
+                                    <td className="px-4 py-3 text-sm text-foreground-tertiary max-w-[200px] truncate">{tp.fabric_details || "—"}</td>
+                                    <td className="px-4 py-3 text-sm text-foreground-secondary text-center">{tp.revision_count}</td>
                                     <td className="px-4 py-3">
-                                        <span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[tp.status] || "bg-slate-100 text-slate-800"}`}>
+                                        <span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[tp.status] || "bg-surface-3 text-foreground"}`}>
                                             {tp.status.replace(/_/g, " ")}
                                         </span>
                                     </td>
-                                    <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(tp.created_at), "dd MMM yyyy")}</td>
+                                    <td className="px-4 py-3 text-sm text-foreground-tertiary">{format(new Date(tp.created_at), "dd MMM yyyy")}</td>
                                 </tr>
                             ))}
                         </tbody>

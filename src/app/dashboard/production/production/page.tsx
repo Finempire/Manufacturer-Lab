@@ -42,8 +42,8 @@ export default function ProductionInterfacePage() {
     return (
         <div className="space-y-4">
             <div>
-                <h1 className="text-lg font-semibold tracking-tight text-slate-900">Production</h1>
-                <p className="text-sm text-slate-500 mt-1">Orders currently in production pipeline</p>
+                <h1 className="text-lg font-semibold tracking-tight text-foreground">Production</h1>
+                <p className="text-sm text-foreground-tertiary mt-1">Orders currently in production pipeline</p>
             </div>
 
             {/* Status summary cards */}
@@ -51,43 +51,43 @@ export default function ProductionInterfacePage() {
                 {PRODUCTION_STATUSES.map(status => {
                     const count = orders.filter(o => o.status === status).length;
                     return (
-                        <div key={status} className="bg-white rounded-lg border border-slate-200 p-4">
-                            <p className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">{status.replace(/_/g, " ")}</p>
-                            <p className="text-2xl font-bold text-slate-900 mt-1">{count}</p>
+                        <div key={status} className="bg-surface-1 rounded-lg border border-border p-4">
+                            <p className="text-[11px] font-medium text-foreground-tertiary uppercase tracking-wider">{status.replace(/_/g, " ")}</p>
+                            <p className="text-2xl font-bold text-foreground mt-1">{count}</p>
                         </div>
                     );
                 })}
             </div>
 
-            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+            <div className="bg-surface-1 rounded-lg border border-border overflow-hidden">
                 <table className="min-w-full divide-y divide-slate-200">
-                    <thead className="bg-slate-50">
+                    <thead className="bg-surface-2">
                         <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Order No</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Buyer</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Order Date</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Shipping Date</th>
-                            <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Total Qty</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
-                            <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">View</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Order No</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Buyer</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Order Date</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Shipping Date</th>
+                            <th className="px-4 py-3 text-center text-xs font-semibold text-foreground-tertiary uppercase">Total Qty</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Status</th>
+                            <th className="px-4 py-3 text-center text-xs font-semibold text-foreground-tertiary uppercase">View</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-border-secondary">
                         {loading ? (
-                            <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-400">Loading...</td></tr>
+                            <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-foreground-muted">Loading...</td></tr>
                         ) : orders.length === 0 ? (
                             <tr><td colSpan={7} className="px-4 py-12 text-center">
                                 <Factory className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-                                <p className="text-sm text-slate-500">No orders in production</p>
+                                <p className="text-sm text-foreground-tertiary">No orders in production</p>
                             </td></tr>
                         ) : orders.map(order => (
-                            <tr key={order.id} className="hover:bg-slate-50">
-                                <td className="px-4 py-3 text-sm font-semibold text-slate-900">{order.order_no}</td>
-                                <td className="px-4 py-3 text-sm text-slate-600">{order.buyer.name}</td>
-                                <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(order.order_date), "dd MMM yyyy")}</td>
-                                <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(order.shipping_date), "dd MMM yyyy")}</td>
-                                <td className="px-4 py-3 text-sm text-slate-600 text-center tabular-nums">{order.lines.reduce((s, l) => s + l.quantity, 0)}</td>
-                                <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[order.status] || "bg-slate-100 text-slate-800"}`}>{order.status.replace(/_/g, " ")}</span></td>
+                            <tr key={order.id} className="hover:bg-surface-2">
+                                <td className="px-4 py-3 text-sm font-semibold text-foreground">{order.order_no}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-secondary">{order.buyer.name}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-tertiary">{format(new Date(order.order_date), "dd MMM yyyy")}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-tertiary">{format(new Date(order.shipping_date), "dd MMM yyyy")}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-secondary text-center tabular-nums">{order.lines.reduce((s, l) => s + l.quantity, 0)}</td>
+                                <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[order.status] || "bg-surface-3 text-foreground"}`}>{order.status.replace(/_/g, " ")}</span></td>
                                 <td className="px-4 py-3 text-center">
                                     <Link href={`/dashboard/production/orders/${order.id}`} className="text-blue-600 hover:text-blue-800"><Eye className="w-4 h-4 mx-auto" /></Link>
                                 </td>

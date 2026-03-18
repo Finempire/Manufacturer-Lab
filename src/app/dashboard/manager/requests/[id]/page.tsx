@@ -43,65 +43,65 @@ export default function ManagerRequestDetailPage() {
             .catch(() => { toast.error("Failed to load"); setLoading(false); });
     }, [params.id]);
 
-    if (loading) return <div className="text-center py-12 text-slate-400">Loading...</div>;
-    if (!request) return <div className="text-center py-12 text-slate-400">Request not found</div>;
+    if (loading) return <div className="text-center py-12 text-foreground-muted">Loading...</div>;
+    if (!request) return <div className="text-center py-12 text-foreground-muted">Request not found</div>;
 
     const totalExpected = request.lines.reduce((s, l) => s + l.expected_amount, 0);
 
     return (
         <div className="space-y-6 max-w-4xl mx-auto pb-10">
             <div className="flex items-center gap-4">
-                <button onClick={() => router.back()} className="p-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition">
-                    <ArrowLeft className="w-5 h-5 text-slate-600" />
+                <button onClick={() => router.back()} className="p-2 bg-surface-1 border border-border rounded-lg hover:bg-surface-2 transition">
+                    <ArrowLeft className="w-5 h-5 text-foreground-secondary" />
                 </button>
                 <div className="flex-1">
-                    <h1 className="text-lg font-semibold tracking-tight text-slate-900">{request.request_no}</h1>
-                    <p className="text-sm text-slate-500 mt-0.5">{request.order.order_no} &bull; {request.buyer.name}</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-foreground">{request.request_no}</h1>
+                    <p className="text-sm text-foreground-tertiary mt-0.5">{request.order.order_no} &bull; {request.buyer.name}</p>
                 </div>
-                <span className={`px-3 py-1.5 text-xs font-bold uppercase rounded-md ${STATUS_COLORS[request.status] || "bg-slate-100 text-slate-800"}`}>
+                <span className={`px-3 py-1.5 text-xs font-bold uppercase rounded-md ${STATUS_COLORS[request.status] || "bg-surface-3 text-foreground"}`}>
                     {request.status.replace(/_/g, " ")}
                 </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="md:col-span-2 space-y-6">
-                    <div className="bg-white rounded-lg border border-slate-200 p-5">
-                        <h3 className="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wide border-b pb-2">Request Details</h3>
+                    <div className="bg-surface-1 rounded-lg border border-border p-5">
+                        <h3 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wide border-b pb-2">Request Details</h3>
                         <div className="grid grid-cols-2 gap-y-4 gap-x-6">
-                            <div><p className="text-xs text-slate-500 mb-1">Runner</p><p className="text-sm font-medium">{request.runner.name}</p></div>
-                            <div><p className="text-xs text-slate-500 mb-1">Preferred Vendor</p><p className="text-sm font-medium">{request.preferred_vendor?.name || "—"}</p></div>
-                            {request.style && <div><p className="text-xs text-slate-500 mb-1">Style</p><p className="text-sm font-medium">{request.style.style_code}</p></div>}
-                            {request.expected_date && <div><p className="text-xs text-slate-500 mb-1">Expected By</p><p className="text-sm font-medium">{format(new Date(request.expected_date), "dd MMM yyyy")}</p></div>}
-                            {request.store_location && <div><p className="text-xs text-slate-500 mb-1">Store Location</p><p className="text-sm font-medium">{request.store_location}</p></div>}
-                            {request.remarks && <div className="col-span-2"><p className="text-xs text-slate-500 mb-1">Remarks</p><p className="text-sm text-slate-700">{request.remarks}</p></div>}
+                            <div><p className="text-xs text-foreground-tertiary mb-1">Runner</p><p className="text-sm font-medium">{request.runner.name}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary mb-1">Preferred Vendor</p><p className="text-sm font-medium">{request.preferred_vendor?.name || "—"}</p></div>
+                            {request.style && <div><p className="text-xs text-foreground-tertiary mb-1">Style</p><p className="text-sm font-medium">{request.style.style_code}</p></div>}
+                            {request.expected_date && <div><p className="text-xs text-foreground-tertiary mb-1">Expected By</p><p className="text-sm font-medium">{format(new Date(request.expected_date), "dd MMM yyyy")}</p></div>}
+                            {request.store_location && <div><p className="text-xs text-foreground-tertiary mb-1">Store Location</p><p className="text-sm font-medium">{request.store_location}</p></div>}
+                            {request.remarks && <div className="col-span-2"><p className="text-xs text-foreground-tertiary mb-1">Remarks</p><p className="text-sm text-foreground-secondary">{request.remarks}</p></div>}
                         </div>
                     </div>
 
                     {/* Material Lines */}
-                    <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
-                        <div className="px-5 py-3 border-b border-slate-100 bg-slate-50">
-                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Material Lines</h3>
+                    <div className="bg-surface-1 rounded-lg border border-border overflow-hidden">
+                        <div className="px-5 py-3 border-b border-border-secondary bg-surface-2">
+                            <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Material Lines</h3>
                         </div>
-                        <table className="min-w-full divide-y divide-slate-100">
-                            <thead className="bg-slate-50/50">
+                        <table className="min-w-full divide-y divide-border-secondary">
+                            <thead className="bg-surface-2">
                                 <tr>
-                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase">Material</th>
-                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase">Qty</th>
-                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase">Rate</th>
-                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase">Amount</th>
+                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-foreground-tertiary uppercase">Material</th>
+                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-foreground-tertiary uppercase">Qty</th>
+                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-foreground-tertiary uppercase">Rate</th>
+                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-foreground-tertiary uppercase">Amount</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-50">
+                            <tbody className="divide-y divide-border-secondary">
                                 {request.lines.map(line => (
                                     <tr key={line.id}>
-                                        <td className="px-4 py-2.5 text-sm text-slate-900">{line.material.description}</td>
+                                        <td className="px-4 py-2.5 text-sm text-foreground">{line.material.description}</td>
                                         <td className="px-4 py-2.5 text-sm text-right tabular-nums">{line.quantity}</td>
                                         <td className="px-4 py-2.5 text-sm text-right tabular-nums">₹{line.expected_rate.toLocaleString("en-IN")}</td>
                                         <td className="px-4 py-2.5 text-sm font-medium text-right tabular-nums">₹{line.expected_amount.toLocaleString("en-IN")}</td>
                                     </tr>
                                 ))}
                             </tbody>
-                            <tfoot className="bg-slate-50">
+                            <tfoot className="bg-surface-2">
                                 <tr>
                                     <td colSpan={3} className="px-4 py-3 text-right text-sm font-semibold">Total:</td>
                                     <td className="px-4 py-3 text-right text-sm font-bold tabular-nums">₹{totalExpected.toLocaleString("en-IN")}</td>
@@ -112,12 +112,12 @@ export default function ManagerRequestDetailPage() {
 
                     {/* Purchases */}
                     {request.purchases.length > 0 && (
-                        <div className="bg-white rounded-lg border border-slate-200 p-4">
-                            <h4 className="text-sm font-bold text-slate-900 mb-3">Purchases ({request.purchases.length})</h4>
+                        <div className="bg-surface-1 rounded-lg border border-border p-4">
+                            <h4 className="text-sm font-bold text-foreground mb-3">Purchases ({request.purchases.length})</h4>
                             <div className="space-y-2">
                                 {request.purchases.map(p => (
-                                    <div key={p.id} className="flex items-center justify-between py-1.5 px-2 bg-slate-50 rounded-lg">
-                                        <span className="text-xs font-medium text-slate-700">{p.purchase_no}</span>
+                                    <div key={p.id} className="flex items-center justify-between py-1.5 px-2 bg-surface-2 rounded-lg">
+                                        <span className="text-xs font-medium text-foreground-secondary">{p.purchase_no}</span>
                                         <div className="flex items-center gap-2">
                                             <span className="text-xs tabular-nums">₹{p.invoice_amount.toLocaleString("en-IN")}</span>
                                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">{p.status.replace(/_/g, " ")}</span>
@@ -130,12 +130,12 @@ export default function ManagerRequestDetailPage() {
                 </div>
 
                 <div>
-                    <div className="bg-white rounded-lg border border-slate-200 p-4">
-                        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3">Summary</h4>
+                    <div className="bg-surface-1 rounded-lg border border-border p-4">
+                        <h4 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3">Summary</h4>
                         <div className="space-y-3">
-                            <div><p className="text-xs text-slate-500">Total Materials</p><p className="text-sm font-bold">{request.lines.length} items</p></div>
-                            <div><p className="text-xs text-slate-500">Expected Total</p><p className="text-sm font-bold text-slate-900">₹{totalExpected.toLocaleString("en-IN")}</p></div>
-                            <div><p className="text-xs text-slate-500">Created</p><p className="text-sm font-medium">{format(new Date(request.created_at), "dd MMM yyyy")}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary">Total Materials</p><p className="text-sm font-bold">{request.lines.length} items</p></div>
+                            <div><p className="text-xs text-foreground-tertiary">Expected Total</p><p className="text-sm font-bold text-foreground">₹{totalExpected.toLocaleString("en-IN")}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary">Created</p><p className="text-sm font-medium">{format(new Date(request.created_at), "dd MMM yyyy")}</p></div>
                         </div>
                     </div>
                 </div>

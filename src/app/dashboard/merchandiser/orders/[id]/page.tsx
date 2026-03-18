@@ -56,22 +56,22 @@ export default function MerchandiserOrderDetail() {
         finally { setCreating(false); }
     };
 
-    if (loading) return <div className="text-center py-12 text-slate-400">Loading...</div>;
-    if (!order) return <div className="text-center py-12 text-slate-400">Order not found</div>;
+    if (loading) return <div className="text-center py-12 text-foreground-muted">Loading...</div>;
+    if (!order) return <div className="text-center py-12 text-foreground-muted">Order not found</div>;
 
     const canCreateTechPack = ["MERCHANDISER_ASSIGNED", "TECH_PACK_IN_PROGRESS"].includes(order.status);
 
     return (
         <div className="space-y-6 max-w-5xl mx-auto pb-10">
             <div className="flex items-center gap-4">
-                <button onClick={() => router.back()} className="p-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition">
-                    <ArrowLeft className="w-5 h-5 text-slate-600" />
+                <button onClick={() => router.back()} className="p-2 bg-surface-1 border border-border rounded-lg hover:bg-surface-2 transition">
+                    <ArrowLeft className="w-5 h-5 text-foreground-secondary" />
                 </button>
                 <div className="flex-1">
-                    <h1 className="text-lg font-semibold tracking-tight text-slate-900">{order.order_no}</h1>
-                    <p className="text-sm text-slate-500 mt-0.5">{order.buyer.name} &bull; {order.order_type}</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-foreground">{order.order_no}</h1>
+                    <p className="text-sm text-foreground-tertiary mt-0.5">{order.buyer.name} &bull; {order.order_type}</p>
                 </div>
-                <span className={`px-3 py-1.5 text-xs font-bold uppercase rounded-md ${STATUS_COLORS[order.status] || "bg-slate-100 text-slate-800"}`}>
+                <span className={`px-3 py-1.5 text-xs font-bold uppercase rounded-md ${STATUS_COLORS[order.status] || "bg-surface-3 text-foreground"}`}>
                     {order.status.replace(/_/g, " ")}
                 </span>
             </div>
@@ -79,34 +79,34 @@ export default function MerchandiserOrderDetail() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
                     {/* Order Info */}
-                    <div className="bg-white rounded-lg border border-slate-200 p-5">
-                        <h3 className="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wide border-b pb-2">Order Information</h3>
+                    <div className="bg-surface-1 rounded-lg border border-border p-5">
+                        <h3 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wide border-b pb-2">Order Information</h3>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-6">
-                            <div><p className="text-xs text-slate-500 mb-1">Order Date</p><p className="text-sm font-medium">{format(new Date(order.order_date), "dd MMM yyyy")}</p></div>
-                            <div><p className="text-xs text-slate-500 mb-1">Shipping Date</p><p className="text-sm font-medium">{format(new Date(order.shipping_date), "dd MMM yyyy")}</p></div>
-                            <div><p className="text-xs text-slate-500 mb-1">Buyer</p><p className="text-sm font-medium">{order.buyer.name}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary mb-1">Order Date</p><p className="text-sm font-medium">{format(new Date(order.order_date), "dd MMM yyyy")}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary mb-1">Shipping Date</p><p className="text-sm font-medium">{format(new Date(order.shipping_date), "dd MMM yyyy")}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary mb-1">Buyer</p><p className="text-sm font-medium">{order.buyer.name}</p></div>
                         </div>
                     </div>
 
                     {/* Item Lines */}
-                    <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
-                        <div className="px-5 py-3 border-b border-slate-100 bg-slate-50">
-                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Item Lines</h3>
+                    <div className="bg-surface-1 rounded-lg border border-border overflow-hidden">
+                        <div className="px-5 py-3 border-b border-border-secondary bg-surface-2">
+                            <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Item Lines</h3>
                         </div>
-                        <table className="min-w-full divide-y divide-slate-100">
-                            <thead className="bg-slate-50/50">
+                        <table className="min-w-full divide-y divide-border-secondary">
+                            <thead className="bg-surface-2">
                                 <tr>
-                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase">Style</th>
-                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase">Description</th>
-                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase">Qty</th>
+                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-foreground-tertiary uppercase">Style</th>
+                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-foreground-tertiary uppercase">Description</th>
+                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-foreground-tertiary uppercase">Qty</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-50">
+                            <tbody className="divide-y divide-border-secondary">
                                 {order.lines.map(line => (
                                     <tr key={line.id}>
-                                        <td className="px-4 py-2.5 text-sm font-medium text-slate-900">{line.style.style_code}</td>
-                                        <td className="px-4 py-2.5 text-sm text-slate-500">{line.description || line.style.style_name}</td>
-                                        <td className="px-4 py-2.5 text-sm text-slate-900 text-right tabular-nums">{line.quantity}</td>
+                                        <td className="px-4 py-2.5 text-sm font-medium text-foreground">{line.style.style_code}</td>
+                                        <td className="px-4 py-2.5 text-sm text-foreground-tertiary">{line.description || line.style.style_name}</td>
+                                        <td className="px-4 py-2.5 text-sm text-foreground text-right tabular-nums">{line.quantity}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -114,11 +114,11 @@ export default function MerchandiserOrderDetail() {
                     </div>
 
                     {/* Tech Packs */}
-                    <div className="bg-white rounded-lg border border-slate-200 p-5">
+                    <div className="bg-surface-1 rounded-lg border border-border p-5">
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-2">
                                 <FileText className="w-4 h-4 text-purple-500" />
-                                <h3 className="text-sm font-bold text-slate-900">Tech Packs ({order.tech_packs.length})</h3>
+                                <h3 className="text-sm font-bold text-foreground">Tech Packs ({order.tech_packs.length})</h3>
                             </div>
                             {canCreateTechPack && (
                                 <button onClick={handleCreateTechPack} disabled={creating} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-purple-700 bg-purple-50 rounded-lg hover:bg-purple-100 disabled:opacity-50">
@@ -127,14 +127,14 @@ export default function MerchandiserOrderDetail() {
                             )}
                         </div>
                         {order.tech_packs.length === 0 ? (
-                            <p className="text-sm text-slate-400 text-center py-6">No tech packs yet. Create one to start working.</p>
+                            <p className="text-sm text-foreground-muted text-center py-6">No tech packs yet. Create one to start working.</p>
                         ) : (
                             <div className="space-y-3">
                                 {order.tech_packs.map(tp => (
-                                    <div key={tp.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100 hover:bg-slate-100 transition cursor-pointer">
+                                    <div key={tp.id} className="flex items-center justify-between p-3 bg-surface-2 rounded-lg border border-border-secondary hover:bg-surface-3 transition cursor-pointer">
                                         <div>
-                                            <p className="text-sm font-medium text-slate-900">{tp.tech_pack_no}</p>
-                                            <p className="text-xs text-slate-400 mt-0.5">{tp.fabric_details || "No fabric details"}</p>
+                                            <p className="text-sm font-medium text-foreground">{tp.tech_pack_no}</p>
+                                            <p className="text-xs text-foreground-muted mt-0.5">{tp.fabric_details || "No fabric details"}</p>
                                         </div>
                                         <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700">{tp.status.replace(/_/g, " ")}</span>
                                     </div>
@@ -145,8 +145,8 @@ export default function MerchandiserOrderDetail() {
                 </div>
 
                 <div className="space-y-6">
-                    <div className="bg-white rounded-lg border border-slate-200 p-4">
-                        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3">
+                    <div className="bg-surface-1 rounded-lg border border-border p-4">
+                        <h4 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3">
                             <Clock className="w-4 h-4 inline mr-1" /> Timeline
                         </h4>
                         <OrderTimeline status={order.status} orderType={order.order_type} />

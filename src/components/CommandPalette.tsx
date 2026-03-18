@@ -19,6 +19,10 @@ import {
   LayoutDashboard,
   BarChart3,
   Package,
+  ClipboardList,
+  ListChecks,
+  Clock,
+  History,
 } from "lucide-react";
 
 interface SearchResult {
@@ -29,6 +33,14 @@ interface SearchResult {
   meta?: string;
 }
 
+interface RecentItem {
+  id: string;
+  type: string;
+  title: string;
+  subtitle: string;
+  viewedAt: string;
+}
+
 interface CommandItem {
   id: string;
   label: string;
@@ -36,7 +48,7 @@ interface CommandItem {
   icon: typeof Plus;
   iconColor: string;
   href: string;
-  section: "action" | "navigation";
+  section: "action" | "navigation" | "master";
 }
 
 const TYPE_CONFIG: Record<
@@ -84,9 +96,30 @@ function getResultHref(result: SearchResult, role: string): string {
   }
 }
 
+function getRecentItemHref(item: RecentItem, role: string): string {
+  const base = ROLE_PATHS[role] || "/dashboard";
+
+  switch (item.type) {
+    case "order":
+      return `${base}/orders/${item.id}`;
+    case "purchase":
+      if (role === "RUNNER") return `${base}/my-purchases`;
+      if (role === "ACCOUNTANT") return `${base}/purchases-review`;
+      return base;
+    case "expense":
+      return `${base}/expense-requests/${item.id}`;
+    case "tech_pack":
+      return `${base}/tech-packs`;
+    default:
+      return base;
+  }
+}
+
 function getCommandsForRole(role: string): CommandItem[] {
   const base = ROLE_PATHS[role] || "/dashboard";
   const commands: CommandItem[] = [];
+
+  // --- Quick Actions ---
 
   if (role === "ACCOUNTANT") {
     commands.push({
@@ -140,6 +173,8 @@ function getCommandsForRole(role: string): CommandItem[] {
     });
   }
 
+  // --- Navigation ---
+
   commands.push({
     id: "nav-dashboard",
     label: "Go to Dashboard",
@@ -188,6 +223,150 @@ function getCommandsForRole(role: string): CommandItem[] {
     });
   }
 
+  // Role-specific navigation commands
+
+  if (role === "ACCOUNTANT") {
+    commands.push(
+      {
+        id: "nav-purchases-review",
+        label: "Review Purchases",
+        description: "Review and approve purchase requests",
+        icon: ClipboardList,
+        iconColor: "text-cyan-400 bg-cyan-500/15",
+        href: `${base}/purchases-review`,
+        section: "navigation",
+      },
+      {
+        id: "nav-payments",
+        label: "Manage Payments",
+        description: "View and manage payments",
+        icon: CreditCard,
+        iconColor: "text-emerald-400 bg-emerald-500/15",
+        href: `${base}/payments`,
+        section: "navigation",
+      },
+      {
+        id: "nav-all-transactions",
+        label: "All Transactions",
+        description: "View all transactions",
+        icon: Receipt,
+        iconColor: "text-amber-400 bg-amber-500/15",
+        href: `${base}/all-transactions`,
+        section: "navigation",
+      },
+      {
+        id: "nav-users",
+        label: "Manage Users",
+        description: "Manage system users",
+        icon: Users,
+        iconColor: "text-violet-400 bg-violet-500/15",
+        href: `${base}/users`,
+        section: "navigation",
+      }
+    );
+  }
+
+  if (role === "STORE_MANAGER") {
+    commands.push(
+      {
+        id: "nav-requirements",
+        label: "View Requirements",
+        description: "View material requirements",
+        icon: ListChecks,
+        iconColor: "text-amber-400 bg-amber-500/15",
+        href: `${base}/requirements`,
+        section: "navigation",
+      },
+      {
+        id: "nav-requests",
+        label: "View Requests",
+        description: "View purchase requests",
+        icon: ClipboardList,
+        iconColor: "text-cyan-400 bg-cyan-500/15",
+        href: `${base}/requests`,
+        section: "navigation",
+      }
+    );
+  }
+
+  if (role === "RUNNER") {
+    commands.push(
+      {
+        id: "nav-my-purchases",
+        label: "My Purchases",
+        description: "View assigned purchases",
+        icon: ShoppingCart,
+        iconColor: "text-cyan-400 bg-cyan-500/15",
+        href: `${base}/my-purchases`,
+        section: "navigation",
+      },
+      {
+        id: "nav-pending",
+        label: "Pending Tasks",
+        description: "View pending tasks",
+        icon: Clock,
+        iconColor: "text-amber-400 bg-amber-500/15",
+        href: `${base}/pending`,
+        section: "navigation",
+      }
+    );
+  }
+
+  if (role === "MERCHANDISER") {
+    commands.push({
+      id: "nav-my-techpacks",
+      label: "My Tech Packs",
+      description: "View assigned tech packs",
+      icon: FileText,
+      iconColor: "text-purple-400 bg-purple-500/15",
+      href: `${base}/tech-packs`,
+      section: "navigation",
+    });
+  }
+
+  // --- Master Data (Accountant only) ---
+
+  if (role === "ACCOUNTANT") {
+    commands.push(
+      {
+        id: "master-buyers",
+        label: "Manage Buyers",
+        description: "View and manage buyers",
+        icon: Users,
+        iconColor: "text-emerald-400 bg-emerald-500/15",
+        href: `${base}/master/buyers`,
+        section: "master",
+      },
+      {
+        id: "master-vendors",
+        label: "Manage Vendors",
+        description: "View and manage vendors",
+        icon: Truck,
+        iconColor: "text-orange-400 bg-orange-500/15",
+        href: `${base}/master/vendors`,
+        section: "master",
+      },
+      {
+        id: "master-materials",
+        label: "Manage Materials",
+        description: "View and manage materials",
+        icon: Package,
+        iconColor: "text-teal-400 bg-teal-500/15",
+        href: `${base}/master/materials`,
+        section: "master",
+      },
+      {
+        id: "master-styles",
+        label: "Manage Styles",
+        description: "View and manage styles",
+        icon: Palette,
+        iconColor: "text-purple-400 bg-purple-500/15",
+        href: `${base}/master/styles`,
+        section: "master",
+      }
+    );
+  }
+
   return commands;
 }
 
@@ -195,6 +374,8 @@ export default function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [recentItems, setRecentItems] = useState<RecentItem[]>([]);
+  const [recentLoading, setRecentLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -228,8 +409,35 @@ export default function CommandPalette() {
     () => filteredCommands.filter((c) => c.section === "navigation"),
     [filteredCommands]
   );
+  const masterCommands = useMemo(
+    () => filteredCommands.filter((c) => c.section === "master"),
+    [filteredCommands]
+  );
 
-  const totalItems = isCommandMode ? filteredCommands.length : results.length;
+  // Show recent items when palette opens with empty query and no command query
+  const showRecent = isCommandMode && !commandQuery && recentItems.length > 0;
+
+  const totalItems = isCommandMode
+    ? filteredCommands.length + (showRecent ? recentItems.length : 0)
+    : results.length;
+
+  // Fetch recent items when palette opens
+  useEffect(() => {
+    if (open) {
+      setRecentLoading(true);
+      fetch("/api/recent-items")
+        .then((res) => res.json())
+        .then((data) => {
+          setRecentItems((data.items || []).slice(0, 5));
+        })
+        .catch(() => {
+          setRecentItems([]);
+        })
+        .finally(() => {
+          setRecentLoading(false);
+        });
+    }
+  }, [open]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -296,6 +504,12 @@ export default function CommandPalette() {
     router.push(href);
   };
 
+  const navigateToRecentItem = (item: RecentItem) => {
+    const href = getRecentItemHref(item, role);
+    setOpen(false);
+    router.push(href);
+  };
+
   const navigateToCommand = (cmd: CommandItem) => {
     setOpen(false);
     router.push(cmd.href);
@@ -310,8 +524,16 @@ export default function CommandPalette() {
       setActiveIndex((i) => Math.max(i - 1, 0));
     } else if (e.key === "Enter") {
       e.preventDefault();
-      if (isCommandMode && filteredCommands[activeIndex]) {
-        navigateToCommand(filteredCommands[activeIndex]);
+      if (isCommandMode) {
+        // Recent items come after commands in the flat index
+        if (showRecent && activeIndex >= filteredCommands.length) {
+          const recentIdx = activeIndex - filteredCommands.length;
+          if (recentItems[recentIdx]) {
+            navigateToRecentItem(recentItems[recentIdx]);
+          }
+        } else if (filteredCommands[activeIndex]) {
+          navigateToCommand(filteredCommands[activeIndex]);
+        }
       } else if (!isCommandMode && results[activeIndex]) {
         navigateTo(results[activeIndex]);
       }
@@ -360,7 +582,7 @@ export default function CommandPalette() {
               placeholder='Search or type ">" for commands...'
               className="flex-1 text-sm text-foreground placeholder:text-foreground-muted outline-none bg-transparent"
             />
-            {loading && <Loader2 className="w-4 h-4 text-foreground-tertiary animate-spin shrink-0" />}
+            {(loading || recentLoading) && <Loader2 className="w-4 h-4 text-foreground-tertiary animate-spin shrink-0" />}
             <button
               onClick={() => setOpen(false)}
               className="p-1 text-foreground-muted hover:text-foreground-secondary rounded transition-colors"
@@ -372,7 +594,7 @@ export default function CommandPalette() {
           {/* Content Area */}
           <div ref={listRef} className="max-h-[360px] overflow-y-auto">
             {isCommandMode ? (
-              filteredCommands.length === 0 ? (
+              filteredCommands.length === 0 && !showRecent ? (
                 <div className="px-4 py-10 text-center">
                   <p className="text-sm text-foreground-muted">
                     No matching commands
@@ -461,6 +683,103 @@ export default function CommandPalette() {
                                 {cmd.description}
                               </p>
                             </div>
+                            <ArrowRight
+                              className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                                idx === activeIndex
+                                  ? "text-brand-hover"
+                                  : "text-foreground-muted"
+                              }`}
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {masterCommands.length > 0 && (
+                    <div>
+                      <div className="px-4 py-1.5 bg-surface-3 border-b border-border-secondary">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground-muted">
+                          Master Data
+                        </span>
+                      </div>
+                      {masterCommands.map((cmd) => {
+                        const idx = commandFlatIndex++;
+                        const Icon = cmd.icon;
+                        return (
+                          <button
+                            key={cmd.id}
+                            data-command-item
+                            onClick={() => navigateToCommand(cmd)}
+                            className={`flex items-center gap-3 w-full px-4 py-2.5 text-left transition-colors ${
+                              idx === activeIndex
+                                ? "bg-brand-muted"
+                                : "hover:bg-surface-3"
+                            }`}
+                          >
+                            <div
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${cmd.iconColor}`}
+                            >
+                              <Icon className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-foreground truncate">
+                                {cmd.label}
+                              </p>
+                              <p className="text-xs text-foreground-tertiary truncate">
+                                {cmd.description}
+                              </p>
+                            </div>
+                            <ArrowRight
+                              className={`w-3.5 h-3.5 shrink-0 transition-colors ${
+                                idx === activeIndex
+                                  ? "text-brand-hover"
+                                  : "text-foreground-muted"
+                              }`}
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {showRecent && (
+                    <div>
+                      <div className="px-4 py-1.5 bg-surface-3 border-b border-border-secondary">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground-muted">
+                          Recent
+                        </span>
+                      </div>
+                      {recentItems.map((item, i) => {
+                        const idx = filteredCommands.length + i;
+                        const config = TYPE_CONFIG[item.type];
+                        const Icon = config?.icon || History;
+                        const color = config?.color || "text-foreground-secondary bg-surface-3";
+                        return (
+                          <button
+                            key={`recent-${item.id}-${item.type}`}
+                            data-command-item
+                            onClick={() => navigateToRecentItem(item)}
+                            className={`flex items-center gap-3 w-full px-4 py-2.5 text-left transition-colors ${
+                              idx === activeIndex
+                                ? "bg-brand-muted"
+                                : "hover:bg-surface-3"
+                            }`}
+                          >
+                            <div
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${color}`}
+                            >
+                              <Icon className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-foreground truncate">
+                                {item.title}
+                              </p>
+                              <p className="text-xs text-foreground-tertiary truncate">
+                                {item.subtitle}
+                              </p>
+                            </div>
+                            <History className="w-3 h-3 text-foreground-muted shrink-0" />
                             <ArrowRight
                               className={`w-3.5 h-3.5 shrink-0 transition-colors ${
                                 idx === activeIndex

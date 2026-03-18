@@ -32,8 +32,8 @@ export default function VendorsPage() {
         <div className="space-y-4">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-lg font-semibold tracking-tight text-slate-900">Vendors</h1>
-                    <p className="text-sm text-slate-500 mt-1">{vendors.length} vendors</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-foreground">Vendors</h1>
+                    <p className="text-sm text-foreground-tertiary mt-1">{vendors.length} vendors</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <ExcelImport entityType="vendors" onComplete={fetchVendors} />
@@ -43,25 +43,25 @@ export default function VendorsPage() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+            <div className="bg-surface-1 rounded-lg border border-border overflow-hidden">
                 <table className="min-w-full divide-y divide-slate-200">
-                    <thead className="bg-slate-50">
+                    <thead className="bg-surface-2">
                         <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Name</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Contact</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">GSTIN</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Name</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Contact</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">GSTIN</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-border-secondary">
                         {vendors.map((v) => (
-                            <tr key={v.id} className="hover:bg-slate-50">
-                                <td className="px-4 py-3 text-sm font-medium text-slate-900">
+                            <tr key={v.id} className="hover:bg-surface-2">
+                                <td className="px-4 py-3 text-sm font-medium text-foreground">
                                     {v.name}
                                     {v.created_inline && <span className="ml-2 px-2 py-0.5 text-[10px] font-medium bg-purple-100 text-purple-700 rounded-full">Inline</span>}
                                 </td>
-                                <td className="px-4 py-3 text-sm text-slate-500">{v.contact_person} {v.phone ? `(${v.phone})` : ""}</td>
-                                <td className="px-4 py-3 text-sm text-slate-500 font-mono">{v.gstin || "—"}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-tertiary">{v.contact_person} {v.phone ? `(${v.phone})` : ""}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-tertiary font-mono">{v.gstin || "—"}</td>
                                 <td className="px-4 py-3">
                                     <span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${v.is_active ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
                                         {v.is_active ? "Active" : "Inactive"}
@@ -76,29 +76,29 @@ export default function VendorsPage() {
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowModal(false)}>
-                    <div className="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 p-6" onClick={(e) => e.stopPropagation()}>
-                        <h3 className="text-lg font-semibold text-slate-900 mb-4">Add New Vendor</h3>
+                    <div className="bg-surface-1 rounded-lg shadow-xl max-w-lg w-full mx-4 p-6" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-lg font-semibold text-foreground mb-4">Add New Vendor</h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-xs font-medium text-slate-700 mb-1">Vendor Name *</label>
-                                <input type="text" required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                                <label className="block text-xs font-medium text-foreground-secondary mb-1">Vendor Name *</label>
+                                <input type="text" required className="w-full h-10 px-3 border border-border rounded-lg text-sm" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-700 mb-1">Contact Person</label>
-                                    <input type="text" className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm" value={form.contact_person} onChange={(e) => setForm({ ...form, contact_person: e.target.value })} />
+                                    <label className="block text-xs font-medium text-foreground-secondary mb-1">Contact Person</label>
+                                    <input type="text" className="w-full h-10 px-3 border border-border rounded-lg text-sm" value={form.contact_person} onChange={(e) => setForm({ ...form, contact_person: e.target.value })} />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-700 mb-1">Phone</label>
-                                    <input type="text" className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                                    <label className="block text-xs font-medium text-foreground-secondary mb-1">Phone</label>
+                                    <input type="text" className="w-full h-10 px-3 border border-border rounded-lg text-sm" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-slate-700 mb-1">GSTIN</label>
-                                <input type="text" className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm" value={form.gstin} onChange={(e) => setForm({ ...form, gstin: e.target.value })} />
+                                <label className="block text-xs font-medium text-foreground-secondary mb-1">GSTIN</label>
+                                <input type="text" className="w-full h-10 px-3 border border-border rounded-lg text-sm" value={form.gstin} onChange={(e) => setForm({ ...form, gstin: e.target.value })} />
                             </div>
                             <div className="flex justify-end gap-3 pt-4">
-                                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-sm text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50">Cancel</button>
+                                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-sm text-foreground-secondary border border-border rounded-lg hover:bg-surface-2">Cancel</button>
                                 <button type="submit" className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700">Save</button>
                             </div>
                         </form>

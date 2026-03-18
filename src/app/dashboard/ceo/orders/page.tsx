@@ -11,27 +11,27 @@ export default function CeoOrdersPage() {
 
     return (
         <div className="space-y-4">
-            <div><h1 className="text-lg font-semibold tracking-tight text-slate-900">All Orders</h1><p className="text-sm text-slate-500 mt-1">Complete order overview</p></div>
-            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+            <div><h1 className="text-lg font-semibold tracking-tight text-foreground">All Orders</h1><p className="text-sm text-foreground-tertiary mt-1">Complete order overview</p></div>
+            <div className="bg-surface-1 rounded-lg border border-border overflow-hidden">
                 <table className="min-w-full divide-y divide-slate-200">
-                    <thead className="bg-slate-50">
+                    <thead className="bg-surface-2">
                         <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Order</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Date</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Buyer</th>
-                            <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase">Amount</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Order</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Date</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Buyer</th>
+                            <th className="px-4 py-3 text-right text-xs font-semibold text-foreground-tertiary uppercase">Amount</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-border-secondary">
                         {orders.length === 0 ? (
-                            <tr><td colSpan={5} className="px-4 py-12 text-center text-sm text-slate-400"><ShoppingCart className="w-8 h-8 mx-auto mb-2 text-slate-300" />No orders yet</td></tr>
+                            <tr><td colSpan={5} className="px-4 py-12 text-center text-sm text-foreground-muted"><ShoppingCart className="w-8 h-8 mx-auto mb-2 text-slate-300" />No orders yet</td></tr>
                         ) : orders.map(o => (
-                            <tr key={o.id} className="hover:bg-slate-50">
-                                <td className="px-4 py-3 text-sm font-semibold text-slate-900">{o.order_no}</td>
-                                <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(o.order_date), "dd MMM yyyy")}</td>
-                                <td className="px-4 py-3 text-sm text-slate-900">{o.buyer?.name}</td>
-                                <td className="px-4 py-3 text-sm text-slate-900 text-right tabular-nums font-medium">₹{o.total_amount.toLocaleString("en-IN")}</td>
+                            <tr key={o.id} className="hover:bg-surface-2">
+                                <td className="px-4 py-3 text-sm font-semibold text-foreground">{o.order_no}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-tertiary">{format(new Date(o.order_date), "dd MMM yyyy")}</td>
+                                <td className="px-4 py-3 text-sm text-foreground">{o.buyer?.name}</td>
+                                <td className="px-4 py-3 text-sm text-foreground text-right tabular-nums font-medium">₹{o.total_amount.toLocaleString("en-IN")}</td>
                                 <td className="px-4 py-3"><span className="px-2.5 py-1 text-[11px] font-semibold rounded-full bg-blue-100 text-blue-800">{o.status.replace(/_/g, " ")}</span></td>
                             </tr>
                         ))}

@@ -90,18 +90,18 @@ export default function RequirementsPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-lg font-semibold tracking-tight text-slate-900">Material Requirements</h1>
-                <p className="text-sm text-slate-500 mt-1">Review requirements from Production Managers</p>
+                <h1 className="text-lg font-semibold tracking-tight text-foreground">Material Requirements</h1>
+                <p className="text-sm text-foreground-tertiary mt-1">Review requirements from Production Managers</p>
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 bg-slate-100 p-1 rounded-lg w-fit">
+            <div className="flex gap-1 bg-surface-3 p-1 rounded-lg w-fit">
                 {tabs.map((t) => (
                     <button
                         key={t.key}
                         onClick={() => setTab(t.key)}
                         className={`px-4 py-1.5 rounded-md text-sm font-medium transition ${
-                            tab === t.key ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                            tab === t.key ? "bg-surface-1 text-foreground shadow-sm" : "text-foreground-tertiary hover:text-foreground-secondary"
                         }`}
                     >
                         {t.label}
@@ -110,48 +110,48 @@ export default function RequirementsPage() {
             </div>
 
             {loading ? (
-                <div className="text-center py-12 text-slate-500">Loading...</div>
+                <div className="text-center py-12 text-foreground-tertiary">Loading...</div>
             ) : requirements.length === 0 ? (
-                <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
+                <div className="bg-surface-1 rounded-lg border border-border p-12 text-center">
                     <ClipboardList className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                    <p className="text-slate-500 text-sm">
+                    <p className="text-foreground-tertiary text-sm">
                         {tab === "PENDING" ? "No material requirements pending acceptance" : "No material requirements found"}
                     </p>
                 </div>
             ) : (
-                <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+                <div className="bg-surface-1 rounded-lg border border-border overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-slate-200">
-                            <thead className="bg-slate-50">
+                            <thead className="bg-surface-2">
                                 <tr>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Order</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Style</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Buyer</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">PM</th>
-                                    <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">Items</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Required By</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Status</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date</th>
-                                    <th className="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase">Actions</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">Order</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">Style</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">Buyer</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">PM</th>
+                                    <th className="px-4 py-3 text-center text-xs font-medium text-foreground-tertiary uppercase">Items</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">Required By</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">Status</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">Date</th>
+                                    <th className="px-4 py-3 text-center text-xs font-medium text-foreground-tertiary uppercase">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100">
+                            <tbody className="divide-y divide-border-secondary">
                                 {requirements.map((r) => (
-                                    <tr key={r.id} className="hover:bg-slate-50">
-                                        <td className="px-4 py-3 text-sm font-medium text-slate-900">{r.order?.order_no}</td>
-                                        <td className="px-4 py-3 text-sm text-slate-600">{r.style?.style_code}</td>
-                                        <td className="px-4 py-3 text-sm text-slate-600">{r.buyer?.name}</td>
-                                        <td className="px-4 py-3 text-sm text-slate-600">{r.production_manager?.name}</td>
-                                        <td className="px-4 py-3 text-sm text-center text-slate-600">{r.lines?.length || 0}</td>
-                                        <td className="px-4 py-3 text-sm text-slate-600">
+                                    <tr key={r.id} className="hover:bg-surface-2">
+                                        <td className="px-4 py-3 text-sm font-medium text-foreground">{r.order?.order_no}</td>
+                                        <td className="px-4 py-3 text-sm text-foreground-secondary">{r.style?.style_code}</td>
+                                        <td className="px-4 py-3 text-sm text-foreground-secondary">{r.buyer?.name}</td>
+                                        <td className="px-4 py-3 text-sm text-foreground-secondary">{r.production_manager?.name}</td>
+                                        <td className="px-4 py-3 text-sm text-center text-foreground-secondary">{r.lines?.length || 0}</td>
+                                        <td className="px-4 py-3 text-sm text-foreground-secondary">
                                             {format(new Date(r.required_by_date), "dd MMM yyyy")}
                                         </td>
                                         <td className="px-4 py-3">
-                                            <span className={`px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded-md ${STATUS_COLORS[r.status] || "bg-slate-100 text-slate-600"}`}>
+                                            <span className={`px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded-md ${STATUS_COLORS[r.status] || "bg-surface-3 text-foreground-secondary"}`}>
                                                 {r.status.replace(/_/g, " ")}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(r.created_at), "dd MMM yyyy")}</td>
+                                        <td className="px-4 py-3 text-sm text-foreground-tertiary">{format(new Date(r.created_at), "dd MMM yyyy")}</td>
                                         <td className="px-4 py-3 text-center">
                                             <button
                                                 onClick={() => setSelectedReq(r)}
@@ -172,13 +172,13 @@ export default function RequirementsPage() {
             {selectedReq && (
                 <>
                     <div className="fixed inset-0 bg-black/40 z-[40] backdrop-blur-sm" onClick={() => setSelectedReq(null)} />
-                    <div className="fixed top-0 right-0 h-full w-full max-w-2xl bg-white shadow-2xl z-[50] flex flex-col">
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                    <div className="fixed top-0 right-0 h-full w-full max-w-2xl bg-surface-1 shadow-2xl z-[50] flex flex-col">
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-border-secondary">
                             <div>
-                                <h2 className="text-lg font-bold text-slate-900">Material Requirement</h2>
-                                <p className="text-xs text-slate-500">Order: {selectedReq.order?.order_no} | Style: {selectedReq.style?.style_code}</p>
+                                <h2 className="text-lg font-bold text-foreground">Material Requirement</h2>
+                                <p className="text-xs text-foreground-tertiary">Order: {selectedReq.order?.order_no} | Style: {selectedReq.style?.style_code}</p>
                             </div>
-                            <button onClick={() => setSelectedReq(null)} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg">
+                            <button onClick={() => setSelectedReq(null)} className="p-2 text-foreground-muted hover:text-foreground-secondary hover:bg-surface-3 rounded-lg">
                                 &times;
                             </button>
                         </div>
@@ -186,17 +186,17 @@ export default function RequirementsPage() {
                         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
                             {/* Info Grid */}
                             <div className="grid grid-cols-2 gap-4">
-                                <div><p className="text-xs text-slate-500">Buyer</p><p className="text-sm font-medium">{selectedReq.buyer?.name}</p></div>
-                                <div><p className="text-xs text-slate-500">Production Manager</p><p className="text-sm font-medium">{selectedReq.production_manager?.name}</p></div>
-                                <div><p className="text-xs text-slate-500">Style</p><p className="text-sm font-medium">{selectedReq.style?.style_code} — {selectedReq.style?.style_name}</p></div>
-                                <div><p className="text-xs text-slate-500">Required By</p><p className="text-sm font-medium">{format(new Date(selectedReq.required_by_date), "dd MMM yyyy")}</p></div>
-                                <div><p className="text-xs text-slate-500">Status</p>
-                                    <span className={`px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded-md ${STATUS_COLORS[selectedReq.status] || "bg-slate-100 text-slate-600"}`}>
+                                <div><p className="text-xs text-foreground-tertiary">Buyer</p><p className="text-sm font-medium">{selectedReq.buyer?.name}</p></div>
+                                <div><p className="text-xs text-foreground-tertiary">Production Manager</p><p className="text-sm font-medium">{selectedReq.production_manager?.name}</p></div>
+                                <div><p className="text-xs text-foreground-tertiary">Style</p><p className="text-sm font-medium">{selectedReq.style?.style_code} — {selectedReq.style?.style_name}</p></div>
+                                <div><p className="text-xs text-foreground-tertiary">Required By</p><p className="text-sm font-medium">{format(new Date(selectedReq.required_by_date), "dd MMM yyyy")}</p></div>
+                                <div><p className="text-xs text-foreground-tertiary">Status</p>
+                                    <span className={`px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded-md ${STATUS_COLORS[selectedReq.status] || "bg-surface-3 text-foreground-secondary"}`}>
                                         {selectedReq.status.replace(/_/g, " ")}
                                     </span>
                                 </div>
                                 {selectedReq.store_manager && (
-                                    <div><p className="text-xs text-slate-500">Assigned Store Manager</p><p className="text-sm font-medium">{selectedReq.store_manager.name}</p></div>
+                                    <div><p className="text-xs text-foreground-tertiary">Assigned Store Manager</p><p className="text-sm font-medium">{selectedReq.store_manager.name}</p></div>
                                 )}
                             </div>
 
@@ -210,23 +210,23 @@ export default function RequirementsPage() {
                             {/* Material Lines */}
                             {selectedReq.lines?.length > 0 && (
                                 <div>
-                                    <h3 className="text-sm font-semibold text-slate-900 mb-2">Material Lines</h3>
+                                    <h3 className="text-sm font-semibold text-foreground mb-2">Material Lines</h3>
                                     <table className="min-w-full divide-y divide-slate-200">
-                                        <thead className="bg-slate-50">
+                                        <thead className="bg-surface-2">
                                             <tr>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase">Material</th>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase">Description</th>
-                                                <th className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase">Qty</th>
-                                                <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase">Unit</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-foreground-tertiary uppercase">Material</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-foreground-tertiary uppercase">Description</th>
+                                                <th className="px-3 py-2 text-right text-xs font-medium text-foreground-tertiary uppercase">Qty</th>
+                                                <th className="px-3 py-2 text-left text-xs font-medium text-foreground-tertiary uppercase">Unit</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-slate-100">
+                                        <tbody className="divide-y divide-border-secondary">
                                             {selectedReq.lines.map((line) => (
                                                 <tr key={line.id}>
-                                                    <td className="px-3 py-2 text-sm text-slate-900">{line.material_name}</td>
-                                                    <td className="px-3 py-2 text-sm text-slate-600">{line.description || "—"}</td>
+                                                    <td className="px-3 py-2 text-sm text-foreground">{line.material_name}</td>
+                                                    <td className="px-3 py-2 text-sm text-foreground-secondary">{line.description || "—"}</td>
                                                     <td className="px-3 py-2 text-sm text-right tabular-nums">{line.quantity}</td>
-                                                    <td className="px-3 py-2 text-sm text-slate-600">{line.unit}</td>
+                                                    <td className="px-3 py-2 text-sm text-foreground-secondary">{line.unit}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -236,7 +236,7 @@ export default function RequirementsPage() {
 
                             {/* Action Buttons - only for PENDING_STORE_ACCEPTANCE */}
                             {selectedReq.status === "PENDING_STORE_ACCEPTANCE" && (
-                                <div className="flex gap-3 pt-4 border-t border-slate-200">
+                                <div className="flex gap-3 pt-4 border-t border-border">
                                     <button
                                         onClick={() => handleAction(selectedReq.id, "accept")}
                                         disabled={acting}
@@ -256,7 +256,7 @@ export default function RequirementsPage() {
 
                             {/* Link to create material request if accepted */}
                             {selectedReq.status === "ACCEPTED_BY_STORE" && (
-                                <div className="pt-4 border-t border-slate-200">
+                                <div className="pt-4 border-t border-border">
                                     <Link
                                         href={`/dashboard/manager/requests/new?requirement_id=${selectedReq.id}&order_id=${selectedReq.order_id}`}
                                         className="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition"

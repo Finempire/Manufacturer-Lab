@@ -113,27 +113,27 @@ export default function AccountantOrderDetail() {
         }
     };
 
-    if (loading) return <div className="text-center py-12 text-slate-400">Loading order...</div>;
-    if (!order) return <div className="text-center py-12 text-slate-400">Order not found</div>;
+    if (loading) return <div className="text-center py-12 text-foreground-muted">Loading order...</div>;
+    if (!order) return <div className="text-center py-12 text-foreground-muted">Order not found</div>;
 
     return (
         <div className="space-y-6 max-w-5xl mx-auto pb-10">
             {/* Header */}
             <div className="flex items-center gap-4">
-                <button onClick={() => router.back()} className="p-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition">
-                    <ArrowLeft className="w-5 h-5 text-slate-600" />
+                <button onClick={() => router.back()} className="p-2 bg-surface-1 border border-border rounded-lg hover:bg-surface-2 transition">
+                    <ArrowLeft className="w-5 h-5 text-foreground-secondary" />
                 </button>
                 <div className="flex-1">
-                    <h1 className="text-lg font-semibold tracking-tight text-slate-900">{order.order_no}</h1>
-                    <p className="text-sm text-slate-500 mt-0.5">{order.buyer.name} {order.buyer.brand_code ? `(${order.buyer.brand_code})` : ""} &bull; {order.order_type}</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-foreground">{order.order_no}</h1>
+                    <p className="text-sm text-foreground-tertiary mt-0.5">{order.buyer.name} {order.buyer.brand_code ? `(${order.buyer.brand_code})` : ""} &bull; {order.order_type}</p>
                 </div>
-                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border ${STATUS_COLORS[order.status] || "bg-slate-100 text-slate-800 border-slate-200"}`}>
+                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border ${STATUS_COLORS[order.status] || "bg-surface-3 text-foreground border-border"}`}>
                     {order.status.replace(/_/g, " ")}
                 </span>
             </div>
 
             {/* Horizontal Pipeline Timeline */}
-            <div className="bg-white rounded-lg border border-slate-200 px-4 py-3 shadow-sm">
+            <div className="bg-surface-1 rounded-lg border border-border px-4 py-3 shadow-sm">
                 <OrderPipelineHeader status={order.status} />
             </div>
 
@@ -141,52 +141,52 @@ export default function AccountantOrderDetail() {
                 {/* Left Column */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Order Info Card */}
-                    <div className="bg-white rounded-lg border border-slate-200 p-5">
-                        <h3 className="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wide border-b pb-2">Order Information</h3>
+                    <div className="bg-surface-1 rounded-lg border border-border p-5">
+                        <h3 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wide border-b pb-2">Order Information</h3>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-6">
-                            <div><p className="text-xs text-slate-500 mb-1">Order Date</p><p className="text-sm font-medium">{format(new Date(order.order_date), "dd MMM yyyy")}</p></div>
-                            <div><p className="text-xs text-slate-500 mb-1">Shipping Date</p><p className="text-sm font-medium">{format(new Date(order.shipping_date), "dd MMM yyyy")}</p></div>
-                            <div><p className="text-xs text-slate-500 mb-1">Created By</p><p className="text-sm font-medium">{order.creator.name}</p></div>
-                            <div><p className="text-xs text-slate-500 mb-1">Merchandiser</p><p className="text-sm font-medium">{order.merchandiser?.name || "Not assigned"}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary mb-1">Order Date</p><p className="text-sm font-medium">{format(new Date(order.order_date), "dd MMM yyyy")}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary mb-1">Shipping Date</p><p className="text-sm font-medium">{format(new Date(order.shipping_date), "dd MMM yyyy")}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary mb-1">Created By</p><p className="text-sm font-medium">{order.creator.name}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary mb-1">Merchandiser</p><p className="text-sm font-medium">{order.merchandiser?.name || "Not assigned"}</p></div>
                         </div>
                         {order.remarks && (
-                            <div className="mt-4 pt-3 border-t border-slate-100">
-                                <p className="text-xs text-slate-500 mb-1">Remarks</p>
-                                <p className="text-sm text-slate-700">{order.remarks}</p>
+                            <div className="mt-4 pt-3 border-t border-border-secondary">
+                                <p className="text-xs text-foreground-tertiary mb-1">Remarks</p>
+                                <p className="text-sm text-foreground-secondary">{order.remarks}</p>
                             </div>
                         )}
                     </div>
 
                     {/* Item Lines */}
-                    <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
-                        <div className="px-5 py-3 border-b border-slate-100 bg-slate-50">
-                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Item Lines</h3>
+                    <div className="bg-surface-1 rounded-lg border border-border overflow-hidden">
+                        <div className="px-5 py-3 border-b border-border-secondary bg-surface-2">
+                            <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Item Lines</h3>
                         </div>
-                        <table className="min-w-full divide-y divide-slate-100">
-                            <thead className="bg-slate-50/50">
+                        <table className="min-w-full divide-y divide-border-secondary">
+                            <thead className="bg-surface-2">
                                 <tr>
-                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase">Style</th>
-                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500 uppercase">Description</th>
-                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase">Qty</th>
-                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase">Rate</th>
-                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-slate-500 uppercase">Amount</th>
+                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-foreground-tertiary uppercase">Style</th>
+                                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-foreground-tertiary uppercase">Description</th>
+                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-foreground-tertiary uppercase">Qty</th>
+                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-foreground-tertiary uppercase">Rate</th>
+                                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-foreground-tertiary uppercase">Amount</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-50">
+                            <tbody className="divide-y divide-border-secondary">
                                 {order.lines.map(line => (
                                     <tr key={line.id}>
-                                        <td className="px-4 py-2.5 text-sm font-medium text-slate-900">{line.style.style_code}</td>
-                                        <td className="px-4 py-2.5 text-sm text-slate-500">{line.description || line.style.style_name}</td>
-                                        <td className="px-4 py-2.5 text-sm text-slate-900 text-right tabular-nums">{line.quantity}</td>
-                                        <td className="px-4 py-2.5 text-sm text-slate-900 text-right tabular-nums">₹{line.rate.toLocaleString("en-IN")}</td>
-                                        <td className="px-4 py-2.5 text-sm font-medium text-slate-900 text-right tabular-nums">₹{line.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+                                        <td className="px-4 py-2.5 text-sm font-medium text-foreground">{line.style.style_code}</td>
+                                        <td className="px-4 py-2.5 text-sm text-foreground-tertiary">{line.description || line.style.style_name}</td>
+                                        <td className="px-4 py-2.5 text-sm text-foreground text-right tabular-nums">{line.quantity}</td>
+                                        <td className="px-4 py-2.5 text-sm text-foreground text-right tabular-nums">₹{line.rate.toLocaleString("en-IN")}</td>
+                                        <td className="px-4 py-2.5 text-sm font-medium text-foreground text-right tabular-nums">₹{line.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
                                     </tr>
                                 ))}
                             </tbody>
-                            <tfoot className="bg-slate-50">
+                            <tfoot className="bg-surface-2">
                                 <tr>
-                                    <td colSpan={4} className="px-4 py-3 text-right text-sm font-semibold text-slate-700">Total:</td>
-                                    <td className="px-4 py-3 text-right text-sm font-bold text-slate-900 tabular-nums">₹{order.total_amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+                                    <td colSpan={4} className="px-4 py-3 text-right text-sm font-semibold text-foreground-secondary">Total:</td>
+                                    <td className="px-4 py-3 text-right text-sm font-bold text-foreground tabular-nums">₹{order.total_amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -195,18 +195,18 @@ export default function AccountantOrderDetail() {
                     {/* Related Items */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Tech Packs */}
-                        <div className="bg-white rounded-lg border border-slate-200 p-4">
+                        <div className="bg-surface-1 rounded-lg border border-border p-4">
                             <div className="flex items-center gap-2 mb-3">
                                 <FileText className="w-4 h-4 text-purple-500" />
-                                <h4 className="text-sm font-bold text-slate-900">Tech Packs ({order.tech_packs.length})</h4>
+                                <h4 className="text-sm font-bold text-foreground">Tech Packs ({order.tech_packs.length})</h4>
                             </div>
                             {order.tech_packs.length === 0 ? (
-                                <p className="text-xs text-slate-400">No tech packs created yet</p>
+                                <p className="text-xs text-foreground-muted">No tech packs created yet</p>
                             ) : (
                                 <div className="space-y-2">
                                     {order.tech_packs.map(tp => (
-                                        <div key={tp.id} className="flex items-center justify-between py-1.5 px-2 bg-slate-50 rounded-lg">
-                                            <span className="text-xs font-medium text-slate-700">{tp.tech_pack_no}</span>
+                                        <div key={tp.id} className="flex items-center justify-between py-1.5 px-2 bg-surface-2 rounded-lg">
+                                            <span className="text-xs font-medium text-foreground-secondary">{tp.tech_pack_no}</span>
                                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700">{tp.status.replace(/_/g, " ")}</span>
                                         </div>
                                     ))}
@@ -215,20 +215,20 @@ export default function AccountantOrderDetail() {
                         </div>
 
                         {/* Material Requests */}
-                        <div className="bg-white rounded-lg border border-slate-200 p-4">
+                        <div className="bg-surface-1 rounded-lg border border-border p-4">
                             <div className="flex items-center gap-2 mb-3">
                                 <Package className="w-4 h-4 text-orange-500" />
-                                <h4 className="text-sm font-bold text-slate-900">Material Requests ({order.material_requests.length})</h4>
+                                <h4 className="text-sm font-bold text-foreground">Material Requests ({order.material_requests.length})</h4>
                             </div>
                             {order.material_requests.length === 0 ? (
-                                <p className="text-xs text-slate-400">No material requests yet</p>
+                                <p className="text-xs text-foreground-muted">No material requests yet</p>
                             ) : (
                                 <div className="space-y-2">
                                     {order.material_requests.map(mr => (
-                                        <div key={mr.id} className="flex items-center justify-between py-1.5 px-2 bg-slate-50 rounded-lg">
+                                        <div key={mr.id} className="flex items-center justify-between py-1.5 px-2 bg-surface-2 rounded-lg">
                                             <div>
-                                                <span className="text-xs font-medium text-slate-700">{mr.request_no}</span>
-                                                {mr.runner && <span className="text-[10px] text-slate-400 ml-1">({mr.runner.name})</span>}
+                                                <span className="text-xs font-medium text-foreground-secondary">{mr.request_no}</span>
+                                                {mr.runner && <span className="text-[10px] text-foreground-muted ml-1">({mr.runner.name})</span>}
                                             </div>
                                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-orange-50 text-orange-700">{mr.status.replace(/_/g, " ")}</span>
                                         </div>
@@ -240,15 +240,15 @@ export default function AccountantOrderDetail() {
 
                     {/* Expenses */}
                     {order.expenses.length > 0 && (
-                        <div className="bg-white rounded-lg border border-slate-200 p-4">
-                            <h4 className="text-sm font-bold text-slate-900 mb-3">Expense Requests ({order.expenses.length})</h4>
+                        <div className="bg-surface-1 rounded-lg border border-border p-4">
+                            <h4 className="text-sm font-bold text-foreground mb-3">Expense Requests ({order.expenses.length})</h4>
                             <div className="space-y-2">
                                 {order.expenses.map(exp => (
-                                    <div key={exp.id} className="flex items-center justify-between py-1.5 px-2 bg-slate-50 rounded-lg">
-                                        <span className="text-xs font-medium text-slate-700">{exp.expense_no}</span>
+                                    <div key={exp.id} className="flex items-center justify-between py-1.5 px-2 bg-surface-2 rounded-lg">
+                                        <span className="text-xs font-medium text-foreground-secondary">{exp.expense_no}</span>
                                         <div className="flex items-center gap-2">
-                                            <span className="text-xs text-slate-600 tabular-nums">₹{exp.expected_amount.toLocaleString("en-IN")}</span>
-                                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">{exp.status.replace(/_/g, " ")}</span>
+                                            <span className="text-xs text-foreground-secondary tabular-nums">₹{exp.expected_amount.toLocaleString("en-IN")}</span>
+                                            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-surface-3 text-foreground-secondary">{exp.status.replace(/_/g, " ")}</span>
                                         </div>
                                     </div>
                                 ))}
@@ -260,8 +260,8 @@ export default function AccountantOrderDetail() {
                 {/* Right Column - Timeline & Actions */}
                 <div className="space-y-6">
                     {/* Actions */}
-                    <div className="bg-white rounded-lg border border-slate-200 p-4 space-y-3">
-                        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Actions</h4>
+                    <div className="bg-surface-1 rounded-lg border border-border p-4 space-y-3">
+                        <h4 className="text-sm font-bold text-foreground uppercase tracking-wide">Actions</h4>
 
                         {!order.merchandiser && order.status === "ORDER_RECEIVED" && (
                             <>
@@ -271,12 +271,12 @@ export default function AccountantOrderDetail() {
                                     </button>
                                 ) : (
                                     <div className="space-y-2">
-                                        <select className="w-full h-9 px-3 border border-slate-300 rounded-lg text-sm" value={selectedMerch} onChange={e => setSelectedMerch(e.target.value)}>
+                                        <select className="w-full h-9 px-3 border border-border rounded-lg text-sm" value={selectedMerch} onChange={e => setSelectedMerch(e.target.value)}>
                                             <option value="">Select merchandiser...</option>
                                             {merchandisers.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
                                         </select>
                                         <div className="flex gap-2">
-                                            <button onClick={() => setShowAssignPanel(false)} className="flex-1 py-2 text-sm text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200">Cancel</button>
+                                            <button onClick={() => setShowAssignPanel(false)} className="flex-1 py-2 text-sm text-foreground-secondary bg-surface-3 rounded-lg hover:bg-surface-3">Cancel</button>
                                             <button onClick={handleAssignMerchandiser} disabled={!selectedMerch || assigning} className="flex-1 py-2 text-sm text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50">
                                                 {assigning ? "Assigning..." : "Assign"}
                                             </button>
@@ -287,7 +287,7 @@ export default function AccountantOrderDetail() {
                         )}
 
                         {order.status !== "CANCELLED" && order.status !== "COMPLETED" && (
-                            <button onClick={handleCancel} disabled={cancelling} className="w-full flex items-center justify-center gap-2 py-2.5 bg-white text-red-600 text-sm font-medium rounded-lg border border-red-200 hover:bg-red-50 transition disabled:opacity-50">
+                            <button onClick={handleCancel} disabled={cancelling} className="w-full flex items-center justify-center gap-2 py-2.5 bg-surface-1 text-red-600 text-sm font-medium rounded-lg border border-red-200 hover:bg-red-50 transition disabled:opacity-50">
                                 <XCircle className="w-4 h-4" /> {cancelling ? "Cancelling..." : "Cancel Order"}
                             </button>
                         )}
@@ -301,37 +301,37 @@ export default function AccountantOrderDetail() {
                     </div>
 
                     {/* Assignments */}
-                    <div className="bg-white rounded-lg border border-slate-200 p-4">
-                        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3">Assignments</h4>
+                    <div className="bg-surface-1 rounded-lg border border-border p-4">
+                        <h4 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3">Assignments</h4>
                         <div className="space-y-3">
                             <div>
-                                <p className="text-xs text-slate-500">Merchandiser</p>
-                                <p className="text-sm font-medium text-slate-900">{order.merchandiser?.name || "—"}</p>
+                                <p className="text-xs text-foreground-tertiary">Merchandiser</p>
+                                <p className="text-sm font-medium text-foreground">{order.merchandiser?.name || "—"}</p>
                             </div>
                             {order.order_type === "SAMPLE" && (
                                 <div>
-                                    <p className="text-xs text-slate-500">Sample PM</p>
-                                    <p className="text-sm font-medium text-slate-900">{order.assigned_sample_pm?.name || "—"}</p>
+                                    <p className="text-xs text-foreground-tertiary">Sample PM</p>
+                                    <p className="text-sm font-medium text-foreground">{order.assigned_sample_pm?.name || "—"}</p>
                                 </div>
                             )}
                             {order.order_type === "PRODUCTION" && (
                                 <div>
-                                    <p className="text-xs text-slate-500">Production PM</p>
-                                    <p className="text-sm font-medium text-slate-900">{order.assigned_production_pm?.name || "—"}</p>
+                                    <p className="text-xs text-foreground-tertiary">Production PM</p>
+                                    <p className="text-sm font-medium text-foreground">{order.assigned_production_pm?.name || "—"}</p>
                                 </div>
                             )}
                             {order.pm_accepted_by && (
                                 <div>
-                                    <p className="text-xs text-slate-500">PM Accepted By</p>
-                                    <p className="text-sm font-medium text-slate-900">{order.pm_accepted_by.name}</p>
+                                    <p className="text-xs text-foreground-tertiary">PM Accepted By</p>
+                                    <p className="text-sm font-medium text-foreground">{order.pm_accepted_by.name}</p>
                                 </div>
                             )}
                         </div>
                     </div>
 
                     {/* Timeline */}
-                    <div className="bg-white rounded-lg border border-slate-200 p-4">
-                        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3">
+                    <div className="bg-surface-1 rounded-lg border border-border p-4">
+                        <h4 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3">
                             <Clock className="w-4 h-4 inline mr-1" /> Timeline
                         </h4>
                         <OrderTimeline status={order.status} orderType={order.order_type} />

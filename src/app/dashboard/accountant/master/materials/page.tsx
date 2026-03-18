@@ -32,8 +32,8 @@ export default function MaterialsPage() {
         <div className="space-y-4">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-lg font-semibold tracking-tight text-slate-900">Materials</h1>
-                    <p className="text-sm text-slate-500 mt-1">{materials.length} materials</p>
+                    <h1 className="text-lg font-semibold tracking-tight text-foreground">Materials</h1>
+                    <p className="text-sm text-foreground-tertiary mt-1">{materials.length} materials</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <ExcelImport entityType="materials" onComplete={fetchMaterials} />
@@ -43,25 +43,25 @@ export default function MaterialsPage() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+            <div className="bg-surface-1 rounded-lg border border-border overflow-hidden">
                 <table className="min-w-full divide-y divide-slate-200">
-                    <thead className="bg-slate-50">
+                    <thead className="bg-surface-2">
                         <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">SKU</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Description</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Category</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">UOM</th>
-                            <th className="px-4 py-3 text-right text-xs font-semibold text-slate-500 uppercase">Rate</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">SKU</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Description</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Category</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">UOM</th>
+                            <th className="px-4 py-3 text-right text-xs font-semibold text-foreground-tertiary uppercase">Rate</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-border-secondary">
                         {materials.map((m) => (
-                            <tr key={m.id} className="hover:bg-slate-50">
-                                <td className="px-4 py-3 text-sm font-mono text-slate-500">{m.sku_code || "—"}</td>
-                                <td className="px-4 py-3 text-sm font-medium text-slate-900">{m.description}</td>
-                                <td className="px-4 py-3"><span className="px-2.5 py-1 text-[11px] font-semibold rounded-full bg-slate-100 text-slate-700">{m.category}</span></td>
-                                <td className="px-4 py-3 text-sm text-slate-500">{m.unit_of_measure}</td>
-                                <td className="px-4 py-3 text-sm text-slate-900 text-right tabular-nums">{m.default_rate ? `₹${m.default_rate.toFixed(2)}` : "—"}</td>
+                            <tr key={m.id} className="hover:bg-surface-2">
+                                <td className="px-4 py-3 text-sm font-mono text-foreground-tertiary">{m.sku_code || "—"}</td>
+                                <td className="px-4 py-3 text-sm font-medium text-foreground">{m.description}</td>
+                                <td className="px-4 py-3"><span className="px-2.5 py-1 text-[11px] font-semibold rounded-full bg-surface-3 text-foreground-secondary">{m.category}</span></td>
+                                <td className="px-4 py-3 text-sm text-foreground-tertiary">{m.unit_of_measure}</td>
+                                <td className="px-4 py-3 text-sm text-foreground text-right tabular-nums">{m.default_rate ? `₹${m.default_rate.toFixed(2)}` : "—"}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -70,17 +70,17 @@ export default function MaterialsPage() {
 
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowModal(false)}>
-                    <div className="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 p-6" onClick={(e) => e.stopPropagation()}>
-                        <h3 className="text-lg font-semibold text-slate-900 mb-4">Add New Material</h3>
+                    <div className="bg-surface-1 rounded-lg shadow-xl max-w-lg w-full mx-4 p-6" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-lg font-semibold text-foreground mb-4">Add New Material</h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-700 mb-1">SKU Code</label>
-                                    <input type="text" className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm" value={form.sku_code} onChange={(e) => setForm({ ...form, sku_code: e.target.value })} />
+                                    <label className="block text-xs font-medium text-foreground-secondary mb-1">SKU Code</label>
+                                    <input type="text" className="w-full h-10 px-3 border border-border rounded-lg text-sm" value={form.sku_code} onChange={(e) => setForm({ ...form, sku_code: e.target.value })} />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-700 mb-1">Category *</label>
-                                    <select className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+                                    <label className="block text-xs font-medium text-foreground-secondary mb-1">Category *</label>
+                                    <select className="w-full h-10 px-3 border border-border rounded-lg text-sm" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
                                         <option value="FABRIC">Fabric</option>
                                         <option value="TRIM">Trim</option>
                                         <option value="CONSUMABLE">Consumable</option>
@@ -89,13 +89,13 @@ export default function MaterialsPage() {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-slate-700 mb-1">Description *</label>
-                                <input type="text" required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+                                <label className="block text-xs font-medium text-foreground-secondary mb-1">Description *</label>
+                                <input type="text" required className="w-full h-10 px-3 border border-border rounded-lg text-sm" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-700 mb-1">Unit of Measure *</label>
-                                    <select className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm" value={form.unit_of_measure} onChange={(e) => setForm({ ...form, unit_of_measure: e.target.value })}>
+                                    <label className="block text-xs font-medium text-foreground-secondary mb-1">Unit of Measure *</label>
+                                    <select className="w-full h-10 px-3 border border-border rounded-lg text-sm" value={form.unit_of_measure} onChange={(e) => setForm({ ...form, unit_of_measure: e.target.value })}>
                                         <option value="MTR">Meter (MTR)</option>
                                         <option value="KG">Kilogram (KG)</option>
                                         <option value="PCS">Pieces (PCS)</option>
@@ -105,12 +105,12 @@ export default function MaterialsPage() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-700 mb-1">Default Rate</label>
-                                    <input type="number" step="0.01" className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm" value={form.default_rate} onChange={(e) => setForm({ ...form, default_rate: e.target.value })} />
+                                    <label className="block text-xs font-medium text-foreground-secondary mb-1">Default Rate</label>
+                                    <input type="number" step="0.01" className="w-full h-10 px-3 border border-border rounded-lg text-sm" value={form.default_rate} onChange={(e) => setForm({ ...form, default_rate: e.target.value })} />
                                 </div>
                             </div>
                             <div className="flex justify-end gap-3 pt-4">
-                                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-sm text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50">Cancel</button>
+                                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 text-sm text-foreground-secondary border border-border rounded-lg hover:bg-surface-2">Cancel</button>
                                 <button type="submit" className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700">Save</button>
                             </div>
                         </form>

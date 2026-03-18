@@ -54,15 +54,15 @@ export default function AccountantMaterialNeedsPage() {
     return (
         <div className="space-y-4">
             <div>
-                <h1 className="text-lg font-semibold tracking-tight text-slate-900">Material Needs</h1>
-                <p className="text-sm text-slate-500 mt-1">Overview of all material requirements across orders</p>
+                <h1 className="text-lg font-semibold tracking-tight text-foreground">Material Needs</h1>
+                <p className="text-sm text-foreground-tertiary mt-1">Overview of all material requirements across orders</p>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
                 <select
                     value={statusFilter}
                     onChange={(e) => { setStatusFilter(e.target.value); setFilters(prev => ({ ...prev, status: e.target.value || undefined })); }}
-                    className="h-9 px-3 text-sm border border-slate-300 rounded-lg bg-white"
+                    className="h-9 px-3 text-sm border border-border rounded-lg bg-surface-1"
                 >
                     <option value="">All Statuses</option>
                     {Object.keys(STATUS_COLORS).map(s => (
@@ -72,36 +72,36 @@ export default function AccountantMaterialNeedsPage() {
                 <SavedFilters page="accountant-material-needs" currentFilters={filters} onApplyFilter={handleApplyFilter} />
             </div>
 
-            <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+            <div className="bg-surface-1 rounded-lg border border-border overflow-hidden">
                 <table className="min-w-full divide-y divide-slate-200">
-                    <thead className="bg-slate-50">
+                    <thead className="bg-surface-2">
                         <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Order</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Buyer</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Style</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">PM</th>
-                            <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Items</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Required By</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Order</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Buyer</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Style</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">PM</th>
+                            <th className="px-4 py-3 text-center text-xs font-semibold text-foreground-tertiary uppercase">Items</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Required By</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-border-secondary">
                         {loading ? (
-                            <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-400">Loading...</td></tr>
+                            <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-foreground-muted">Loading...</td></tr>
                         ) : displayed.length === 0 ? (
                             <tr><td colSpan={7} className="px-4 py-12 text-center">
                                 <Package className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-                                <p className="text-sm text-slate-500">No material requirements</p>
+                                <p className="text-sm text-foreground-tertiary">No material requirements</p>
                             </td></tr>
                         ) : displayed.map(req => (
-                            <tr key={req.id} className="hover:bg-slate-50">
-                                <td className="px-4 py-3 text-sm font-medium text-slate-900">{req.order.order_no}</td>
-                                <td className="px-4 py-3 text-sm text-slate-600">{req.buyer.name}</td>
-                                <td className="px-4 py-3 text-sm text-slate-600">{req.style.style_code}</td>
-                                <td className="px-4 py-3 text-sm text-slate-600">{req.production_manager.name}</td>
-                                <td className="px-4 py-3 text-sm text-slate-600 text-center">{req.lines.length}</td>
-                                <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(req.required_by_date), "dd MMM yyyy")}</td>
-                                <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[req.status] || "bg-slate-100 text-slate-800"}`}>{req.status.replace(/_/g, " ")}</span></td>
+                            <tr key={req.id} className="hover:bg-surface-2">
+                                <td className="px-4 py-3 text-sm font-medium text-foreground">{req.order.order_no}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-secondary">{req.buyer.name}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-secondary">{req.style.style_code}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-secondary">{req.production_manager.name}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-secondary text-center">{req.lines.length}</td>
+                                <td className="px-4 py-3 text-sm text-foreground-tertiary">{format(new Date(req.required_by_date), "dd MMM yyyy")}</td>
+                                <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[req.status] || "bg-surface-3 text-foreground"}`}>{req.status.replace(/_/g, " ")}</span></td>
                             </tr>
                         ))}
                     </tbody>

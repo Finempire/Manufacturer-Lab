@@ -112,20 +112,20 @@ export default function NewOrder() {
 
     return (
         <div className="max-w-4xl mx-auto space-y-6">
-            <h1 className="text-lg font-semibold tracking-tight text-slate-900">Create New Order</h1>
-            <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border border-slate-200">
+            <h1 className="text-lg font-semibold tracking-tight text-foreground">Create New Order</h1>
+            <form onSubmit={handleSubmit} className="space-y-6 bg-surface-1 p-6 rounded-lg border border-border">
                 {/* Row 1: Order Type | Buyer + Add New */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">Order Type *</label>
-                        <select required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={formData.order_type} onChange={(e) => setFormData({ ...formData, order_type: e.target.value })}>
+                        <label className="block text-xs font-medium text-foreground-secondary mb-1">Order Type *</label>
+                        <select required className="w-full h-10 px-3 border border-border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={formData.order_type} onChange={(e) => setFormData({ ...formData, order_type: e.target.value })}>
                             <option value="PRODUCTION">Production</option>
                             <option value="SAMPLE">Sample</option>
                         </select>
                     </div>
                     <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">Buyer *</label>
-                        <select required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={formData.buyer_id} onChange={handleBuyerChange}>
+                        <label className="block text-xs font-medium text-foreground-secondary mb-1">Buyer *</label>
+                        <select required className="w-full h-10 px-3 border border-border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={formData.buyer_id} onChange={handleBuyerChange}>
                             <option value="">Select Buyer</option>
                             {buyers.map((b) => (<option key={b.id} value={b.id}>{b.name} ({b.brand_code})</option>))}
                             <option value="ADD_NEW" className="text-blue-600 font-medium">+ Add New Buyer</option>
@@ -136,58 +136,58 @@ export default function NewOrder() {
                 {/* Row 2: Order No | Order Date | Shipping Date */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">Order No</label>
-                        <input type="text" placeholder="Auto-generated" className="w-full h-9 px-3 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={orderNo} onChange={(e) => setOrderNo(e.target.value)} />
+                        <label className="block text-xs font-medium text-foreground-secondary mb-1">Order No</label>
+                        <input type="text" placeholder="Auto-generated" className="w-full h-9 px-3 bg-surface-2 border border-border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={orderNo} onChange={(e) => setOrderNo(e.target.value)} />
                     </div>
                     <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">Order Date *</label>
-                        <input type="date" required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={formData.order_date} onChange={(e) => setFormData({ ...formData, order_date: e.target.value })} />
+                        <label className="block text-xs font-medium text-foreground-secondary mb-1">Order Date *</label>
+                        <input type="date" required className="w-full h-10 px-3 border border-border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={formData.order_date} onChange={(e) => setFormData({ ...formData, order_date: e.target.value })} />
                     </div>
                     <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">Shipping Date *</label>
-                        <input type="date" required className="w-full h-10 px-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={formData.shipping_date} onChange={(e) => setFormData({ ...formData, shipping_date: e.target.value })} />
+                        <label className="block text-xs font-medium text-foreground-secondary mb-1">Shipping Date *</label>
+                        <input type="date" required className="w-full h-10 px-3 border border-border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" value={formData.shipping_date} onChange={(e) => setFormData({ ...formData, shipping_date: e.target.value })} />
                     </div>
                 </div>
 
                 {/* Row 3: Remarks */}
                 <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">Remarks</label>
-                    <textarea className="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={2} value={formData.remarks} onChange={(e) => setFormData({ ...formData, remarks: e.target.value })} />
+                    <label className="block text-xs font-medium text-foreground-secondary mb-1">Remarks</label>
+                    <textarea className="w-full p-3 border border-border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows={2} value={formData.remarks} onChange={(e) => setFormData({ ...formData, remarks: e.target.value })} />
                 </div>
 
                 {/* Item Lines with resizable columns + style dropdown */}
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-semibold text-slate-900">Item Lines</h3>
+                        <h3 className="text-sm font-semibold text-foreground">Item Lines</h3>
                         <button type="button" onClick={() => setLines([...lines, { style_id: "", description: "", quantity: 0, rate: 0, amount: 0 }])} className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 rounded-lg hover:bg-blue-100">
                             <Plus className="w-3.5 h-3.5" /> Add Line
                         </button>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-slate-200" style={{ tableLayout: "fixed" }}>
-                            <thead className="bg-slate-50">
+                            <thead className="bg-surface-2">
                                 <tr>
-                                    <th style={{ width: widths.style, minWidth: 120, position: "relative" }} className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase">Style<ResizeHandle colKey="style" /></th>
-                                    <th style={{ width: widths.description, minWidth: 100, position: "relative" }} className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase">Description<ResizeHandle colKey="description" /></th>
-                                    <th style={{ width: widths.qty, minWidth: 60, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase">Qty<ResizeHandle colKey="qty" /></th>
-                                    <th style={{ width: widths.rate, minWidth: 80, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase">Rate<ResizeHandle colKey="rate" /></th>
-                                    <th style={{ width: widths.amount, minWidth: 90, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase">Amount<ResizeHandle colKey="amount" /></th>
-                                    <th style={{ width: 32 }} className="px-3 py-2 text-center text-xs font-medium text-slate-500 uppercase">×</th>
+                                    <th style={{ width: widths.style, minWidth: 120, position: "relative" }} className="px-3 py-2 text-left text-xs font-medium text-foreground-tertiary uppercase">Style<ResizeHandle colKey="style" /></th>
+                                    <th style={{ width: widths.description, minWidth: 100, position: "relative" }} className="px-3 py-2 text-left text-xs font-medium text-foreground-tertiary uppercase">Description<ResizeHandle colKey="description" /></th>
+                                    <th style={{ width: widths.qty, minWidth: 60, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-foreground-tertiary uppercase">Qty<ResizeHandle colKey="qty" /></th>
+                                    <th style={{ width: widths.rate, minWidth: 80, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-foreground-tertiary uppercase">Rate<ResizeHandle colKey="rate" /></th>
+                                    <th style={{ width: widths.amount, minWidth: 90, position: "relative" }} className="px-3 py-2 text-right text-xs font-medium text-foreground-tertiary uppercase">Amount<ResizeHandle colKey="amount" /></th>
+                                    <th style={{ width: 32 }} className="px-3 py-2 text-center text-xs font-medium text-foreground-tertiary uppercase">×</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100">
+                            <tbody className="divide-y divide-border-secondary">
                                 {lines.map((line, i) => (
                                     <tr key={i}>
                                         <td className="px-3 py-2" style={{ width: widths.style }}>
-                                            <select required className="w-full h-8 px-2 border border-slate-300 rounded text-sm" value={line.style_id} onChange={(e) => handleStyleSelect(i, e.target.value)}>
+                                            <select required className="w-full h-8 px-2 border border-border rounded text-sm" value={line.style_id} onChange={(e) => handleStyleSelect(i, e.target.value)}>
                                                 <option value="">Select Style</option>
                                                 {styles.map(s => <option key={s.id} value={s.id}>{s.style_code} — {s.style_name}</option>)}
                                                 <option value="ADD_NEW_STYLE" className="text-blue-600 font-medium">+ Add New Style</option>
                                             </select>
                                         </td>
-                                        <td className="px-3 py-2" style={{ width: widths.description }}><input type="text" className="w-full h-8 px-2 border border-slate-300 rounded text-sm" value={line.description} onChange={(e) => handleLineChange(i, "description", e.target.value)} /></td>
-                                        <td className="px-3 py-2" style={{ width: widths.qty }}><input type="number" required min="1" className="w-full h-8 px-2 border border-slate-300 rounded text-sm text-right" value={line.quantity || ""} onChange={(e) => handleLineChange(i, "quantity", e.target.value)} /></td>
-                                        <td className="px-3 py-2" style={{ width: widths.rate }}><input type="number" required min="0" step="0.01" className="w-full h-8 px-2 border border-slate-300 rounded text-sm text-right" value={line.rate || ""} onChange={(e) => handleLineChange(i, "rate", e.target.value)} /></td>
+                                        <td className="px-3 py-2" style={{ width: widths.description }}><input type="text" className="w-full h-8 px-2 border border-border rounded text-sm" value={line.description} onChange={(e) => handleLineChange(i, "description", e.target.value)} /></td>
+                                        <td className="px-3 py-2" style={{ width: widths.qty }}><input type="number" required min="1" className="w-full h-8 px-2 border border-border rounded text-sm text-right" value={line.quantity || ""} onChange={(e) => handleLineChange(i, "quantity", e.target.value)} /></td>
+                                        <td className="px-3 py-2" style={{ width: widths.rate }}><input type="number" required min="0" step="0.01" className="w-full h-8 px-2 border border-border rounded text-sm text-right" value={line.rate || ""} onChange={(e) => handleLineChange(i, "rate", e.target.value)} /></td>
                                         <td className="px-3 py-2 text-right text-sm font-medium tabular-nums" style={{ width: widths.amount }}>₹{line.amount.toFixed(2)}</td>
                                         <td className="px-3 py-2 text-center" style={{ width: 32 }}>
                                             <button type="button" onClick={() => setLines(lines.filter((_, idx) => idx !== i))} disabled={lines.length === 1} className="text-red-400 hover:text-red-600 disabled:opacity-30">
@@ -197,10 +197,10 @@ export default function NewOrder() {
                                     </tr>
                                 ))}
                             </tbody>
-                            <tfoot className="bg-slate-50">
+                            <tfoot className="bg-surface-2">
                                 <tr>
-                                    <td colSpan={4} className="px-3 py-3 text-right text-sm font-semibold text-slate-700">Total:</td>
-                                    <td className="px-3 py-3 text-right text-sm font-bold text-slate-900 tabular-nums">₹{totalAmount.toFixed(2)}</td>
+                                    <td colSpan={4} className="px-3 py-3 text-right text-sm font-semibold text-foreground-secondary">Total:</td>
+                                    <td className="px-3 py-3 text-right text-sm font-bold text-foreground tabular-nums">₹{totalAmount.toFixed(2)}</td>
                                     <td></td>
                                 </tr>
                             </tfoot>
@@ -209,7 +209,7 @@ export default function NewOrder() {
                 </div>
 
                 <div className="flex justify-end gap-3 pt-4 border-t">
-                    <button type="button" onClick={() => router.back()} className="px-4 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50">Cancel</button>
+                    <button type="button" onClick={() => router.back()} className="px-4 py-2.5 text-sm font-medium text-foreground-secondary bg-surface-1 border border-border rounded-lg hover:bg-surface-2">Cancel</button>
                     <button type="submit" disabled={loading} className="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50">{loading ? "Creating..." : "Create Order"}</button>
                 </div>
             </form>
