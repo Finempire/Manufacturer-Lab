@@ -3,9 +3,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { format } from "date-fns";
-import { ArrowLeft, FileText, Clock, Plus } from "lucide-react";
+import { ArrowLeft, FileText, Plus } from "lucide-react";
 import { toast } from "sonner";
-import OrderTimeline from "@/components/OrderTimeline";
 
 interface OrderDetail {
     id: string;
@@ -76,8 +75,8 @@ export default function MerchandiserOrderDetail() {
                 </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-6">
+            <div className="space-y-6">
+                <div className="space-y-6">
                     {/* Order Info */}
                     <div className="bg-surface-1 rounded-lg border border-border p-5">
                         <h3 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wide border-b pb-2">Order Information</h3>
@@ -144,14 +143,6 @@ export default function MerchandiserOrderDetail() {
                     </div>
                 </div>
 
-                <div className="space-y-6">
-                    <div className="bg-surface-1 rounded-lg border border-border p-4">
-                        <h4 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3">
-                            <Clock className="w-4 h-4 inline mr-1" /> Timeline
-                        </h4>
-                        <OrderTimeline status={order.status} orderType={order.order_type} />
-                    </div>
-                </div>
             </div>
         </div>
     );

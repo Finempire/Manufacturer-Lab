@@ -3,10 +3,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { format } from "date-fns";
-import { ArrowLeft, Clock, Package, FileText } from "lucide-react";
+import { ArrowLeft, Package, FileText } from "lucide-react";
 import { toast } from "sonner";
-import OrderTimeline from "@/components/OrderTimeline";
-import OrderPipelineHeader from "@/components/OrderPipelineHeader";
 
 interface OrderDetail {
     id: string;
@@ -65,11 +63,6 @@ export default function CEOOrderDetail() {
                 <span className={`px-3 py-1.5 text-xs font-bold uppercase rounded-md ${STATUS_COLORS[order.status] || "bg-surface-3 text-foreground"}`}>
                     {order.status.replace(/_/g, " ")}
                 </span>
-            </div>
-
-            {/* Horizontal Pipeline Timeline */}
-            <div className="bg-surface-1 rounded-lg border border-border px-4 py-3 shadow-sm">
-                <OrderPipelineHeader status={order.status} />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -164,10 +157,6 @@ export default function CEOOrderDetail() {
                             <div><p className="text-xs text-foreground-tertiary">Merchandiser</p><p className="text-sm font-medium">{order.merchandiser?.name || "—"}</p></div>
                             <div><p className="text-xs text-foreground-tertiary">{order.order_type === "SAMPLE" ? "Sample PM" : "Production PM"}</p><p className="text-sm font-medium">{(order.order_type === "SAMPLE" ? order.assigned_sample_pm?.name : order.assigned_production_pm?.name) || "—"}</p></div>
                         </div>
-                    </div>
-                    <div className="bg-surface-1 rounded-lg border border-border p-4">
-                        <h4 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3"><Clock className="w-4 h-4 inline mr-1" /> Timeline</h4>
-                        <OrderTimeline status={order.status} orderType={order.order_type} />
                     </div>
                 </div>
             </div>
