@@ -9,7 +9,7 @@ export async function GET(
 ) {
     const auth = await requireRole([
         "ACCOUNTANT",
-        "SAMPLE_PRODUCTION_MANAGER",
+        "SENIOR_MERCHANDISER",
         "PRODUCTION_MANAGER",
         "MERCHANDISER",
         "CEO",
@@ -47,7 +47,7 @@ export async function PUT(
     req: Request,
     { params }: { params: { id: string } }
 ) {
-    const auth = await requireRole(["MERCHANDISER", "PRODUCTION_MANAGER", "SAMPLE_PRODUCTION_MANAGER", "ACCOUNTANT"]);
+    const auth = await requireRole(["MERCHANDISER", "PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "ACCOUNTANT"]);
     if (!auth.authorized) return auth.response;
 
     try {

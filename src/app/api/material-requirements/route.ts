@@ -9,7 +9,8 @@ export async function GET(req: Request) {
     const auth = await requireRole([
         "ACCOUNTANT",
         "PRODUCTION_MANAGER",
-        "SAMPLE_PRODUCTION_MANAGER",
+        "SENIOR_MERCHANDISER",
+        "MERCHANDISER",
         "STORE_MANAGER",
         "CEO",
     ]);
@@ -26,7 +27,7 @@ export async function GET(req: Request) {
     if (status) where.status = status;
 
     const role = auth.user.role;
-    if (role === "PRODUCTION_MANAGER" || role === "SAMPLE_PRODUCTION_MANAGER") {
+    if (role === "PRODUCTION_MANAGER" || role === "SENIOR_MERCHANDISER" || role === "MERCHANDISER") {
         where.production_manager_id = auth.user.id;
     } else if (role === "STORE_MANAGER") {
         // SM sees requirements assigned to them or pending acceptance
@@ -53,7 +54,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-    const auth = await requireRole(["PRODUCTION_MANAGER", "SAMPLE_PRODUCTION_MANAGER"]);
+    const auth = await requireRole(["PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "MERCHANDISER"]);
     if (!auth.authorized) return auth.response;
 
     try {

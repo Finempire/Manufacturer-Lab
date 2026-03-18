@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 
 export type UserRole =
   | "ACCOUNTANT"
-  | "SAMPLE_PRODUCTION_MANAGER"
+  | "SENIOR_MERCHANDISER"
   | "PRODUCTION_MANAGER"
   | "MERCHANDISER"
   | "STORE_MANAGER"
@@ -14,7 +14,7 @@ export type UserRole =
 
 export const ROLE_LABELS: Record<UserRole, string> = {
   ACCOUNTANT: "Accountant",
-  SAMPLE_PRODUCTION_MANAGER: "Sample Production Manager",
+  SENIOR_MERCHANDISER: "Sample Production Manager",
   PRODUCTION_MANAGER: "Production Manager",
   MERCHANDISER: "Merchandiser",
   STORE_MANAGER: "Store Manager",

@@ -72,7 +72,7 @@ export async function POST(
         // Notify PMs
         const pms = await prisma.user.findMany({
             where: {
-                role: { in: ["PRODUCTION_MANAGER", "SAMPLE_PRODUCTION_MANAGER"] },
+                role: { in: ["PRODUCTION_MANAGER", "SENIOR_MERCHANDISER"] },
                 is_active: true,
             },
         });

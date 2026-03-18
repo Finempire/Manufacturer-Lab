@@ -42,7 +42,7 @@ export default function SamplePMMaterialNeedsPage() {
                     <h1 className="text-lg font-semibold tracking-tight text-foreground">Material Needs</h1>
                     <p className="text-sm text-foreground-tertiary mt-1">{requirements.length} requirements</p>
                 </div>
-                <Link href="/dashboard/sample-pm/material-needs/new" className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
+                <Link href="/dashboard/merchandiser/material-needs/new" className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
                     <Plus className="w-4 h-4" /> New Requirement
                 </Link>
             </div>
@@ -76,7 +76,7 @@ export default function SamplePMMaterialNeedsPage() {
                                 <td className="px-4 py-3 text-sm text-foreground-secondary text-center">{req.lines.length}</td>
                                 <td className="px-4 py-3 text-sm text-foreground-tertiary">{format(new Date(req.required_by_date), "dd MMM yyyy")}</td>
                                 <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[req.status] || "bg-surface-3 text-foreground"}`}>{req.status.replace(/_/g, " ")}</span></td>
-                                <td className="px-4 py-3 text-center"><Link href={`/dashboard/sample-pm/material-needs/${req.id}`} className="text-blue-600 hover:text-blue-800"><Eye className="w-4 h-4 mx-auto" /></Link></td>
+                                <td className="px-4 py-3 text-center"><Link href={`/dashboard/merchandiser/material-needs/${req.id}`} className="text-blue-600 hover:text-blue-800"><Eye className="w-4 h-4 mx-auto" /></Link></td>
                             </tr>
                         ))}
                     </tbody>

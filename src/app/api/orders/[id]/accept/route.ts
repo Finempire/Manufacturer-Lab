@@ -7,7 +7,7 @@ export async function POST(
     req: Request,
     { params }: { params: { id: string } }
 ) {
-    const auth = await requireRole(["PRODUCTION_MANAGER", "SAMPLE_PRODUCTION_MANAGER"]);
+    const auth = await requireRole(["PRODUCTION_MANAGER", "SENIOR_MERCHANDISER"]);
     if (!auth.authorized) return auth.response;
 
     try {
@@ -28,8 +28,8 @@ export async function POST(
 
         // Validate PM type matches order type
         const role = auth.user.role;
-        if (role === "SAMPLE_PRODUCTION_MANAGER" && order.order_type !== "SAMPLE") {
-            return NextResponse.json({ error: "Sample PM can only accept SAMPLE orders" }, { status: 403 });
+        if (role === "SENIOR_MERCHANDISER" && order.order_type !== "SAMPLE") {
+            return NextResponse.json({ error: "Senior Merchandiser can only accept SAMPLE orders" }, { status: 403 });
         }
         if (role === "PRODUCTION_MANAGER" && order.order_type !== "PRODUCTION") {
             return NextResponse.json({ error: "Production PM can only accept PRODUCTION orders" }, { status: 403 });

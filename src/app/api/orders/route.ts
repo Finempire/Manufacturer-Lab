@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
     const auth = await requireRole([
         "ACCOUNTANT",
-        "SAMPLE_PRODUCTION_MANAGER",
+        "SENIOR_MERCHANDISER",
         "PRODUCTION_MANAGER",
         "MERCHANDISER",
         "STORE_MANAGER",
@@ -33,7 +33,7 @@ export async function GET(req: Request) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {};
 
-    if (role === "SAMPLE_PRODUCTION_MANAGER") {
+    if (role === "SENIOR_MERCHANDISER") {
         where.order_type = "SAMPLE";
     } else if (role === "PRODUCTION_MANAGER") {
         where.order_type = "PRODUCTION";

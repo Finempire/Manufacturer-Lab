@@ -8,7 +8,7 @@ import { KeyRound } from "lucide-react";
 
 const ROLE_DASHBOARDS: Record<string, string> = {
   ACCOUNTANT: "/dashboard/accountant",
-  SAMPLE_PRODUCTION_MANAGER: "/dashboard/sample-pm",
+  SENIOR_MERCHANDISER: "/dashboard/senior-merchandiser",
   PRODUCTION_MANAGER: "/dashboard/production",
   MERCHANDISER: "/dashboard/merchandiser",
   STORE_MANAGER: "/dashboard/manager",

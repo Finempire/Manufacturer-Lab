@@ -9,7 +9,7 @@ export async function GET(
 ) {
     const auth = await requireRole([
         "ACCOUNTANT",
-        "SAMPLE_PRODUCTION_MANAGER",
+        "SENIOR_MERCHANDISER",
         "PRODUCTION_MANAGER",
         "MERCHANDISER",
         "STORE_MANAGER",
@@ -45,7 +45,7 @@ export async function GET(
     if (role === "MERCHANDISER" && order.assigned_merchandiser_id !== auth.user.id) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
-    if (role === "SAMPLE_PRODUCTION_MANAGER" && order.order_type !== "SAMPLE") {
+    if (role === "SENIOR_MERCHANDISER" && order.order_type !== "SAMPLE") {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
     if (role === "PRODUCTION_MANAGER" && order.order_type !== "PRODUCTION") {
@@ -73,7 +73,7 @@ export async function PUT(
     req: Request,
     { params }: { params: { id: string } }
 ) {
-    const auth = await requireRole(["ACCOUNTANT", "PRODUCTION_MANAGER", "SAMPLE_PRODUCTION_MANAGER", "CEO"]);
+    const auth = await requireRole(["ACCOUNTANT", "PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "CEO"]);
     if (!auth.authorized) return auth.response;
 
     try {

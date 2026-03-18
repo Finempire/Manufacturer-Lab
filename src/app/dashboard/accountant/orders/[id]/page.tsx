@@ -303,7 +303,7 @@ export default function AccountantOrderDetail() {
                             </div>
                             {order.order_type === "SAMPLE" && (
                                 <div>
-                                    <p className="text-xs text-foreground-tertiary">Sample PM</p>
+                                    <p className="text-xs text-foreground-tertiary">Senior Merchandiser</p>
                                     <p className="text-sm font-medium text-foreground">{order.assigned_sample_pm?.name || "—"}</p>
                                 </div>
                             )}

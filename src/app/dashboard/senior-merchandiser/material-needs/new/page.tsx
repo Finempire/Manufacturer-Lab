@@ -44,7 +44,7 @@ export default function SamplePMNewMaterialNeedPage() {
             });
             if (!res.ok) throw new Error("Failed");
             toast.success("Created");
-            router.push("/dashboard/sample-pm/material-needs");
+            router.push("/dashboard/senior-merchandiser/material-needs");
         } catch { toast.error("Failed"); }
         finally { setSubmitting(false); }
     };

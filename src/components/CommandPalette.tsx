@@ -67,7 +67,7 @@ const ROLE_PATHS: Record<string, string> = {
   ACCOUNTANT: "/dashboard/accountant",
   CEO: "/dashboard/ceo",
   PRODUCTION_MANAGER: "/dashboard/production",
-  SAMPLE_PRODUCTION_MANAGER: "/dashboard/sample-pm",
+  SENIOR_MERCHANDISER: "/dashboard/senior-merchandiser",
   MERCHANDISER: "/dashboard/merchandiser",
   STORE_MANAGER: "/dashboard/manager",
   RUNNER: "/dashboard/runner",
@@ -133,7 +133,7 @@ function getCommandsForRole(role: string): CommandItem[] {
     });
   }
 
-  if (role === "PRODUCTION_MANAGER" || role === "SAMPLE_PRODUCTION_MANAGER") {
+  if (role === "PRODUCTION_MANAGER" || role === "SENIOR_MERCHANDISER") {
     commands.push({
       id: "action-raise-material-need",
       label: "Raise Material Need",
@@ -159,7 +159,7 @@ function getCommandsForRole(role: string): CommandItem[] {
 
   if (
     role === "PRODUCTION_MANAGER" ||
-    role === "SAMPLE_PRODUCTION_MANAGER" ||
+    role === "SENIOR_MERCHANDISER" ||
     role === "STORE_MANAGER"
   ) {
     commands.push({
@@ -209,7 +209,7 @@ function getCommandsForRole(role: string): CommandItem[] {
 
   if (
     role === "PRODUCTION_MANAGER" ||
-    role === "SAMPLE_PRODUCTION_MANAGER" ||
+    role === "SENIOR_MERCHANDISER" ||
     role === "MERCHANDISER"
   ) {
     commands.push({

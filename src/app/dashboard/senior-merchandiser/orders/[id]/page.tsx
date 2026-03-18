@@ -129,7 +129,7 @@ export default function SamplePMOrderDetail() {
                             <div><p className="text-xs text-foreground-tertiary mb-1">Order Date</p><p className="text-sm font-medium">{format(new Date(order.order_date), "dd MMM yyyy")}</p></div>
                             <div><p className="text-xs text-foreground-tertiary mb-1">Shipping Date</p><p className="text-sm font-medium">{format(new Date(order.shipping_date), "dd MMM yyyy")}</p></div>
                             <div><p className="text-xs text-foreground-tertiary mb-1">Merchandiser</p><p className="text-sm font-medium">{order.merchandiser?.name || "—"}</p></div>
-                            <div><p className="text-xs text-foreground-tertiary mb-1">Sample PM</p><p className="text-sm font-medium">{order.assigned_sample_pm?.name || "—"}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary mb-1">Senior Merchandiser</p><p className="text-sm font-medium">{order.assigned_sample_pm?.name || "—"}</p></div>
                         </div>
                     </div>
 

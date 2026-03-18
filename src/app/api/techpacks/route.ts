@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
     const auth = await requireRole([
         "ACCOUNTANT",
-        "SAMPLE_PRODUCTION_MANAGER",
+        "SENIOR_MERCHANDISER",
         "PRODUCTION_MANAGER",
         "MERCHANDISER",
         "CEO",
@@ -26,7 +26,7 @@ export async function GET(req: Request) {
     const role = auth.user.role;
     if (role === "MERCHANDISER") {
         where.merchandiser_id = auth.user.id;
-    } else if (role === "SAMPLE_PRODUCTION_MANAGER") {
+    } else if (role === "SENIOR_MERCHANDISER") {
         where.order = { order_type: "SAMPLE" };
     } else if (role === "PRODUCTION_MANAGER") {
         where.order = { order_type: "PRODUCTION" };
@@ -45,7 +45,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-    const auth = await requireRole(["PRODUCTION_MANAGER", "SAMPLE_PRODUCTION_MANAGER", "ACCOUNTANT"]);
+    const auth = await requireRole(["PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "ACCOUNTANT"]);
     if (!auth.authorized) return auth.response;
 
     try {

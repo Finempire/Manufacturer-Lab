@@ -11,7 +11,7 @@ const ROLE_DASHBOARDS: Record<string, string> = {
   ACCOUNTANT: "/dashboard/accountant",
   CEO: "/dashboard/ceo",
   PRODUCTION_MANAGER: "/dashboard/production",
-  SAMPLE_PRODUCTION_MANAGER: "/dashboard/sample-pm",
+  SENIOR_MERCHANDISER: "/dashboard/senior-merchandiser",
   MERCHANDISER: "/dashboard/merchandiser",
   STORE_MANAGER: "/dashboard/manager",
   RUNNER: "/dashboard/runner",

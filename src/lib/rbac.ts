@@ -28,7 +28,7 @@ export async function requireRole(allowedRoles: UserRole[]) {
 export function getRoleDashboardPath(role: string): string {
   const paths: Record<string, string> = {
     ACCOUNTANT: "/dashboard/accountant",
-    SAMPLE_PRODUCTION_MANAGER: "/dashboard/sample-pm",
+    SENIOR_MERCHANDISER: "/dashboard/senior-merchandiser",
     PRODUCTION_MANAGER: "/dashboard/production",
     MERCHANDISER: "/dashboard/merchandiser",
     STORE_MANAGER: "/dashboard/manager",
@@ -43,11 +43,11 @@ export function canViewFinancials(role: string): boolean {
 }
 
 export function isPMRole(role: string): boolean {
-  return role === "SAMPLE_PRODUCTION_MANAGER" || role === "PRODUCTION_MANAGER";
+  return role === "SENIOR_MERCHANDISER" || role === "PRODUCTION_MANAGER";
 }
 
 export function getOrderTypeForPM(role: string): string | null {
-  if (role === "SAMPLE_PRODUCTION_MANAGER") return "SAMPLE";
+  if (role === "SENIOR_MERCHANDISER") return "SAMPLE";
   if (role === "PRODUCTION_MANAGER") return "PRODUCTION";
   return null;
 }

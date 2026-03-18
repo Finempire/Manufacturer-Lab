@@ -39,7 +39,7 @@ export default function SamplePMExpenseRequestsPage() {
                     <h1 className="text-lg font-semibold tracking-tight text-foreground">Expense Requests</h1>
                     <p className="text-sm text-foreground-tertiary mt-1">{expenses.length} requests</p>
                 </div>
-                <Link href="/dashboard/sample-pm/expense-requests/new" className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
+                <Link href="/dashboard/merchandiser/expense-requests/new" className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
                     <Plus className="w-4 h-4" /> New Expense
                 </Link>
             </div>
@@ -73,7 +73,7 @@ export default function SamplePMExpenseRequestsPage() {
                                 <td className="px-4 py-3 text-sm text-foreground-secondary">{exp.order.order_no}</td>
                                 <td className="px-4 py-3 text-sm text-foreground text-right font-medium tabular-nums">₹{exp.expected_amount.toLocaleString("en-IN")}</td>
                                 <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[exp.status] || "bg-surface-3 text-foreground"}`}>{exp.status.replace(/_/g, " ")}</span></td>
-                                <td className="px-4 py-3 text-center"><Link href={`/dashboard/sample-pm/expense-requests/${exp.id}`} className="text-blue-600 hover:text-blue-800"><Eye className="w-4 h-4 mx-auto" /></Link></td>
+                                <td className="px-4 py-3 text-center"><Link href={`/dashboard/merchandiser/expense-requests/${exp.id}`} className="text-blue-600 hover:text-blue-800"><Eye className="w-4 h-4 mx-auto" /></Link></td>
                             </tr>
                         ))}
                     </tbody>

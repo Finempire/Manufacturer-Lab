@@ -4,8 +4,8 @@ import { requireRole } from "@/lib/rbac";
 
 export async function GET() {
     const auth = await requireRole([
-        "ACCOUNTANT", "SAMPLE_PRODUCTION_MANAGER", "PRODUCTION_MANAGER",
-        "STORE_MANAGER", "CEO",
+        "ACCOUNTANT", "SENIOR_MERCHANDISER", "PRODUCTION_MANAGER",
+        "MERCHANDISER", "STORE_MANAGER", "CEO",
     ]);
     if (!auth.authorized) return auth.response;
 
@@ -30,8 +30,8 @@ export async function GET() {
 
 export async function POST(req: Request) {
     const auth = await requireRole([
-        "ACCOUNTANT", "SAMPLE_PRODUCTION_MANAGER", "PRODUCTION_MANAGER",
-        "STORE_MANAGER",
+        "ACCOUNTANT", "SENIOR_MERCHANDISER", "PRODUCTION_MANAGER",
+        "MERCHANDISER", "STORE_MANAGER",
     ]);
     if (!auth.authorized) return auth.response;
 

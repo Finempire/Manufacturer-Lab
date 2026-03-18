@@ -18,25 +18,25 @@ export default function SamplePMDashboard() {
     const [data, setData] = useState<DashboardData | null>(null);
 
     useEffect(() => {
-        fetch("/api/dashboard/sample-pm")
+        fetch("/api/dashboard/senior-merchandiser")
             .then(r => r.json())
             .then(setData)
             .catch(() => {});
     }, []);
 
     const cards = [
-        { label: "Active Orders", value: data?.activeOrders ?? "—", icon: <ShoppingCart className="w-5 h-5" />, color: "text-blue-400 bg-blue-500/10", link: "/dashboard/sample-pm/orders" },
-        { label: "Pending Acceptance", value: data?.pendingAcceptance ?? "—", icon: <ShoppingCart className="w-5 h-5" />, color: "text-amber-400 bg-amber-500/10", link: "/dashboard/sample-pm/orders" },
-        { label: "Tech Packs In Progress", value: data?.techPacksInProgress ?? "—", icon: <FileText className="w-5 h-5" />, color: "text-purple-400 bg-purple-500/10", link: "/dashboard/sample-pm/tech-packs" },
-        { label: "Material Pending", value: data?.materialPending ?? "—", icon: <Package className="w-5 h-5" />, color: "text-orange-400 bg-orange-500/10", link: "/dashboard/sample-pm/material-needs" },
-        { label: "In Production", value: data?.inProduction ?? "—", icon: <Factory className="w-5 h-5" />, color: "text-cyan-400 bg-cyan-500/10", link: "/dashboard/sample-pm/production" },
-        { label: "Pending Expenses", value: data?.pendingExpenses ?? "—", icon: <Receipt className="w-5 h-5" />, color: "text-red-400 bg-red-500/10", link: "/dashboard/sample-pm/expense-requests" },
+        { label: "Active Orders", value: data?.activeOrders ?? "—", icon: <ShoppingCart className="w-5 h-5" />, color: "text-blue-400 bg-blue-500/10", link: "/dashboard/senior-merchandiser/orders" },
+        { label: "Pending Acceptance", value: data?.pendingAcceptance ?? "—", icon: <ShoppingCart className="w-5 h-5" />, color: "text-amber-400 bg-amber-500/10", link: "/dashboard/senior-merchandiser/orders" },
+        { label: "Tech Packs In Progress", value: data?.techPacksInProgress ?? "—", icon: <FileText className="w-5 h-5" />, color: "text-purple-400 bg-purple-500/10", link: "/dashboard/senior-merchandiser/tech-packs" },
+        { label: "Material Pending", value: data?.materialPending ?? "—", icon: <Package className="w-5 h-5" />, color: "text-orange-400 bg-orange-500/10", link: "/dashboard/senior-merchandiser/material-needs" },
+        { label: "In Production", value: data?.inProduction ?? "—", icon: <Factory className="w-5 h-5" />, color: "text-cyan-400 bg-cyan-500/10", link: "/dashboard/senior-merchandiser/production" },
+        { label: "Pending Expenses", value: data?.pendingExpenses ?? "—", icon: <Receipt className="w-5 h-5" />, color: "text-red-400 bg-red-500/10", link: "/dashboard/senior-merchandiser/expense-requests" },
     ];
 
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-lg font-semibold tracking-tight text-foreground">Sample PM Dashboard</h1>
+                <h1 className="text-lg font-semibold tracking-tight text-foreground">Senior Merchandiser Dashboard</h1>
                 <p className="text-sm text-foreground-tertiary mt-1">Overview of sample production operations</p>
             </div>
 

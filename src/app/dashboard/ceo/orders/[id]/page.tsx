@@ -155,7 +155,7 @@ export default function CEOOrderDetail() {
                         <h4 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3">Assignments</h4>
                         <div className="space-y-3">
                             <div><p className="text-xs text-foreground-tertiary">Merchandiser</p><p className="text-sm font-medium">{order.merchandiser?.name || "—"}</p></div>
-                            <div><p className="text-xs text-foreground-tertiary">{order.order_type === "SAMPLE" ? "Sample PM" : "Production PM"}</p><p className="text-sm font-medium">{(order.order_type === "SAMPLE" ? order.assigned_sample_pm?.name : order.assigned_production_pm?.name) || "—"}</p></div>
+                            <div><p className="text-xs text-foreground-tertiary">{order.order_type === "SAMPLE" ? "Senior Merchandiser" : "Production PM"}</p><p className="text-sm font-medium">{(order.order_type === "SAMPLE" ? order.assigned_sample_pm?.name : order.assigned_production_pm?.name) || "—"}</p></div>
                         </div>
                     </div>
                 </div>

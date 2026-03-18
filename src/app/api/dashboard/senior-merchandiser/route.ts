@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/rbac";
 
 export async function GET() {
-    const auth = await requireRole(["SAMPLE_PRODUCTION_MANAGER"]);
+    const auth = await requireRole(["SENIOR_MERCHANDISER"]);
     if (!auth.authorized) return auth.response;
 
     const [activeOrders, pendingAcceptance, techPacksInProgress, materialPending, inProduction, pendingExpenses] =

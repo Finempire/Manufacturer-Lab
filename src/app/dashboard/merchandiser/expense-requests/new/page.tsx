@@ -40,7 +40,7 @@ export default function SamplePMNewExpensePage() {
             });
             if (!res.ok) throw new Error("Failed");
             toast.success("Created");
-            router.push("/dashboard/sample-pm/expense-requests");
+            router.push("/dashboard/merchandiser/expense-requests");
         } catch { toast.error("Failed"); }
         finally { setSubmitting(false); }
     };

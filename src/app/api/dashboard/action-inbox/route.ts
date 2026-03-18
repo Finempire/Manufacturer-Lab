@@ -238,7 +238,7 @@ async function getSamplePMActions(userId: string): Promise<ActionItem[]> {
             title: `Accept Order — ${o.order_no}`,
             subtitle: o.buyer.name,
             action: "Accept Order",
-            href: `/dashboard/sample-pm/orders/${o.id}`,
+            href: `/dashboard/senior-merchandiser/orders/${o.id}`,
             priority: priority(days),
             pending_since: o.created_at.toISOString(),
             days_pending: days,
@@ -252,7 +252,7 @@ async function getSamplePMActions(userId: string): Promise<ActionItem[]> {
             title: `Review Tech Pack — ${tp.tech_pack_no}`,
             subtitle: `${tp.order.order_no} • by ${tp.merchandiser?.name || "—"}`,
             action: "Review",
-            href: `/dashboard/sample-pm/tech-packs`,
+            href: `/dashboard/senior-merchandiser/tech-packs`,
             priority: priority(days),
             pending_since: tp.created_at.toISOString(),
             days_pending: days,
@@ -266,7 +266,7 @@ async function getSamplePMActions(userId: string): Promise<ActionItem[]> {
             title: `Mark Complete — ${o.order_no}`,
             subtitle: o.buyer.name,
             action: "Complete Production",
-            href: `/dashboard/sample-pm/orders/${o.id}`,
+            href: `/dashboard/senior-merchandiser/orders/${o.id}`,
             priority: priority(days),
             pending_since: o.created_at.toISOString(),
             days_pending: days,
@@ -486,7 +486,7 @@ export async function GET() {
     switch (role) {
         case "ACCOUNTANT": items = await getAccountantActions(); break;
         case "PRODUCTION_MANAGER": items = await getProductionPMActions(userId); break;
-        case "SAMPLE_PRODUCTION_MANAGER": items = await getSamplePMActions(userId); break;
+        case "SENIOR_MERCHANDISER": items = await getSamplePMActions(userId); break;
         case "MERCHANDISER": items = await getMerchandiserActions(userId); break;
         case "STORE_MANAGER": items = await getStoreManagerActions(userId); break;
         case "RUNNER": items = await getRunnerActions(userId); break;

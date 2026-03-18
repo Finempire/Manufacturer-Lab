@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
     const auth = await requireRole([
-        "ACCOUNTANT", "SAMPLE_PRODUCTION_MANAGER", "PRODUCTION_MANAGER",
+        "ACCOUNTANT", "SENIOR_MERCHANDISER", "PRODUCTION_MANAGER",
         "MERCHANDISER", "STORE_MANAGER", "RUNNER", "CEO",
     ]);
     if (!auth.authorized) return auth.response;

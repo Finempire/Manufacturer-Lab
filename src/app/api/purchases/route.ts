@@ -19,8 +19,8 @@ export async function GET(req: Request) {
 
         if (status) where.status = status;
 
-        // Role-based filtering
-        if (user.role === "RUNNER") {
+        // Role-based filtering - Runner, PM, Senior Merch, Merch see only their own purchases
+        if (["RUNNER", "PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "MERCHANDISER"].includes(user.role)) {
             where.runner_id = user.id;
         }
 
