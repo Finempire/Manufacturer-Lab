@@ -26,7 +26,7 @@ async function main() {
         name: r.name,
         role: r.role as any,
         password_hash,
-        must_change_password: true,
+        must_change_password: false,
       },
     });
   }

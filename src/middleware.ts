@@ -16,10 +16,6 @@ export default withAuth(
       CEO: "/dashboard/ceo",
     };
 
-    if (token?.must_change_password && path.startsWith("/dashboard")) {
-      return NextResponse.redirect(new URL("/change-password", req.url));
-    }
-
     if (path.startsWith("/dashboard")) {
       const userRole = token?.role as string;
       const allowedBase = rolePathMap[userRole];
