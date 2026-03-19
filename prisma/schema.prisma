@@ -26,34 +26,12 @@ enum OrderType {
 
 enum OrderStatus {
   ORDER_RECEIVED
-  PENDING_PM_ACCEPTANCE
-  MERCHANDISER_ASSIGNED
-  TECH_PACK_IN_PROGRESS
-  TECH_PACK_COMPLETED
-  MATERIAL_REQUIREMENT_SENT
-  MATERIAL_IN_PROGRESS
-  MATERIAL_COMPLETED
-  PRODUCTION_ACCEPTED
-  UNDER_PRODUCTION
-  PRODUCTION_COMPLETED
+  REQUEST_RAISED
+  INVOICE_SUBMITTED
+  APPROVED
+  PAID
   COMPLETED
   CANCELLED
-}
-
-enum TechPackStatus {
-  PENDING_PM_ACCEPTANCE
-  PM_ACCEPTED
-  PENDING_MERCH_ACCEPTANCE
-  MERCH_ACCEPTED
-  IN_PROGRESS
-  SUBMITTED_FOR_REVIEW
-  PM_REVIEWING
-  SHARED_WITH_BUYER
-  BUYER_APPROVED
-  BUYER_REJECTED
-  REVISION_IN_PROGRESS
-  REVISION_SUBMITTED
-  COMPLETED
 }
 
 enum MaterialRequirementStatus {
@@ -157,7 +135,6 @@ enum ExceptionFlag {
 
 enum CommentEntityType {
   ORDER
-  TECH_PACK
   MATERIAL_REQUIREMENT
   MATERIAL_REQUEST
   PURCHASE
@@ -188,16 +165,12 @@ model User {
   created_styles                Style[]              @relation("StyleCreatedBy")
   created_buyers                Buyer[]              @relation("BuyerCreatedBy")
   created_orders                Order[]              @relation("OrderCreatedBy")
-  assigned_merch_orders         Order[]              @relation("OrderAssignedMerchandiser")
   assigned_sample_pm_orders     Order[]              @relation("OrderAssignedSamplePM")
   assigned_production_pm_orders Order[]              @relation("OrderAssignedProductionPM")
   pm_accepted_orders            Order[]              @relation("OrderPMAcceptedBy")
   material_completed_orders     Order[]              @relation("OrderMaterialCompletedBy")
   production_started_orders     Order[]              @relation("OrderProductionStartedBy")
   production_completed_orders   Order[]              @relation("OrderProductionCompletedBy")
-  tech_packs                    TechPack[]           @relation("TechPackMerchandiser")
-  tech_pack_revisions_submitted TechPackRevision[]   @relation("RevisionSubmittedBy")
-  tech_pack_revisions_reviewed  TechPackRevision[]   @relation("RevisionReviewedBy")
   pm_material_requirements      MaterialRequirement[] @relation("MaterialRequirementPM")
   sm_material_requirements      MaterialRequirement[] @relation("MaterialRequirementSM")
   managed_requests              MaterialRequest[]    @relation("MaterialRequestManager")
@@ -210,7 +183,6 @@ model User {
   audit_logs                    AuditLog[]           @relation("AuditLogUser")
   reopened_orders               Order[]              @relation("OrderReopenedBy")
   next_action_orders            Order[]              @relation("OrderNextActionUser")
-  reopened_tech_packs           TechPack[]           @relation("TechPackReopenedBy")
   reopened_purchases            Purchase[]           @relation("PurchaseReopenedBy")
   reopened_expenses             ExpenseRequest[]     @relation("ExpenseReopenedBy")
   comments                      Comment[]            @relation("CommentAuthor")
@@ -329,7 +301,6 @@ model Order {
   remarks                     String?
   status                      OrderStatus @default(ORDER_RECEIVED)
   created_by                  String
-  assigned_merchandiser_id    String?
   assigned_sample_pm_id       String?
   assigned_production_pm_id   String?
   pm_accepted_at              DateTime?
@@ -364,7 +335,6 @@ model Order {
 
   buyer                 Buyer    @relation("OrderBuyer", fields: [buyer_id], references: [id])
   creator               User     @relation("OrderCreatedBy", fields: [created_by], references: [id])
-  merchandiser          User?    @relation("OrderAssignedMerchandiser", fields: [assigned_merchandiser_id], references: [id])
   assigned_sample_pm    User?    @relation("OrderAssignedSamplePM", fields: [assigned_sample_pm_id], references: [id])
   assigned_production_pm User?   @relation("OrderAssignedProductionPM", fields: [assigned_production_pm_id], references: [id])
   pm_accepted_by        User?    @relation("OrderPMAcceptedBy", fields: [pm_accepted_by_id], references: [id])
@@ -374,7 +344,6 @@ model Order {
   reopened_by           User?    @relation("OrderReopenedBy", fields: [reopened_by_id], references: [id])
   next_action_user      User?    @relation("OrderNextActionUser", fields: [next_action_user_id], references: [id])
   lines                 OrderLine[]
-  tech_packs            TechPack[]
   material_requirements MaterialRequirement[]
   material_requests     MaterialRequest[]
   expenses              ExpenseRequest[]
@@ -385,7 +354,6 @@ model Order {
   @@index([order_type])
   @@index([created_by])
   @@index([created_at])
-  @@index([assigned_merchandiser_id])
   @@index([blocker_code])
   @@index([overdue_flag])
   @@index([sla_breached])
@@ -406,75 +374,6 @@ model OrderLine {
 
   @@index([order_id])
   @@index([style_id])
-}
-
-model TechPack {
-  id                      String         @id @default(uuid())
-  tech_pack_no            String         @unique
-  order_id                String
-  merchandiser_id         String?
-  fabric_details          String?
-  trim_details            String?
-  measurements            String?
-  construction_notes      String?
-  status                  TechPackStatus @default(PENDING_PM_ACCEPTANCE)
-  merch_accepted_at       DateTime?
-  submitted_for_review_at DateTime?
-  pm_reviewed_at          DateTime?
-  shared_with_buyer_at    DateTime?
-  buyer_decision          String?
-  buyer_decision_at       DateTime?
-  buyer_notes             String?
-  pm_rejection_notes      String?
-  revision_count          Int            @default(0)
-  completed_at            DateTime?
-  // ─── Operational Control Fields ───
-  pending_since_at      DateTime?
-  next_action_role      Role?
-  next_action_label     String?
-  blocker_code          BlockerCode?
-  blocker_note          String?
-  overdue_flag          Boolean        @default(false)
-  last_activity_at      DateTime?
-  entered_stage_at      DateTime?
-  sla_due_at            DateTime?
-  sla_breached          Boolean        @default(false)
-  exception_flags       ExceptionFlag[]
-  reopened_at           DateTime?
-  reopened_by_id        String?
-  reopen_reason         String?
-  created_at              DateTime       @default(now())
-  updated_at              DateTime       @updatedAt
-
-  order        Order             @relation(fields: [order_id], references: [id])
-  merchandiser User?             @relation("TechPackMerchandiser", fields: [merchandiser_id], references: [id])
-  reopened_by  User?             @relation("TechPackReopenedBy", fields: [reopened_by_id], references: [id])
-  revisions    TechPackRevision[]
-  comments     Comment[]         @relation("TechPackComments")
-
-  @@index([order_id])
-  @@index([merchandiser_id])
-  @@index([status])
-  @@index([blocker_code])
-}
-
-model TechPackRevision {
-  id              String   @id @default(uuid())
-  tech_pack_id    String
-  revision_number Int
-  document_path   String
-  pm_notes        String?
-  status          String   // SUBMITTED | APPROVED | REJECTED
-  submitted_by_id String
-  reviewed_by_id  String?
-  submitted_at    DateTime
-  reviewed_at     DateTime?
-
-  tech_pack    TechPack @relation(fields: [tech_pack_id], references: [id], onDelete: Cascade)
-  submitted_by User     @relation("RevisionSubmittedBy", fields: [submitted_by_id], references: [id])
-  reviewed_by  User?    @relation("RevisionReviewedBy", fields: [reviewed_by_id], references: [id])
-
-  @@index([tech_pack_id])
 }
 
 model MaterialRequirement {
@@ -807,7 +706,6 @@ model Comment {
   content                 String
   // Nullable FK columns — only one is set per comment
   order_id                String?
-  tech_pack_id            String?
   material_requirement_id String?
   material_request_id     String?
   purchase_id             String?
@@ -818,14 +716,12 @@ model Comment {
   author               User                 @relation("CommentAuthor", fields: [author_id], references: [id])
   mentions             CommentMention[]
   order                Order?               @relation("OrderComments", fields: [order_id], references: [id])
-  tech_pack            TechPack?            @relation("TechPackComments", fields: [tech_pack_id], references: [id])
   material_requirement MaterialRequirement? @relation("MaterialRequirementComments", fields: [material_requirement_id], references: [id])
   material_request     MaterialRequest?     @relation("MaterialRequestComments", fields: [material_request_id], references: [id])
   purchase             Purchase?            @relation("PurchaseComments", fields: [purchase_id], references: [id])
   expense              ExpenseRequest?      @relation("ExpenseComments", fields: [expense_id], references: [id])
 
   @@index([entity_type, order_id])
-  @@index([entity_type, tech_pack_id])
   @@index([entity_type, purchase_id])
   @@index([entity_type, expense_id])
   @@index([author_id])

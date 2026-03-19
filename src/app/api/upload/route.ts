@@ -59,7 +59,6 @@ export async function POST(req: Request) {
             PROVISIONAL_INVOICE: ["RUNNER"],
             TAX_INVOICE: ["RUNNER"],
             PAYMENT_PROOF: ["ACCOUNTANT"],
-            TECH_PACK_DOC: ["MERCHANDISER"],
             EXPENSE_ATTACHMENT: ["PRODUCTION_MANAGER", "STORE_MANAGER", "ACCOUNTANT"],
         };
 

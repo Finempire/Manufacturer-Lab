@@ -15,7 +15,6 @@ import {
   Loader2,
   ArrowRight,
   Plus,
-  FileText,
   LayoutDashboard,
   BarChart3,
   Package,
@@ -108,8 +107,6 @@ function getRecentItemHref(item: RecentItem, role: string): string {
       return base;
     case "expense":
       return `${base}/expense-requests/${item.id}`;
-    case "tech_pack":
-      return `${base}/tech-packs`;
     default:
       return base;
   }
@@ -207,22 +204,6 @@ function getCommandsForRole(role: string): CommandItem[] {
     section: "navigation",
   });
 
-  if (
-    role === "PRODUCTION_MANAGER" ||
-    role === "SENIOR_MERCHANDISER" ||
-    role === "MERCHANDISER"
-  ) {
-    commands.push({
-      id: "nav-techpacks",
-      label: "Go to Tech Packs",
-      description: "View tech packs",
-      icon: FileText,
-      iconColor: "text-purple-400 bg-purple-500/15",
-      href: `${base}/tech-packs`,
-      section: "navigation",
-    });
-  }
-
   // Role-specific navigation commands
 
   if (role === "ACCOUNTANT") {
@@ -310,18 +291,6 @@ function getCommandsForRole(role: string): CommandItem[] {
         section: "navigation",
       }
     );
-  }
-
-  if (role === "MERCHANDISER") {
-    commands.push({
-      id: "nav-my-techpacks",
-      label: "My Tech Packs",
-      description: "View assigned tech packs",
-      icon: FileText,
-      iconColor: "text-purple-400 bg-purple-500/15",
-      href: `${base}/tech-packs`,
-      section: "navigation",
-    });
   }
 
   // --- Master Data (Accountant only) ---

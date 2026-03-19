@@ -22,13 +22,11 @@ export async function GET(
         where: { id: params.id },
         include: {
             buyer: true,
-            merchandiser: { select: { id: true, name: true } },
             creator: { select: { name: true } },
             assigned_sample_pm: { select: { id: true, name: true } },
             assigned_production_pm: { select: { id: true, name: true } },
             pm_accepted_by: { select: { id: true, name: true } },
             lines: { include: { style: true } },
-            tech_packs: true,
             material_requirements: true,
             material_requests: { include: { runner: { select: { name: true } } } },
             expenses: true,
@@ -42,9 +40,6 @@ export async function GET(
     // RBAC visibility checks
     const role = auth.user.role;
 
-    if (role === "MERCHANDISER" && order.assigned_merchandiser_id !== auth.user.id) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
     if (role === "SENIOR_MERCHANDISER" && order.order_type !== "SAMPLE") {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
@@ -78,7 +73,7 @@ export async function PUT(
 
     try {
         const body = await req.json();
-        const { status, assigned_merchandiser_id, remarks, shipping_date, buyer_id, order_date, order_type, lines } = body;
+        const { status, remarks, shipping_date, buyer_id, order_date, order_type, lines } = body;
 
         const existingOrder = await prisma.order.findUnique({
             where: { id: params.id },
@@ -136,11 +131,10 @@ export async function PUT(
             return NextResponse.json(order);
         }
 
-        // Partial update (status, merchandiser, remarks, shipping_date)
+        // Partial update (status, remarks, shipping_date)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const updateData: Record<string, any> = {};
         if (status) updateData.status = status;
-        if (assigned_merchandiser_id) updateData.assigned_merchandiser_id = assigned_merchandiser_id;
         if (remarks !== undefined) updateData.remarks = remarks;
         if (shipping_date) updateData.shipping_date = new Date(shipping_date);
 

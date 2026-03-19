@@ -6,7 +6,9 @@ export async function GET() {
     const auth = await requireRole(["SENIOR_MERCHANDISER"]);
     if (!auth.authorized) return auth.response;
 
-    const [activeOrders, pendingAcceptance, techPacksInProgress, materialPending, inProduction, pendingExpenses] =
+    const userId = auth.user.id;
+
+    const [activeOrders, pendingRequests, materialPending, myPurchases, pendingExpenses] =
         await Promise.all([
             prisma.order.count({
                 where: {
@@ -17,30 +19,19 @@ export async function GET() {
             prisma.order.count({
                 where: {
                     order_type: "SAMPLE",
-                    status: "PENDING_PM_ACCEPTANCE",
-                },
-            }),
-            prisma.techPack.count({
-                where: {
-                    status: { in: ["IN_PROGRESS", "SUBMITTED_FOR_REVIEW", "PM_REVIEWING", "REVISION_IN_PROGRESS"] },
-                    order: { order_type: "SAMPLE" },
+                    status: "ORDER_RECEIVED",
                 },
             }),
             prisma.materialRequirement.count({
                 where: {
-                    production_manager_id: auth.user.id,
+                    production_manager_id: userId,
                     status: { in: ["PENDING_STORE_ACCEPTANCE", "ACCEPTED_BY_STORE"] },
                 },
             }),
-            prisma.order.count({
-                where: {
-                    order_type: "SAMPLE",
-                    status: { in: ["PRODUCTION_ACCEPTED", "UNDER_PRODUCTION"] },
-                },
-            }),
+            prisma.purchase.count({ where: { runner_id: userId } }),
             prisma.expenseRequest.count({
                 where: {
-                    raised_by_id: auth.user.id,
+                    raised_by_id: userId,
                     status: "PENDING_APPROVAL",
                 },
             }),
@@ -48,10 +39,9 @@ export async function GET() {
 
     return NextResponse.json({
         activeOrders,
-        pendingAcceptance,
-        techPacksInProgress,
+        pendingRequests,
         materialPending,
-        inProduction,
+        myPurchases,
         pendingExpenses,
     });
 }

@@ -17,7 +17,6 @@ type FilterTab = "all" | "unread" | "approvals" | "mentions" | "reminders";
 
 const ENTITY_GROUPS: Record<string, string> = {
   ORDER: "Orders",
-  TECH_PACK: "Tech Packs",
   PURCHASE: "Purchases",
   EXPENSE: "Expenses",
   MATERIAL_REQUEST: "Material Requests",
@@ -26,7 +25,6 @@ const ENTITY_GROUPS: Record<string, string> = {
 
 const ENTITY_LINK_PREFIX: Record<string, string> = {
   ORDER: "/orders/",
-  TECH_PACK: "/tech-packs/",
   PURCHASE: "/purchases/",
   EXPENSE: "/expenses/",
   MATERIAL_REQUEST: "/material-requests/",

@@ -375,36 +375,6 @@ export async function GET(req: Request) {
                 return NextResponse.json(data);
             }
 
-            case "techpack-revision": {
-                const techPacks = await prisma.techPack.findMany({
-                    where: {
-                        created_at: startDate && endDate ? dateFilter : undefined,
-                    },
-                    include: {
-                        order: { select: { order_no: true, buyer: { select: { name: true } } } },
-                        merchandiser: { select: { name: true } },
-                    },
-                    orderBy: { revision_count: "desc" },
-                });
-
-                const data = techPacks.map((tp) => {
-                    const completionTime = tp.completed_at && tp.created_at
-                        ? Math.round((new Date(tp.completed_at).getTime() - new Date(tp.created_at).getTime()) / 86400000)
-                        : null;
-                    return {
-                        tech_pack_no: tp.tech_pack_no,
-                        order: tp.order.order_no,
-                        buyer: tp.order.buyer.name,
-                        merchandiser: tp.merchandiser?.name || "—",
-                        revision_count: tp.revision_count,
-                        latest_status: tp.status,
-                        completion_days: completionTime ?? "In Progress",
-                    };
-                });
-
-                return NextResponse.json(data);
-            }
-
             case "material-cycle-time": {
                 const requirements = await prisma.materialRequirement.findMany({
                     where: {

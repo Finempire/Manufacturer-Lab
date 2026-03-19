@@ -6,7 +6,7 @@ import { createAuditLog } from "@/lib/auditLog";
 
 export const dynamic = "force-dynamic";
 
-const VALID_ENTITY_TYPES = ["purchase", "expense", "tech_pack", "order"] as const;
+const VALID_ENTITY_TYPES = ["purchase", "expense", "order"] as const;
 type EntityType = (typeof VALID_ENTITY_TYPES)[number];
 
 export async function POST(req: Request) {
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
         if (!entity_type || !VALID_ENTITY_TYPES.includes(entity_type)) {
             return NextResponse.json(
-                { error: "Invalid entity_type. Must be one of: purchase, expense, tech_pack, order" },
+                { error: "Invalid entity_type. Must be one of: purchase, expense, order" },
                 { status: 400 }
             );
         }
@@ -116,35 +116,6 @@ export async function POST(req: Request) {
                         reopened_by_id: user.id,
                         reopen_reason: trimmedReason,
                         exception_flags: { set: expenseFlags },
-                    },
-                });
-                break;
-            }
-
-            case "tech_pack": {
-                const existing = await prisma.techPack.findUnique({
-                    where: { id: entity_id },
-                    select: { status: true, exception_flags: true },
-                });
-                if (!existing) {
-                    return NextResponse.json(
-                        { error: "Tech pack not found" },
-                        { status: 404 }
-                    );
-                }
-                previousStatus = existing.status;
-                const techPackFlags = existing.exception_flags.includes("REOPENED_ITEM")
-                    ? existing.exception_flags
-                    : [...existing.exception_flags, "REOPENED_ITEM" as const];
-
-                await prisma.techPack.update({
-                    where: { id: entity_id },
-                    data: {
-                        status: reopen_to_status,
-                        reopened_at: now,
-                        reopened_by_id: user.id,
-                        reopen_reason: trimmedReason,
-                        exception_flags: { set: techPackFlags },
                     },
                 });
                 break;

@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ShoppingCart, FileText, Package, Receipt, Factory } from "lucide-react";
+import { ShoppingCart, Package, Receipt, Factory } from "lucide-react";
 import Link from "next/link";
 import ActionInbox from "@/components/ActionInbox";
 
 interface DashboardData {
     activeOrders: number;
     pendingAcceptance: number;
-    techPacksInProgress: number;
     materialPending: number;
     inProduction: number;
     pendingExpenses: number;
@@ -27,9 +26,8 @@ export default function SamplePMDashboard() {
     const cards = [
         { label: "Active Orders", value: data?.activeOrders ?? "—", icon: <ShoppingCart className="w-5 h-5" />, color: "text-blue-400 bg-blue-500/10", link: "/dashboard/senior-merchandiser/orders" },
         { label: "Pending Acceptance", value: data?.pendingAcceptance ?? "—", icon: <ShoppingCart className="w-5 h-5" />, color: "text-amber-400 bg-amber-500/10", link: "/dashboard/senior-merchandiser/orders" },
-        { label: "Tech Packs In Progress", value: data?.techPacksInProgress ?? "—", icon: <FileText className="w-5 h-5" />, color: "text-purple-400 bg-purple-500/10", link: "/dashboard/senior-merchandiser/tech-packs" },
         { label: "Material Pending", value: data?.materialPending ?? "—", icon: <Package className="w-5 h-5" />, color: "text-orange-400 bg-orange-500/10", link: "/dashboard/senior-merchandiser/material-needs" },
-        { label: "In Production", value: data?.inProduction ?? "—", icon: <Factory className="w-5 h-5" />, color: "text-cyan-400 bg-cyan-500/10", link: "/dashboard/senior-merchandiser/production" },
+        { label: "In Production", value: data?.inProduction ?? "—", icon: <Factory className="w-5 h-5" />, color: "text-cyan-400 bg-cyan-500/10", link: "/dashboard/senior-merchandiser/orders" },
         { label: "Pending Expenses", value: data?.pendingExpenses ?? "—", icon: <Receipt className="w-5 h-5" />, color: "text-red-400 bg-red-500/10", link: "/dashboard/senior-merchandiser/expense-requests" },
     ];
 

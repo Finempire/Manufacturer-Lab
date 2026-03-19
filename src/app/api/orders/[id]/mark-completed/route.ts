@@ -16,9 +16,9 @@ export async function POST(
             return NextResponse.json({ error: "Order not found" }, { status: 404 });
         }
 
-        if (order.status !== "PRODUCTION_COMPLETED") {
+        if (order.status !== "PAID") {
             return NextResponse.json(
-                { error: `Cannot mark completed. Current status: ${order.status}. Must be PRODUCTION_COMPLETED.` },
+                { error: `Cannot mark completed. Current status: ${order.status}. Must be PAID.` },
                 { status: 400 }
             );
         }

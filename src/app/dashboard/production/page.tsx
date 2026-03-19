@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import {
-    ShoppingCart, FileText, ClipboardList, Receipt,
-    AlertTriangle, Factory, Truck, ShieldAlert, Eye, CheckCircle
+    ShoppingCart, ClipboardList, Receipt,
+    Factory, Truck, ShieldAlert, CheckCircle
 } from "lucide-react";
 import ActionInbox from "@/components/ActionInbox";
 
@@ -14,11 +14,9 @@ interface StageItem {
 
 interface DashboardData {
     newOrders: number;
-    pendingTechPacks: number;
     materialRequirements: number;
     pendingExpenses: number;
     stageDistribution: StageItem[];
-    techPacksAwaitingReview: number;
     materialPendingAcceptance: number;
     productionReadyOrders: number;
     delayedShippingRisk: number;
@@ -27,16 +25,11 @@ interface DashboardData {
 
 const STAGE_LABELS: Record<string, string> = {
     ORDER_RECEIVED: "Received",
-    PENDING_PM_ACCEPTANCE: "PM Accept",
-    MERCHANDISER_ASSIGNED: "Merch Assigned",
-    TECH_PACK_IN_PROGRESS: "Tech Pack WIP",
-    TECH_PACK_COMPLETED: "Tech Pack Done",
-    MATERIAL_REQUIREMENT_SENT: "Mat. Req Sent",
-    MATERIAL_IN_PROGRESS: "Material WIP",
-    MATERIAL_COMPLETED: "Material Done",
-    PRODUCTION_ACCEPTED: "Prod Accepted",
-    UNDER_PRODUCTION: "In Production",
-    PRODUCTION_COMPLETED: "Prod Complete",
+    REQUEST_RAISED: "Request Raised",
+    INVOICE_SUBMITTED: "Invoice Submitted",
+    APPROVED: "Approved",
+    PAID: "Paid",
+    COMPLETED: "Completed",
     CANCELLED: "Cancelled",
 };
 
@@ -49,13 +42,11 @@ export default function ProductionDashboard() {
 
     const cards = [
         { label: "New Orders", value: data?.newOrders ?? "—", icon: <ShoppingCart className="w-5 h-5" />, color: "text-blue-400 bg-blue-500/10" },
-        { label: "Pending Tech Packs", value: data?.pendingTechPacks ?? "—", icon: <FileText className="w-5 h-5" />, color: "text-amber-400 bg-amber-500/10" },
         { label: "Material Requirements", value: data?.materialRequirements ?? "—", icon: <ClipboardList className="w-5 h-5" />, color: "text-green-400 bg-green-500/10" },
         { label: "My Expenses", value: data?.pendingExpenses ?? "—", icon: <Receipt className="w-5 h-5" />, color: "text-purple-400 bg-purple-500/10" },
     ];
 
     const v2Cards = [
-        { label: "Tech Packs Awaiting Review", value: data?.techPacksAwaitingReview ?? "—", icon: <Eye className="w-5 h-5" />, color: "text-amber-400 bg-amber-500/10", urgent: (data?.techPacksAwaitingReview ?? 0) > 0 },
         { label: "Material Pending Acceptance", value: data?.materialPendingAcceptance ?? "—", icon: <ClipboardList className="w-5 h-5" />, color: "text-orange-400 bg-orange-500/10", urgent: (data?.materialPendingAcceptance ?? 0) > 0 },
         { label: "Production-Ready Orders", value: data?.productionReadyOrders ?? "—", icon: <Factory className="w-5 h-5" />, color: "text-green-400 bg-green-500/10", urgent: false },
         { label: "Delayed Shipping Risk", value: data?.delayedShippingRisk ?? "—", icon: <Truck className="w-5 h-5" />, color: "text-red-400 bg-red-500/10", urgent: (data?.delayedShippingRisk ?? 0) > 0 },
@@ -70,7 +61,7 @@ export default function ProductionDashboard() {
             </div>
 
             {/* Existing KPI Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {cards.map((card) => (
                     <div key={card.label} className="bg-surface-1 rounded-lg border border-border-secondary p-4 hover:shadow-premium-md transition-shadow">
                         <div className={`inline-flex items-center justify-center w-10 h-10 rounded-lg ${card.color} mb-3`}>{card.icon}</div>
@@ -81,7 +72,7 @@ export default function ProductionDashboard() {
             </div>
 
             {/* V2 KPI Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {v2Cards.map((card) => (
                     <div key={card.label} className={`bg-surface-1 rounded-lg border ${card.urgent ? "border-red-500/20" : "border-border-secondary"} p-4 hover:shadow-premium-md transition-shadow`}>
                         <div className={`inline-flex items-center justify-center w-10 h-10 rounded-lg ${card.color} mb-3`}>{card.icon}</div>
@@ -98,7 +89,7 @@ export default function ProductionDashboard() {
                         <CheckCircle className="w-5 h-5 text-blue-400" />
                         <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">Orders by Stage</h2>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
                         {data.stageDistribution.map((item) => (
                             <div key={item.stage} className="bg-surface-3 rounded-lg p-3">
                                 <p className="text-xs text-foreground-tertiary font-medium truncate" title={item.stage}>

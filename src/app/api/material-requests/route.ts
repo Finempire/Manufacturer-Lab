@@ -162,12 +162,6 @@ export async function POST(req: Request) {
                 });
             }
 
-            // Update order status
-            await tx.order.update({
-                where: { id: order_id },
-                data: { status: "MATERIAL_IN_PROGRESS" },
-            });
-
             return materialRequest;
         });
 

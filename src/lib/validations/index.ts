@@ -6,13 +6,6 @@ export {
 } from "./orders";
 
 export {
-  TechPackSchema,
-  TechPackRevisionSchema,
-  type TechPackInput,
-  type TechPackRevisionInput,
-} from "./techpacks";
-
-export {
   MaterialNeedRequestSchema,
   NeedLineSchema,
   type MaterialNeedRequestInput,

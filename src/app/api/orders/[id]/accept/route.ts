@@ -19,7 +19,7 @@ export async function POST(
             return NextResponse.json({ error: "Order not found" }, { status: 404 });
         }
 
-        if (order.status !== "ORDER_RECEIVED" && order.status !== "PENDING_PM_ACCEPTANCE") {
+        if (order.status !== "ORDER_RECEIVED") {
             return NextResponse.json(
                 { error: `Cannot accept order in status: ${order.status}` },
                 { status: 400 }
@@ -42,7 +42,6 @@ export async function POST(
         const updated = await prisma.order.update({
             where: { id: params.id },
             data: {
-                status: "PENDING_PM_ACCEPTANCE",
                 pm_accepted_at: new Date(),
                 pm_accepted_by_id: auth.user.id,
                 pm_acceptance_notes: notes || null,

@@ -89,7 +89,7 @@ export async function GET() {
 
         // Pending sign-off
         prisma.order.count({
-            where: { status: "PRODUCTION_COMPLETED" },
+            where: { status: "PAID" },
         }),
 
         // Expense trend (last 6 months)

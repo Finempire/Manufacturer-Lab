@@ -144,30 +144,6 @@ export async function GET(
       })),
     });
 
-    // 5. Check if tech pack is completed
-    const techPacks = await prisma.techPack.findMany({
-      where: { order_id: order.id },
-    });
-    const allTechPacksComplete = techPacks.length > 0 && techPacks.every(
-      (tp) => tp.status === "COMPLETED"
-    );
-
-    checklist.push({
-      id: "tech_packs",
-      label: "All tech packs completed",
-      status: allTechPacksComplete ? "complete" : techPacks.length === 0 ? "na" : "incomplete",
-      detail: techPacks.length > 0
-        ? `${techPacks.filter((tp) => tp.status === "COMPLETED").length}/${techPacks.length} completed`
-        : "No tech packs",
-      blockers: techPacks
-        .filter((tp) => tp.status !== "COMPLETED")
-        .map((tp) => ({
-          id: tp.id,
-          label: `Tech Pack — ${tp.status.replace(/_/g, " ")}`,
-          status: tp.status,
-        })),
-    });
-
     // Overall readiness
     const isReady = checklist.every(
       (item) => item.status === "complete" || item.status === "na"

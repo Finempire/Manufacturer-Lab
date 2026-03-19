@@ -6,7 +6,6 @@ import { formatDistanceToNow } from "date-fns";
 interface CommentsPanelProps {
   entityType:
     | "ORDER"
-    | "TECH_PACK"
     | "MATERIAL_REQUIREMENT"
     | "MATERIAL_REQUEST"
     | "PURCHASE"

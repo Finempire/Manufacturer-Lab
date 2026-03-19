@@ -8,12 +8,10 @@ interface Order { id: string; order_no: string; order_date: string; buyer: { nam
 
 const STATUS_COLORS: Record<string, string> = {
     ORDER_RECEIVED: "bg-blue-100 text-blue-800",
-    PENDING_PM_ACCEPTANCE: "bg-amber-100 text-amber-800",
-    MERCHANDISER_ASSIGNED: "bg-indigo-100 text-indigo-800",
-    TECH_PACK_IN_PROGRESS: "bg-purple-100 text-purple-800",
-    MATERIAL_IN_PROGRESS: "bg-orange-100 text-orange-800",
-    UNDER_PRODUCTION: "bg-amber-100 text-amber-800",
-    PRODUCTION_COMPLETED: "bg-emerald-100 text-emerald-800",
+    REQUEST_RAISED: "bg-amber-100 text-amber-800",
+    INVOICE_SUBMITTED: "bg-indigo-100 text-indigo-800",
+    APPROVED: "bg-teal-100 text-teal-800",
+    PAID: "bg-emerald-100 text-emerald-800",
     COMPLETED: "bg-green-100 text-green-800",
     CANCELLED: "bg-red-100 text-red-800",
 };

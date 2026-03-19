@@ -19,7 +19,6 @@ const TABS = [
     { id: "style-wise", label: "Style-Wise Cost" },
     { id: "order-aging", label: "Order Aging" },
     { id: "stage-turnaround", label: "Stage Turnaround" },
-    { id: "techpack-revision", label: "Tech Pack Revision" },
     { id: "material-cycle-time", label: "Material Cycle Time" },
     { id: "pending-provisional", label: "Pending Provisional Invoice" },
     { id: "expense-approval-tat", label: "Expense Approval TAT" },
@@ -215,15 +214,6 @@ function getColumns(tab: string): ColDef[] | null {
             { key: "avg_sample", label: "Avg Sample (hrs)", type: "hours", align: "right" },
             { key: "avg_production", label: "Avg Production (hrs)", type: "hours", align: "right" },
         ],
-        "techpack-revision": [
-            { key: "tech_pack_no", label: "Tech Pack No", type: "text" },
-            { key: "order", label: "Order", type: "text" },
-            { key: "buyer", label: "Buyer", type: "text" },
-            { key: "merchandiser", label: "Merchandiser", type: "text" },
-            { key: "revision_count", label: "Revisions", type: "number", align: "right" },
-            { key: "latest_status", label: "Status", type: "status" },
-            { key: "completion_days", label: "Completion Days", type: "days", align: "right" },
-        ],
         "material-cycle-time": [
             { key: "order_no", label: "Order No", type: "text" },
             { key: "buyer", label: "Buyer", type: "text" },
@@ -385,17 +375,6 @@ function computeSummary(tab: string, data: any[]): SummaryCard[] {
                 { label: "Stages Tracked", value: String(data.length) },
                 { label: "Total Transitions", value: String(totalOrders) },
                 { label: "Overall Avg Hours", value: String(avgAll) },
-            ];
-        }
-        case "techpack-revision": {
-            const totalRevisions = data.reduce((s, r) => s + (Number(r.revision_count) || 0), 0);
-            const highRev = data.filter(r => (Number(r.revision_count) || 0) > 3).length;
-            const completed = data.filter(r => r.latest_status === "COMPLETED").length;
-            return [
-                { label: "Tech Packs", value: String(data.length) },
-                { label: "Total Revisions", value: String(totalRevisions) },
-                { label: "High Revision (>3)", value: String(highRev) },
-                { label: "Completed", value: String(completed) },
             ];
         }
         case "material-cycle-time": {
@@ -703,27 +682,6 @@ export default function ReportsPage() {
                         </ResponsiveContainer>
                     </ChartContainer>
                 );
-
-            case "techpack-revision": {
-                const chartData = [...data].sort((a, b) => (Number(b.revision_count) || 0) - (Number(a.revision_count) || 0)).slice(0, 15);
-                return (
-                    <ChartContainer title="Revision Counts by Tech Pack">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 10 }}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridStroke} />
-                                <XAxis dataKey="tech_pack_no" tick={axisStyle} interval={0} angle={-20} textAnchor="end" height={60} />
-                                <YAxis tick={axisStyle} allowDecimals={false} />
-                                <Tooltip content={<ChartTooltip />} />
-                                <Bar dataKey="revision_count" name="Revisions" fill="#ec4899" radius={[4, 4, 0, 0]}>
-                                    {chartData.map((entry, i) => (
-                                        <Cell key={i} fill={(Number(entry.revision_count) || 0) > 3 ? "#ef4444" : "#ec4899"} />
-                                    ))}
-                                </Bar>
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </ChartContainer>
-                );
-            }
 
             case "shipping-risk": {
                 const riskCounts = new Map<string, number>();

@@ -13,13 +13,15 @@ interface Order {
     buyer: { name: string };
     order_type: string;
     status: string;
-    merchandiser: { name: string } | null;
 }
 
 const STATUS_COLORS: Record<string, string> = {
-    ORDER_RECEIVED: "bg-blue-100 text-blue-800", PENDING_PM_ACCEPTANCE: "bg-amber-100 text-amber-800",
-    MERCHANDISER_ASSIGNED: "bg-indigo-100 text-indigo-800", TECH_PACK_IN_PROGRESS: "bg-purple-100 text-purple-800",
-    UNDER_PRODUCTION: "bg-amber-100 text-amber-800", COMPLETED: "bg-green-100 text-green-800",
+    ORDER_RECEIVED: "bg-blue-100 text-blue-800",
+    REQUEST_RAISED: "bg-amber-100 text-amber-800",
+    INVOICE_SUBMITTED: "bg-indigo-100 text-indigo-800",
+    APPROVED: "bg-teal-100 text-teal-800",
+    PAID: "bg-emerald-100 text-emerald-800",
+    COMPLETED: "bg-green-100 text-green-800",
     CANCELLED: "bg-red-100 text-red-800",
 };
 
@@ -48,16 +50,15 @@ export default function SamplePMOrdersPage() {
                             <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Order No</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Date</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Buyer</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Merchandiser</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold text-foreground-tertiary uppercase">Status</th>
                             <th className="px-4 py-3 text-center text-xs font-semibold text-foreground-tertiary uppercase">View</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-border-secondary">
                         {loading ? (
-                            <tr><td colSpan={6} className="px-4 py-12 text-center text-sm text-foreground-muted">Loading...</td></tr>
+                            <tr><td colSpan={5} className="px-4 py-12 text-center text-sm text-foreground-muted">Loading...</td></tr>
                         ) : orders.length === 0 ? (
-                            <tr><td colSpan={6} className="px-4 py-12 text-center">
+                            <tr><td colSpan={5} className="px-4 py-12 text-center">
                                 <ShoppingCart className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                                 <p className="text-sm text-foreground-tertiary">No sample orders assigned</p>
                             </td></tr>
@@ -66,7 +67,6 @@ export default function SamplePMOrdersPage() {
                                 <td className="px-4 py-3 text-sm font-semibold text-foreground">{order.order_no}</td>
                                 <td className="px-4 py-3 text-sm text-foreground-tertiary">{format(new Date(order.order_date), "dd MMM yyyy")}</td>
                                 <td className="px-4 py-3 text-sm text-foreground-secondary">{order.buyer.name}</td>
-                                <td className="px-4 py-3 text-sm text-foreground-secondary">{order.merchandiser?.name || "—"}</td>
                                 <td className="px-4 py-3"><span className={`px-2.5 py-1 text-[11px] font-semibold rounded-full ${STATUS_COLORS[order.status] || "bg-surface-3 text-foreground"}`}>{order.status.replace(/_/g, " ")}</span></td>
                                 <td className="px-4 py-3 text-center">
                                     <Link href={`/dashboard/senior-merchandiser/orders/${order.id}`} className="text-blue-600 hover:text-blue-800"><Eye className="w-4 h-4 mx-auto" /></Link>

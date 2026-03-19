@@ -97,7 +97,7 @@ export async function POST(req: Request) {
         // Update order status
         await prisma.order.update({
             where: { id: order_id },
-            data: { status: "MATERIAL_REQUIREMENT_SENT" },
+            data: { status: "REQUEST_RAISED" },
         });
 
         await createAuditLog({

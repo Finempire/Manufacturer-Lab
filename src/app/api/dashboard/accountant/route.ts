@@ -44,7 +44,7 @@ export async function GET() {
         }),
         // Orders pending final sign-off
         prisma.order.count({
-            where: { status: "PRODUCTION_COMPLETED" },
+            where: { status: "PAID" },
         }),
         // Active runners (runners with at least one in-progress assignment)
         prisma.user.count({

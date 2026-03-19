@@ -9,7 +9,6 @@ export const dynamic = "force-dynamic";
 
 const entityFkMap: Record<string, string> = {
   ORDER: "order_id",
-  TECH_PACK: "tech_pack_id",
   MATERIAL_REQUIREMENT: "material_requirement_id",
   MATERIAL_REQUEST: "material_request_id",
   PURCHASE: "purchase_id",
