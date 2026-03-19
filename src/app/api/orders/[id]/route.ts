@@ -134,7 +134,47 @@ export async function PUT(
         // Partial update (status, remarks, shipping_date)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const updateData: Record<string, any> = {};
-        if (status) updateData.status = status;
+
+        // Status transition validation
+        if (status) {
+            // Only ACCOUNTANT and CEO can change status via this PUT route
+            if (!["ACCOUNTANT", "CEO"].includes(auth.user.role)) {
+                return NextResponse.json(
+                    { error: "Only ACCOUNTANT or CEO can change order status via this route" },
+                    { status: 403 }
+                );
+            }
+
+            // Only ACCOUNTANT can set CANCELLED
+            if (status === "CANCELLED" && auth.user.role !== "ACCOUNTANT") {
+                return NextResponse.json(
+                    { error: "Only ACCOUNTANT can cancel an order" },
+                    { status: 403 }
+                );
+            }
+
+            const VALID_TRANSITIONS: Record<string, string[]> = {
+                ORDER_RECEIVED: ["REQUEST_RAISED", "CANCELLED"],
+                REQUEST_RAISED: ["INVOICE_SUBMITTED", "CANCELLED"],
+                INVOICE_SUBMITTED: ["APPROVED", "CANCELLED"],
+                APPROVED: ["PAID", "CANCELLED"],
+                PAID: ["COMPLETED", "CANCELLED"],
+                COMPLETED: ["CANCELLED"],
+            };
+
+            if (status !== "CANCELLED") {
+                const allowedNext = VALID_TRANSITIONS[existingOrder.status];
+                if (!allowedNext || !allowedNext.includes(status)) {
+                    return NextResponse.json(
+                        { error: `Invalid status transition from ${existingOrder.status} to ${status}` },
+                        { status: 400 }
+                    );
+                }
+            }
+
+            updateData.status = status;
+        }
+
         if (remarks !== undefined) updateData.remarks = remarks;
         if (shipping_date) updateData.shipping_date = new Date(shipping_date);
 

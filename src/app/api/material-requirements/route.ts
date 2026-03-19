@@ -94,10 +94,30 @@ export async function POST(req: Request) {
             },
         });
 
-        // Update order status
+        // Set operational control fields on the newly created requirement
+        await prisma.materialRequirement.update({
+            where: { id: requirement.id },
+            data: {
+                pending_since_at: new Date(),
+                next_action_role: "STORE_MANAGER",
+                next_action_label: "Accept or decline material requirement",
+                blocker_code: "WAITING_STORE_ACCEPTANCE",
+                entered_stage_at: new Date(),
+                last_activity_at: new Date(),
+            },
+        });
+
+        // Update order status and operational control fields
         await prisma.order.update({
             where: { id: order_id },
-            data: { status: "REQUEST_RAISED" },
+            data: {
+                status: "REQUEST_RAISED",
+                last_activity_at: new Date(),
+                next_action_role: "STORE_MANAGER",
+                next_action_label: "Accept material requirement",
+                blocker_code: "WAITING_STORE_ACCEPTANCE",
+                pending_since_at: new Date(),
+            },
         });
 
         await createAuditLog({

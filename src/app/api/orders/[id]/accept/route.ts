@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/rbac";
 import { createAuditLog } from "@/lib/auditLog";
+import { Role } from "@prisma/client";
 
 export async function POST(
     req: Request,
@@ -39,13 +40,19 @@ export async function POST(
             ? "assigned_sample_pm_id"
             : "assigned_production_pm_id";
 
+        const now = new Date();
         const updated = await prisma.order.update({
             where: { id: params.id },
             data: {
-                pm_accepted_at: new Date(),
+                pm_accepted_at: now,
                 pm_accepted_by_id: auth.user.id,
                 pm_acceptance_notes: notes || null,
                 [pmField]: auth.user.id,
+                pending_since_at: now,
+                next_action_role: role as Role,
+                next_action_label: "Raise material need or buy directly",
+                last_activity_at: now,
+                entered_stage_at: now,
             },
         });
 

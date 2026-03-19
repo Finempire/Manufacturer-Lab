@@ -215,9 +215,72 @@ async function getSamplePMActions(userId: string): Promise<ActionItem[]> {
 }
 
 async function getMerchandiserActions(userId: string): Promise<ActionItem[]> {
-    // Merchandiser actions are now handled through material requirements and requests
-    // Tech pack workflow has been removed in the simplified order flow
-    return [];
+    const items: ActionItem[] = [];
+
+    const [pendingStoreAcceptance, pendingPurchase, pendingExpenseApproval] = await Promise.all([
+        prisma.materialRequirement.findMany({
+            where: { production_manager_id: userId, status: "PENDING_STORE_ACCEPTANCE" },
+            include: { order: { select: { order_no: true } }, style: { select: { style_code: true } } },
+            orderBy: { created_at: "asc" },
+            take: 20,
+        }),
+        prisma.materialRequest.findMany({
+            where: { manager_id: userId, status: "PENDING_PURCHASE" },
+            include: { order: { select: { order_no: true } } },
+            orderBy: { created_at: "asc" },
+            take: 20,
+        }),
+        prisma.expenseRequest.findMany({
+            where: { raised_by_id: userId, status: "PENDING_APPROVAL" },
+            include: { order: { select: { order_no: true } } },
+            orderBy: { created_at: "asc" },
+            take: 20,
+        }),
+    ]);
+
+    for (const r of pendingStoreAcceptance) {
+        const days = daysSince(r.created_at);
+        items.push({
+            id: r.id, type: "material_req",
+            title: `Material Need — ${r.order.order_no}`,
+            subtitle: r.style?.style_code || "",
+            action: "Awaiting Store",
+            href: `/dashboard/merchandiser/material-needs`,
+            priority: priority(days),
+            pending_since: r.created_at.toISOString(),
+            days_pending: days,
+        });
+    }
+
+    for (const mr of pendingPurchase) {
+        const days = daysSince(mr.created_at);
+        items.push({
+            id: mr.id, type: "material_request",
+            title: `Purchase Pending — ${mr.request_no}`,
+            subtitle: mr.order?.order_no || "",
+            action: "Purchase Pending",
+            href: `/dashboard/merchandiser/my-purchases`,
+            priority: priority(days),
+            pending_since: mr.created_at.toISOString(),
+            days_pending: days,
+        });
+    }
+
+    for (const e of pendingExpenseApproval) {
+        const days = daysSince(e.created_at);
+        items.push({
+            id: e.id, type: "expense",
+            title: `Expense — ${e.expense_no}`,
+            subtitle: e.order?.order_no || "",
+            action: "Awaiting Approval",
+            href: `/dashboard/merchandiser/expense-requests`,
+            priority: priority(days),
+            pending_since: e.created_at.toISOString(),
+            days_pending: days,
+        });
+    }
+
+    return items.sort((a, b) => b.days_pending - a.days_pending);
 }
 
 async function getStoreManagerActions(userId: string): Promise<ActionItem[]> {

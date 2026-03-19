@@ -25,7 +25,13 @@ export async function POST(
 
         const updated = await prisma.order.update({
             where: { id: params.id },
-            data: { status: "COMPLETED" },
+            data: {
+                status: "COMPLETED",
+                next_action_role: null,
+                next_action_label: null,
+                blocker_code: null,
+                last_activity_at: new Date(),
+            },
         });
 
         await createAuditLog({

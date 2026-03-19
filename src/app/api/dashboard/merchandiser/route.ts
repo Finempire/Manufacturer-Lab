@@ -13,6 +13,9 @@ export async function GET() {
         pendingRequirements,
         myPurchases,
         myExpenses,
+        myMaterialNeeds,
+        myPendingExpenses,
+        myActiveRequests,
     ] = await Promise.all([
         prisma.order.count(),
         prisma.materialRequirement.count({
@@ -20,6 +23,15 @@ export async function GET() {
         }),
         prisma.purchase.count({ where: { runner_id: userId } }),
         prisma.expenseRequest.count({ where: { raised_by_id: userId } }),
+        prisma.materialRequirement.count({
+            where: { production_manager_id: userId },
+        }),
+        prisma.expenseRequest.count({
+            where: { raised_by_id: userId, status: "PENDING_APPROVAL" },
+        }),
+        prisma.materialRequest.count({
+            where: { manager_id: userId, status: { notIn: ["COMPLETED", "CANCELLED"] } },
+        }),
     ]);
 
     return NextResponse.json({
@@ -27,5 +39,8 @@ export async function GET() {
         pendingRequirements,
         myPurchases,
         myExpenses,
+        myMaterialNeeds,
+        myPendingExpenses,
+        myActiveRequests,
     });
 }

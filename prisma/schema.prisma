@@ -446,7 +446,7 @@ model MaterialRequest {
   expected_date           DateTime?
   remarks                 String?
   preferred_vendor_id     String?
-  assigned_runner_id      String
+  assigned_runner_id      String?
   status                  PurchaseStatus @default(PENDING_PURCHASE)
   // ─── Operational Control Fields ───
   pending_since_at      DateTime?
@@ -469,7 +469,7 @@ model MaterialRequest {
   style            Style?               @relation("RequestStyle", fields: [style_id], references: [id])
   requirement      MaterialRequirement? @relation(fields: [material_requirement_id], references: [id])
   preferred_vendor Vendor?              @relation("RequestPreferredVendor", fields: [preferred_vendor_id], references: [id])
-  runner           User                 @relation("MaterialRequestRunner", fields: [assigned_runner_id], references: [id])
+  runner           User?                @relation("MaterialRequestRunner", fields: [assigned_runner_id], references: [id])
   lines            MaterialRequestLine[]
   purchases        Purchase[]
   comments         Comment[]            @relation("MaterialRequestComments")
