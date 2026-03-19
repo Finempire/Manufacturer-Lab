@@ -196,16 +196,6 @@ function GlobeBackground() {
   return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />;
 }
 
-// --- Demo role credentials ---
-const DEMO_ROLES = [
-  { email: "accountant@cashflow.com", label: "Accountant" },
-  { email: "sample.pm@cashflow.com", label: "Senior Merchandiser" },
-  { email: "production@cashflow.com", label: "Production PM" },
-  { email: "merch@cashflow.com", label: "Merchandiser" },
-  { email: "manager@cashflow.com", label: "Store Mgr" },
-  { email: "runner@cashflow.com", label: "Runner" },
-];
-
 // --- Main Login Page ---
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -234,11 +224,6 @@ export default function LoginPage() {
       const session = await sessionRes.json();
       const role = session?.user?.role;
 
-      if (session?.user?.must_change_password) {
-        router.push("/change-password");
-        return;
-      }
-
       toast.success("Signed in successfully");
       router.push(ROLE_DASHBOARDS[role] || "/dashboard/accountant");
       router.refresh();
@@ -246,11 +231,6 @@ export default function LoginPage() {
       toast.error("An error occurred. Please try again.");
       setLoading(false);
     }
-  };
-
-  const setDemoRole = (roleEmail: string) => {
-    setEmail(roleEmail);
-    setPassword("Change@123");
   };
 
   return (
@@ -341,31 +321,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Demo Credentials */}
-          <div className="mt-8 pt-6 border-t border-border-secondary">
-            <p className="text-xs font-medium text-foreground-tertiary text-center mb-4 uppercase tracking-wider">
-              Demo Roles (pw: Change@123)
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              {DEMO_ROLES.map((cred) => (
-                <button
-                  key={cred.email}
-                  onClick={() => setDemoRole(cred.email)}
-                  type="button"
-                  className="text-xs font-medium text-foreground-secondary bg-surface-2 hover:bg-surface-3 border border-border py-2.5 rounded-lg transition-colors"
-                >
-                  {cred.label}
-                </button>
-              ))}
-              <button
-                onClick={() => setDemoRole("ceo@cashflow.com")}
-                type="button"
-                className="col-span-2 text-xs font-medium text-brand-hover bg-brand-muted hover:bg-brand/20 border border-brand/30 py-2.5 rounded-lg transition-colors"
-              >
-                CEO
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Footer */}
