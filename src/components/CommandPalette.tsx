@@ -15,7 +15,6 @@ import {
   Loader2,
   ArrowRight,
   Plus,
-  FileText,
   LayoutDashboard,
   BarChart3,
   Package,
@@ -67,7 +66,7 @@ const ROLE_PATHS: Record<string, string> = {
   ACCOUNTANT: "/dashboard/accountant",
   CEO: "/dashboard/ceo",
   PRODUCTION_MANAGER: "/dashboard/production",
-  SAMPLE_PRODUCTION_MANAGER: "/dashboard/sample-pm",
+  SENIOR_MERCHANDISER: "/dashboard/senior-merchandiser",
   MERCHANDISER: "/dashboard/merchandiser",
   STORE_MANAGER: "/dashboard/manager",
   RUNNER: "/dashboard/runner",
@@ -108,8 +107,6 @@ function getRecentItemHref(item: RecentItem, role: string): string {
       return base;
     case "expense":
       return `${base}/expense-requests/${item.id}`;
-    case "tech_pack":
-      return `${base}/tech-packs`;
     default:
       return base;
   }
@@ -133,7 +130,7 @@ function getCommandsForRole(role: string): CommandItem[] {
     });
   }
 
-  if (role === "PRODUCTION_MANAGER" || role === "SAMPLE_PRODUCTION_MANAGER") {
+  if (role === "PRODUCTION_MANAGER" || role === "SENIOR_MERCHANDISER") {
     commands.push({
       id: "action-raise-material-need",
       label: "Raise Material Need",
@@ -159,7 +156,7 @@ function getCommandsForRole(role: string): CommandItem[] {
 
   if (
     role === "PRODUCTION_MANAGER" ||
-    role === "SAMPLE_PRODUCTION_MANAGER" ||
+    role === "SENIOR_MERCHANDISER" ||
     role === "STORE_MANAGER"
   ) {
     commands.push({
@@ -206,22 +203,6 @@ function getCommandsForRole(role: string): CommandItem[] {
     href: `${base}/orders`,
     section: "navigation",
   });
-
-  if (
-    role === "PRODUCTION_MANAGER" ||
-    role === "SAMPLE_PRODUCTION_MANAGER" ||
-    role === "MERCHANDISER"
-  ) {
-    commands.push({
-      id: "nav-techpacks",
-      label: "Go to Tech Packs",
-      description: "View tech packs",
-      icon: FileText,
-      iconColor: "text-purple-400 bg-purple-500/15",
-      href: `${base}/tech-packs`,
-      section: "navigation",
-    });
-  }
 
   // Role-specific navigation commands
 
@@ -310,18 +291,6 @@ function getCommandsForRole(role: string): CommandItem[] {
         section: "navigation",
       }
     );
-  }
-
-  if (role === "MERCHANDISER") {
-    commands.push({
-      id: "nav-my-techpacks",
-      label: "My Tech Packs",
-      description: "View assigned tech packs",
-      icon: FileText,
-      iconColor: "text-purple-400 bg-purple-500/15",
-      href: `${base}/tech-packs`,
-      section: "navigation",
-    });
   }
 
   // --- Master Data (Accountant only) ---

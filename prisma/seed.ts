@@ -9,7 +9,7 @@ async function main() {
   // Create users for all 7 roles
   const roles = [
     { email: "accountant@cashflow.com", name: "Ravi Kumar", role: "ACCOUNTANT" },
-    { email: "sample.pm@cashflow.com", name: "Amit Verma", role: "SAMPLE_PRODUCTION_MANAGER" },
+    { email: "sample.pm@cashflow.com", name: "Amit Verma", role: "SENIOR_MERCHANDISER" },
     { email: "production@cashflow.com", name: "Suresh Patel", role: "PRODUCTION_MANAGER" },
     { email: "merch@cashflow.com", name: "Priya Sharma", role: "MERCHANDISER" },
     { email: "manager@cashflow.com", name: "Anil Gupta", role: "STORE_MANAGER" },

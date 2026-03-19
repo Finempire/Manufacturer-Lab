@@ -6,60 +6,41 @@ export async function GET() {
     const auth = await requireRole(["MERCHANDISER"]);
     if (!auth.authorized) return auth.response;
 
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
+    const userId = auth.user.id;
 
     const [
-        assignedOrders,
-        draftTechPacks,
-        completedTechPacks,
-        // V2 fields
-        assignedTechPacks,
-        submittedAwaitingReview,
-        revisionRequired,
-        completedThisWeek,
+        totalOrders,
+        pendingRequirements,
+        myPurchases,
+        myExpenses,
+        myMaterialNeeds,
+        myPendingExpenses,
+        myActiveRequests,
     ] = await Promise.all([
-        prisma.order.count({ where: { assigned_merchandiser_id: auth.user.id } }),
-        prisma.techPack.count({ where: { merchandiser_id: auth.user.id, status: "IN_PROGRESS" } }),
-        prisma.techPack.count({ where: { merchandiser_id: auth.user.id, status: "BUYER_APPROVED" } }),
-        // All tech packs assigned to this merchandiser (any active status)
-        prisma.techPack.count({
-            where: {
-                merchandiser_id: auth.user.id,
-                status: { notIn: ["BUYER_APPROVED", "COMPLETED"] },
-            },
+        prisma.order.count(),
+        prisma.materialRequirement.count({
+            where: { production_manager_id: userId, status: "PENDING_STORE_ACCEPTANCE" },
         }),
-        // Submitted and awaiting PM review
-        prisma.techPack.count({
-            where: {
-                merchandiser_id: auth.user.id,
-                status: { in: ["SUBMITTED_FOR_REVIEW", "REVISION_SUBMITTED"] },
-            },
+        prisma.purchase.count({ where: { runner_id: userId } }),
+        prisma.expenseRequest.count({ where: { raised_by_id: userId } }),
+        prisma.materialRequirement.count({
+            where: { production_manager_id: userId },
         }),
-        // Revision required (buyer rejected or revision in progress)
-        prisma.techPack.count({
-            where: {
-                merchandiser_id: auth.user.id,
-                status: { in: ["BUYER_REJECTED", "REVISION_IN_PROGRESS"] },
-            },
+        prisma.expenseRequest.count({
+            where: { raised_by_id: userId, status: "PENDING_APPROVAL" },
         }),
-        // Completed this week
-        prisma.techPack.count({
-            where: {
-                merchandiser_id: auth.user.id,
-                status: { in: ["BUYER_APPROVED", "COMPLETED"] },
-                updated_at: { gte: weekAgo },
-            },
+        prisma.materialRequest.count({
+            where: { manager_id: userId, status: { notIn: ["COMPLETED", "CANCELLED"] } },
         }),
     ]);
 
     return NextResponse.json({
-        assignedOrders,
-        draftTechPacks,
-        completedTechPacks,
-        assignedTechPacks,
-        submittedAwaitingReview,
-        revisionRequired,
-        completedThisWeek,
+        totalOrders,
+        pendingRequirements,
+        myPurchases,
+        myExpenses,
+        myMaterialNeeds,
+        myPendingExpenses,
+        myActiveRequests,
     });
 }

@@ -8,7 +8,7 @@ import { Mail, Lock, LogIn, Factory } from "lucide-react";
 
 const ROLE_DASHBOARDS: Record<string, string> = {
   ACCOUNTANT: "/dashboard/accountant",
-  SAMPLE_PRODUCTION_MANAGER: "/dashboard/sample-pm",
+  SENIOR_MERCHANDISER: "/dashboard/senior-merchandiser",
   PRODUCTION_MANAGER: "/dashboard/production",
   MERCHANDISER: "/dashboard/merchandiser",
   STORE_MANAGER: "/dashboard/manager",
@@ -199,7 +199,7 @@ function GlobeBackground() {
 // --- Demo role credentials ---
 const DEMO_ROLES = [
   { email: "accountant@cashflow.com", label: "Accountant" },
-  { email: "sample.pm@cashflow.com", label: "Sample PM" },
+  { email: "sample.pm@cashflow.com", label: "Senior Merchandiser" },
   { email: "production@cashflow.com", label: "Production PM" },
   { email: "merch@cashflow.com", label: "Merchandiser" },
   { email: "manager@cashflow.com", label: "Store Mgr" },

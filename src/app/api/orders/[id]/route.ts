@@ -9,7 +9,7 @@ export async function GET(
 ) {
     const auth = await requireRole([
         "ACCOUNTANT",
-        "SAMPLE_PRODUCTION_MANAGER",
+        "SENIOR_MERCHANDISER",
         "PRODUCTION_MANAGER",
         "MERCHANDISER",
         "STORE_MANAGER",
@@ -22,13 +22,11 @@ export async function GET(
         where: { id: params.id },
         include: {
             buyer: true,
-            merchandiser: { select: { id: true, name: true } },
             creator: { select: { name: true } },
             assigned_sample_pm: { select: { id: true, name: true } },
             assigned_production_pm: { select: { id: true, name: true } },
             pm_accepted_by: { select: { id: true, name: true } },
             lines: { include: { style: true } },
-            tech_packs: true,
             material_requirements: true,
             material_requests: { include: { runner: { select: { name: true } } } },
             expenses: true,
@@ -42,10 +40,7 @@ export async function GET(
     // RBAC visibility checks
     const role = auth.user.role;
 
-    if (role === "MERCHANDISER" && order.assigned_merchandiser_id !== auth.user.id) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-    if (role === "SAMPLE_PRODUCTION_MANAGER" && order.order_type !== "SAMPLE") {
+    if (role === "SENIOR_MERCHANDISER" && order.order_type !== "SAMPLE") {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
     if (role === "PRODUCTION_MANAGER" && order.order_type !== "PRODUCTION") {
@@ -73,12 +68,12 @@ export async function PUT(
     req: Request,
     { params }: { params: { id: string } }
 ) {
-    const auth = await requireRole(["ACCOUNTANT", "PRODUCTION_MANAGER", "SAMPLE_PRODUCTION_MANAGER", "CEO"]);
+    const auth = await requireRole(["ACCOUNTANT", "PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "CEO"]);
     if (!auth.authorized) return auth.response;
 
     try {
         const body = await req.json();
-        const { status, assigned_merchandiser_id, remarks, shipping_date, buyer_id, order_date, order_type, lines } = body;
+        const { status, remarks, shipping_date, buyer_id, order_date, order_type, lines } = body;
 
         const existingOrder = await prisma.order.findUnique({
             where: { id: params.id },
@@ -136,11 +131,50 @@ export async function PUT(
             return NextResponse.json(order);
         }
 
-        // Partial update (status, merchandiser, remarks, shipping_date)
+        // Partial update (status, remarks, shipping_date)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const updateData: Record<string, any> = {};
-        if (status) updateData.status = status;
-        if (assigned_merchandiser_id) updateData.assigned_merchandiser_id = assigned_merchandiser_id;
+
+        // Status transition validation
+        if (status) {
+            // Only ACCOUNTANT and CEO can change status via this PUT route
+            if (!["ACCOUNTANT", "CEO"].includes(auth.user.role)) {
+                return NextResponse.json(
+                    { error: "Only ACCOUNTANT or CEO can change order status via this route" },
+                    { status: 403 }
+                );
+            }
+
+            // Only ACCOUNTANT can set CANCELLED
+            if (status === "CANCELLED" && auth.user.role !== "ACCOUNTANT") {
+                return NextResponse.json(
+                    { error: "Only ACCOUNTANT can cancel an order" },
+                    { status: 403 }
+                );
+            }
+
+            const VALID_TRANSITIONS: Record<string, string[]> = {
+                ORDER_RECEIVED: ["REQUEST_RAISED", "CANCELLED"],
+                REQUEST_RAISED: ["INVOICE_SUBMITTED", "CANCELLED"],
+                INVOICE_SUBMITTED: ["APPROVED", "CANCELLED"],
+                APPROVED: ["PAID", "CANCELLED"],
+                PAID: ["COMPLETED", "CANCELLED"],
+                COMPLETED: ["CANCELLED"],
+            };
+
+            if (status !== "CANCELLED") {
+                const allowedNext = VALID_TRANSITIONS[existingOrder.status];
+                if (!allowedNext || !allowedNext.includes(status)) {
+                    return NextResponse.json(
+                        { error: `Invalid status transition from ${existingOrder.status} to ${status}` },
+                        { status: 400 }
+                    );
+                }
+            }
+
+            updateData.status = status;
+        }
+
         if (remarks !== undefined) updateData.remarks = remarks;
         if (shipping_date) updateData.shipping_date = new Date(shipping_date);
 

@@ -9,7 +9,7 @@ export async function GET(
     const auth = await requireRole([
         "ACCOUNTANT",
         "PRODUCTION_MANAGER",
-        "SAMPLE_PRODUCTION_MANAGER",
+        "SENIOR_MERCHANDISER",
         "STORE_MANAGER",
         "CEO",
     ]);

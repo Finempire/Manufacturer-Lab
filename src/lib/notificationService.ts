@@ -6,7 +6,6 @@ import {
   sendReminderEmail,
   sendOverdueAlertEmail,
   sendOrderAssignedEmail,
-  sendTechPackRevisionEmail,
   sendPaymentConfirmationEmail,
 } from "./email";
 
@@ -153,38 +152,6 @@ export async function notifyOrderAssigned(
     }
   } catch (err) {
     console.error(`Failed to send order assigned email to user ${userId}:`, err);
-  }
-}
-
-/**
- * Notify a merchandiser that a tech pack needs revision.
- */
-export async function notifyTechPackRevision(
-  userId: string,
-  techPackNo: string,
-  orderNo: string,
-  notes: string
-) {
-  await prisma.notification.create({
-    data: {
-      user_id: userId,
-      title: `Tech Pack Revision Required: ${techPackNo}`,
-      message: `Tech pack ${techPackNo} for order ${orderNo} needs revision. Notes: ${notes}`,
-      entity_type: "TECH_PACK",
-      entity_id: techPackNo,
-    },
-  });
-
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { email: true, is_active: true },
-    });
-    if (user?.email && user.is_active) {
-      await sendTechPackRevisionEmail(user.email, techPackNo, orderNo, notes);
-    }
-  } catch (err) {
-    console.error(`Failed to send tech pack revision email to user ${userId}:`, err);
   }
 }
 

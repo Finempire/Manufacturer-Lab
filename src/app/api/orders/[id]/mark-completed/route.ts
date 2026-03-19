@@ -16,16 +16,22 @@ export async function POST(
             return NextResponse.json({ error: "Order not found" }, { status: 404 });
         }
 
-        if (order.status !== "PRODUCTION_COMPLETED") {
+        if (order.status !== "PAID") {
             return NextResponse.json(
-                { error: `Cannot mark completed. Current status: ${order.status}. Must be PRODUCTION_COMPLETED.` },
+                { error: `Cannot mark completed. Current status: ${order.status}. Must be PAID.` },
                 { status: 400 }
             );
         }
 
         const updated = await prisma.order.update({
             where: { id: params.id },
-            data: { status: "COMPLETED" },
+            data: {
+                status: "COMPLETED",
+                next_action_role: null,
+                next_action_label: null,
+                blocker_code: null,
+                last_activity_at: new Date(),
+            },
         });
 
         await createAuditLog({

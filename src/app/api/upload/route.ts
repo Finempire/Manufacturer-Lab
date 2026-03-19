@@ -56,11 +56,10 @@ export async function POST(req: Request) {
 
         // RBAC validation for specific upload types
         const typeRoleMap: Record<string, string[]> = {
-            PROVISIONAL_INVOICE: ["RUNNER"],
-            TAX_INVOICE: ["RUNNER"],
+            PROVISIONAL_INVOICE: ["RUNNER", "PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "MERCHANDISER"],
+            TAX_INVOICE: ["RUNNER", "PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "MERCHANDISER"],
             PAYMENT_PROOF: ["ACCOUNTANT"],
-            TECH_PACK_DOC: ["MERCHANDISER"],
-            EXPENSE_ATTACHMENT: ["PRODUCTION_MANAGER", "STORE_MANAGER", "ACCOUNTANT"],
+            EXPENSE_ATTACHMENT: ["PRODUCTION_MANAGER", "STORE_MANAGER", "ACCOUNTANT", "SENIOR_MERCHANDISER", "MERCHANDISER"],
         };
 
         const allowedRoles = typeRoleMap[type];

@@ -8,7 +8,7 @@ export async function GET(
 ) {
     const auth = await requireRole([
         "ACCOUNTANT", "STORE_MANAGER", "PRODUCTION_MANAGER",
-        "SAMPLE_PRODUCTION_MANAGER", "CEO",
+        "SENIOR_MERCHANDISER", "CEO",
     ]);
     if (!auth.authorized) return auth.response;
 

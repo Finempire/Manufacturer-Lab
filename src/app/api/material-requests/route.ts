@@ -11,7 +11,8 @@ export async function GET(req: Request) {
         "STORE_MANAGER",
         "RUNNER",
         "PRODUCTION_MANAGER",
-        "SAMPLE_PRODUCTION_MANAGER",
+        "SENIOR_MERCHANDISER",
+        "MERCHANDISER",
         "CEO",
     ]);
     if (!auth.authorized) return auth.response;
@@ -51,7 +52,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-    const auth = await requireRole(["STORE_MANAGER"]);
+    const auth = await requireRole(["STORE_MANAGER", "PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "MERCHANDISER"]);
     if (!auth.authorized) return auth.response;
 
     try {
@@ -69,20 +70,24 @@ export async function POST(req: Request) {
             lines,
         } = body;
 
-        if (!buyer_id || !order_id || !assigned_runner_id) {
+        if (!buyer_id || !order_id) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        // Runner lock check
-        const runner = await prisma.user.findUnique({ where: { id: assigned_runner_id } });
-        if (!runner || runner.role !== "RUNNER") {
-            return NextResponse.json({ error: "Invalid runner" }, { status: 400 });
-        }
-        if (runner.runner_status !== "AVAILABLE") {
-            return NextResponse.json(
-                { error: "Runner is currently on a task. Please select another runner or wait." },
-                { status: 409 }
-            );
+        // If runner is assigned, validate runner availability
+        // PM/Senior Merch/Merchandiser can also act as buyer (self-assign)
+        const selfBuying = !assigned_runner_id;
+        if (assigned_runner_id) {
+            const runner = await prisma.user.findUnique({ where: { id: assigned_runner_id } });
+            if (!runner || runner.role !== "RUNNER") {
+                return NextResponse.json({ error: "Invalid runner" }, { status: 400 });
+            }
+            if (runner.runner_status !== "AVAILABLE") {
+                return NextResponse.json(
+                    { error: "Runner is currently on a task. Please select another runner or wait." },
+                    { status: 409 }
+                );
+            }
         }
 
         // Generate request number
@@ -112,8 +117,8 @@ export async function POST(req: Request) {
                     expected_date: expected_date ? new Date(expected_date) : null,
                     remarks: remarks || null,
                     preferred_vendor_id: preferred_vendor_id || null,
-                    assigned_runner_id,
-                    status: "PENDING_PURCHASE",
+                    assigned_runner_id: assigned_runner_id || null,
+                    status: selfBuying ? "SELF_PURCHASE" : "PENDING_PURCHASE",
                     lines: lines?.length
                         ? {
                               create: lines.map(
@@ -138,14 +143,16 @@ export async function POST(req: Request) {
                 },
             });
 
-            // Lock runner
-            await tx.user.update({
-                where: { id: assigned_runner_id },
-                data: {
-                    runner_status: "ON_TASK",
-                    current_task_id: materialRequest.id,
-                },
-            });
+            // Lock runner (only if a runner was assigned)
+            if (assigned_runner_id) {
+                await tx.user.update({
+                    where: { id: assigned_runner_id },
+                    data: {
+                        runner_status: "ON_TASK",
+                        current_task_id: materialRequest.id,
+                    },
+                });
+            }
 
             // Update material requirement status if linked
             if (material_requirement_id) {
@@ -154,12 +161,6 @@ export async function POST(req: Request) {
                     data: { status: "REQUEST_RAISED" },
                 });
             }
-
-            // Update order status
-            await tx.order.update({
-                where: { id: order_id },
-                data: { status: "MATERIAL_IN_PROGRESS" },
-            });
 
             return materialRequest;
         });
@@ -172,16 +173,18 @@ export async function POST(req: Request) {
             newState: JSON.stringify({ request_no, assigned_runner_id }),
         });
 
-        // Notify runner
-        await prisma.notification.create({
-            data: {
-                user_id: assigned_runner_id,
-                title: "New Purchase Request",
-                message: `You have been assigned purchase request ${request_no}.`,
-                entity_type: "MATERIAL_REQUEST",
-                entity_id: result.id,
-            },
-        });
+        // Notify runner or self
+        if (assigned_runner_id) {
+            await prisma.notification.create({
+                data: {
+                    user_id: assigned_runner_id,
+                    title: "New Purchase Request",
+                    message: `You have been assigned purchase request ${request_no}.`,
+                    entity_type: "MATERIAL_REQUEST",
+                    entity_id: result.id,
+                },
+            });
+        }
 
         return NextResponse.json(result, { status: 201 });
     } catch (error) {

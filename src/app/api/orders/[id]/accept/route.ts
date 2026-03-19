@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/rbac";
 import { createAuditLog } from "@/lib/auditLog";
+import { Role } from "@prisma/client";
 
 export async function POST(
     req: Request,
     { params }: { params: { id: string } }
 ) {
-    const auth = await requireRole(["PRODUCTION_MANAGER", "SAMPLE_PRODUCTION_MANAGER"]);
+    const auth = await requireRole(["PRODUCTION_MANAGER", "SENIOR_MERCHANDISER"]);
     if (!auth.authorized) return auth.response;
 
     try {
@@ -19,7 +20,7 @@ export async function POST(
             return NextResponse.json({ error: "Order not found" }, { status: 404 });
         }
 
-        if (order.status !== "ORDER_RECEIVED" && order.status !== "PENDING_PM_ACCEPTANCE") {
+        if (order.status !== "ORDER_RECEIVED") {
             return NextResponse.json(
                 { error: `Cannot accept order in status: ${order.status}` },
                 { status: 400 }
@@ -28,8 +29,8 @@ export async function POST(
 
         // Validate PM type matches order type
         const role = auth.user.role;
-        if (role === "SAMPLE_PRODUCTION_MANAGER" && order.order_type !== "SAMPLE") {
-            return NextResponse.json({ error: "Sample PM can only accept SAMPLE orders" }, { status: 403 });
+        if (role === "SENIOR_MERCHANDISER" && order.order_type !== "SAMPLE") {
+            return NextResponse.json({ error: "Senior Merchandiser can only accept SAMPLE orders" }, { status: 403 });
         }
         if (role === "PRODUCTION_MANAGER" && order.order_type !== "PRODUCTION") {
             return NextResponse.json({ error: "Production PM can only accept PRODUCTION orders" }, { status: 403 });
@@ -39,14 +40,19 @@ export async function POST(
             ? "assigned_sample_pm_id"
             : "assigned_production_pm_id";
 
+        const now = new Date();
         const updated = await prisma.order.update({
             where: { id: params.id },
             data: {
-                status: "PENDING_PM_ACCEPTANCE",
-                pm_accepted_at: new Date(),
+                pm_accepted_at: now,
                 pm_accepted_by_id: auth.user.id,
                 pm_acceptance_notes: notes || null,
                 [pmField]: auth.user.id,
+                pending_since_at: now,
+                next_action_role: role as Role,
+                next_action_label: "Raise material need or buy directly",
+                last_activity_at: now,
+                entered_stage_at: now,
             },
         });
 

@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 interface ActionItem {
     id: string;
-    type: "order" | "purchase" | "expense" | "tech_pack" | "material_req" | "material_request" | "confirmation";
+    type: "order" | "purchase" | "expense" | "material_req" | "material_request" | "confirmation" | string;
     title: string;
     subtitle: string;
     action: string;
@@ -50,7 +50,7 @@ async function getAccountantActions(): Promise<ActionItem[]> {
             take: 20,
         }),
         prisma.order.findMany({
-            where: { status: "ORDER_RECEIVED", assigned_merchandiser_id: null },
+            where: { status: "ORDER_RECEIVED", pm_accepted_by_id: null },
             include: { buyer: { select: { name: true } } },
             orderBy: { created_at: "asc" },
             take: 10,
@@ -119,27 +119,15 @@ async function getAccountantActions(): Promise<ActionItem[]> {
 async function getProductionPMActions(userId: string): Promise<ActionItem[]> {
     const items: ActionItem[] = [];
 
-    const [ordersToAccept, ordersNeedMerch, techPacksToReview, productionToComplete] = await Promise.all([
+    const [ordersToAccept, productionToComplete] = await Promise.all([
         prisma.order.findMany({
-            where: { order_type: "PRODUCTION", status: { in: ["ORDER_RECEIVED", "PENDING_PM_ACCEPTANCE"] } },
+            where: { order_type: "PRODUCTION", status: "ORDER_RECEIVED", pm_accepted_by_id: null },
             include: { buyer: { select: { name: true } } },
             orderBy: { created_at: "asc" },
             take: 20,
         }),
         prisma.order.findMany({
-            where: { order_type: "PRODUCTION", status: { in: ["ORDER_RECEIVED", "PENDING_PM_ACCEPTANCE"] }, assigned_merchandiser_id: null },
-            include: { buyer: { select: { name: true } } },
-            orderBy: { created_at: "asc" },
-            take: 10,
-        }),
-        prisma.techPack.findMany({
-            where: { status: "SUBMITTED_FOR_REVIEW" },
-            include: { order: { select: { order_no: true, order_type: true } }, merchandiser: { select: { name: true } } },
-            orderBy: { created_at: "asc" },
-            take: 20,
-        }),
-        prisma.order.findMany({
-            where: { order_type: "PRODUCTION", status: "UNDER_PRODUCTION", assigned_production_pm_id: userId },
+            where: { order_type: "PRODUCTION", status: { in: ["REQUEST_RAISED", "INVOICE_SUBMITTED", "APPROVED", "PAID"] }, assigned_production_pm_id: userId },
             include: { buyer: { select: { name: true } } },
             orderBy: { created_at: "asc" },
             take: 10,
@@ -156,36 +144,6 @@ async function getProductionPMActions(userId: string): Promise<ActionItem[]> {
             href: `/dashboard/production/orders/${o.id}`,
             priority: priority(days),
             pending_since: o.created_at.toISOString(),
-            days_pending: days,
-        });
-    }
-
-    for (const o of ordersNeedMerch) {
-        if (!ordersToAccept.find(a => a.id === o.id)) {
-            const days = daysSince(o.created_at);
-            items.push({
-                id: `merch-${o.id}`, type: "order",
-                title: `Assign Merchandiser — ${o.order_no}`,
-                subtitle: o.buyer.name,
-                action: "Assign",
-                href: `/dashboard/production/orders/${o.id}`,
-                priority: priority(days),
-                pending_since: o.created_at.toISOString(),
-                days_pending: days,
-            });
-        }
-    }
-
-    for (const tp of techPacksToReview.filter(t => t.order.order_type === "PRODUCTION")) {
-        const days = daysSince(tp.created_at);
-        items.push({
-            id: tp.id, type: "tech_pack",
-            title: `Review Tech Pack — ${tp.tech_pack_no}`,
-            subtitle: `${tp.order.order_no} • by ${tp.merchandiser?.name || "—"}`,
-            action: "Review",
-            href: `/dashboard/production/tech-packs`,
-            priority: priority(days),
-            pending_since: tp.created_at.toISOString(),
             days_pending: days,
         });
     }
@@ -210,21 +168,15 @@ async function getProductionPMActions(userId: string): Promise<ActionItem[]> {
 async function getSamplePMActions(userId: string): Promise<ActionItem[]> {
     const items: ActionItem[] = [];
 
-    const [ordersToAccept, techPacksToReview, productionToComplete] = await Promise.all([
+    const [ordersToAccept, productionToComplete] = await Promise.all([
         prisma.order.findMany({
-            where: { order_type: "SAMPLE", status: { in: ["ORDER_RECEIVED", "PENDING_PM_ACCEPTANCE"] } },
+            where: { order_type: "SAMPLE", status: "ORDER_RECEIVED", pm_accepted_by_id: null },
             include: { buyer: { select: { name: true } } },
             orderBy: { created_at: "asc" },
             take: 20,
         }),
-        prisma.techPack.findMany({
-            where: { status: "SUBMITTED_FOR_REVIEW" },
-            include: { order: { select: { order_no: true, order_type: true } }, merchandiser: { select: { name: true } } },
-            orderBy: { created_at: "asc" },
-            take: 20,
-        }),
         prisma.order.findMany({
-            where: { order_type: "SAMPLE", status: "UNDER_PRODUCTION", assigned_sample_pm_id: userId },
+            where: { order_type: "SAMPLE", status: { in: ["REQUEST_RAISED", "INVOICE_SUBMITTED", "APPROVED", "PAID"] }, assigned_sample_pm_id: userId },
             include: { buyer: { select: { name: true } } },
             orderBy: { created_at: "asc" },
             take: 10,
@@ -238,23 +190,9 @@ async function getSamplePMActions(userId: string): Promise<ActionItem[]> {
             title: `Accept Order — ${o.order_no}`,
             subtitle: o.buyer.name,
             action: "Accept Order",
-            href: `/dashboard/sample-pm/orders/${o.id}`,
+            href: `/dashboard/senior-merchandiser/orders/${o.id}`,
             priority: priority(days),
             pending_since: o.created_at.toISOString(),
-            days_pending: days,
-        });
-    }
-
-    for (const tp of techPacksToReview.filter(t => t.order.order_type === "SAMPLE")) {
-        const days = daysSince(tp.created_at);
-        items.push({
-            id: tp.id, type: "tech_pack",
-            title: `Review Tech Pack — ${tp.tech_pack_no}`,
-            subtitle: `${tp.order.order_no} • by ${tp.merchandiser?.name || "—"}`,
-            action: "Review",
-            href: `/dashboard/sample-pm/tech-packs`,
-            priority: priority(days),
-            pending_since: tp.created_at.toISOString(),
             days_pending: days,
         });
     }
@@ -266,7 +204,7 @@ async function getSamplePMActions(userId: string): Promise<ActionItem[]> {
             title: `Mark Complete — ${o.order_no}`,
             subtitle: o.buyer.name,
             action: "Complete Production",
-            href: `/dashboard/sample-pm/orders/${o.id}`,
+            href: `/dashboard/senior-merchandiser/orders/${o.id}`,
             priority: priority(days),
             pending_since: o.created_at.toISOString(),
             days_pending: days,
@@ -279,45 +217,65 @@ async function getSamplePMActions(userId: string): Promise<ActionItem[]> {
 async function getMerchandiserActions(userId: string): Promise<ActionItem[]> {
     const items: ActionItem[] = [];
 
-    const [techPacksToDo, techPacksRevision] = await Promise.all([
-        prisma.techPack.findMany({
-            where: { merchandiser_id: userId, status: { in: ["MERCH_ACCEPTED", "IN_PROGRESS"] } },
-            include: { order: { select: { order_no: true, buyer: { select: { name: true } } } } },
+    const [pendingStoreAcceptance, pendingPurchase, pendingExpenseApproval] = await Promise.all([
+        prisma.materialRequirement.findMany({
+            where: { production_manager_id: userId, status: "PENDING_STORE_ACCEPTANCE" },
+            include: { order: { select: { order_no: true } }, style: { select: { style_code: true } } },
             orderBy: { created_at: "asc" },
             take: 20,
         }),
-        prisma.techPack.findMany({
-            where: { merchandiser_id: userId, status: { in: ["BUYER_REJECTED", "REVISION_IN_PROGRESS"] } },
-            include: { order: { select: { order_no: true, buyer: { select: { name: true } } } } },
-            orderBy: { updated_at: "asc" },
-            take: 10,
+        prisma.materialRequest.findMany({
+            where: { manager_id: userId, status: "PENDING_PURCHASE" },
+            include: { order: { select: { order_no: true } } },
+            orderBy: { created_at: "asc" },
+            take: 20,
+        }),
+        prisma.expenseRequest.findMany({
+            where: { raised_by_id: userId, status: "PENDING_APPROVAL" },
+            include: { order: { select: { order_no: true } } },
+            orderBy: { created_at: "asc" },
+            take: 20,
         }),
     ]);
 
-    for (const tp of techPacksToDo) {
-        const days = daysSince(tp.created_at);
+    for (const r of pendingStoreAcceptance) {
+        const days = daysSince(r.created_at);
         items.push({
-            id: tp.id, type: "tech_pack",
-            title: `Complete Tech Pack — ${tp.tech_pack_no}`,
-            subtitle: `${tp.order.order_no} • ${tp.order.buyer.name}`,
-            action: tp.status === "MERCH_ACCEPTED" ? "Start Working" : "Submit for Review",
-            href: `/dashboard/merchandiser/tech-packs`,
+            id: r.id, type: "material_req",
+            title: `Material Need — ${r.order.order_no}`,
+            subtitle: r.style?.style_code || "",
+            action: "Awaiting Store",
+            href: `/dashboard/merchandiser/material-needs`,
             priority: priority(days),
-            pending_since: tp.created_at.toISOString(),
+            pending_since: r.created_at.toISOString(),
             days_pending: days,
         });
     }
 
-    for (const tp of techPacksRevision) {
-        const days = daysSince(tp.updated_at);
+    for (const mr of pendingPurchase) {
+        const days = daysSince(mr.created_at);
         items.push({
-            id: `rev-${tp.id}`, type: "tech_pack",
-            title: `Revision Required — ${tp.tech_pack_no}`,
-            subtitle: `${tp.order.order_no} • ${tp.order.buyer.name}`,
-            action: "Fix & Resubmit",
-            href: `/dashboard/merchandiser/tech-packs`,
-            priority: "high",
-            pending_since: tp.updated_at.toISOString(),
+            id: mr.id, type: "material_request",
+            title: `Purchase Pending — ${mr.request_no}`,
+            subtitle: mr.order?.order_no || "",
+            action: "Purchase Pending",
+            href: `/dashboard/merchandiser/my-purchases`,
+            priority: priority(days),
+            pending_since: mr.created_at.toISOString(),
+            days_pending: days,
+        });
+    }
+
+    for (const e of pendingExpenseApproval) {
+        const days = daysSince(e.created_at);
+        items.push({
+            id: e.id, type: "expense",
+            title: `Expense — ${e.expense_no}`,
+            subtitle: e.order?.order_no || "",
+            action: "Awaiting Approval",
+            href: `/dashboard/merchandiser/expense-requests`,
+            priority: priority(days),
+            pending_since: e.created_at.toISOString(),
             days_pending: days,
         });
     }
@@ -434,7 +392,7 @@ async function getCEOSummary(): Promise<ActionItem[]> {
             take: 20,
         }),
         prisma.order.findMany({
-            where: { status: { in: ["ORDER_RECEIVED", "PENDING_PM_ACCEPTANCE"] }, created_at: { lt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) } },
+            where: { status: "ORDER_RECEIVED", pm_accepted_by_id: null, created_at: { lt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) } },
             include: { buyer: { select: { name: true } } },
             orderBy: { created_at: "asc" },
             take: 10,
@@ -486,7 +444,7 @@ export async function GET() {
     switch (role) {
         case "ACCOUNTANT": items = await getAccountantActions(); break;
         case "PRODUCTION_MANAGER": items = await getProductionPMActions(userId); break;
-        case "SAMPLE_PRODUCTION_MANAGER": items = await getSamplePMActions(userId); break;
+        case "SENIOR_MERCHANDISER": items = await getSamplePMActions(userId); break;
         case "MERCHANDISER": items = await getMerchandiserActions(userId); break;
         case "STORE_MANAGER": items = await getStoreManagerActions(userId); break;
         case "RUNNER": items = await getRunnerActions(userId); break;

@@ -14,9 +14,8 @@ import { DatePresets } from "@/components/DatePresets";
 import { exportToExcel } from "@/lib/exportExcel";
 
 const ORDER_STATUSES = [
-    "ORDER_RECEIVED", "PENDING_PM_ACCEPTANCE", "MERCHANDISER_ASSIGNED", "TECH_PACK_IN_PROGRESS",
-    "TECH_PACK_COMPLETED", "MATERIAL_REQUIREMENT_SENT", "MATERIAL_IN_PROGRESS", "MATERIAL_COMPLETED",
-    "PRODUCTION_ACCEPTED", "UNDER_PRODUCTION", "PRODUCTION_COMPLETED", "COMPLETED", "CANCELLED"
+    "ORDER_RECEIVED", "REQUEST_RAISED", "INVOICE_SUBMITTED", "APPROVED",
+    "PAID", "COMPLETED", "CANCELLED"
 ];
 
 interface Order {
@@ -27,7 +26,6 @@ interface Order {
     order_type: string;
     total_amount: number;
     status: string;
-    merchandiser?: { name: string } | null;
     blocker_code?: string | null;
     pending_since_at?: string | null;
     overdue_flag?: boolean;
@@ -159,8 +157,7 @@ export default function OrdersList() {
         if (searchQuery) {
             const q = searchQuery.toLowerCase();
             if (!order.order_no.toLowerCase().includes(q) &&
-                !order.buyer?.name?.toLowerCase().includes(q) &&
-                !order.merchandiser?.name?.toLowerCase().includes(q)) return false;
+                !order.buyer?.name?.toLowerCase().includes(q)) return false;
         }
         return true;
     });

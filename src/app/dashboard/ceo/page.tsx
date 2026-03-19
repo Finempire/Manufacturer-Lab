@@ -62,16 +62,10 @@ interface DashboardData {
 
 const STAGE_LABELS: Record<string, string> = {
     ORDER_RECEIVED: "Received",
-    PENDING_PM_ACCEPTANCE: "PM Accept",
-    MERCHANDISER_ASSIGNED: "Merch Assign",
-    TECH_PACK_IN_PROGRESS: "Tech Pack",
-    TECH_PACK_COMPLETED: "TP Done",
-    MATERIAL_REQUIREMENT_SENT: "Mat Req Sent",
-    MATERIAL_IN_PROGRESS: "Mat In Prog",
-    MATERIAL_COMPLETED: "Mat Done",
-    PRODUCTION_ACCEPTED: "Prod Accept",
-    UNDER_PRODUCTION: "In Prod",
-    PRODUCTION_COMPLETED: "Prod Done",
+    REQUEST_RAISED: "Requested",
+    INVOICE_SUBMITTED: "Invoice",
+    APPROVED: "Approved",
+    PAID: "Paid",
     COMPLETED: "Completed",
     CANCELLED: "Cancelled",
 };

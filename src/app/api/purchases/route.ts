@@ -22,6 +22,11 @@ export async function GET(req: Request) {
         // Role-based filtering
         if (user.role === "RUNNER") {
             where.runner_id = user.id;
+        } else if (["PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "MERCHANDISER", "STORE_MANAGER"].includes(user.role)) {
+            where.OR = [
+                { runner_id: user.id },
+                { request: { manager_id: user.id } },
+            ];
         }
 
         const purchases = await prisma.purchase.findMany({

@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
     const auth = await requireRole([
         "ACCOUNTANT",
-        "SAMPLE_PRODUCTION_MANAGER",
+        "SENIOR_MERCHANDISER",
         "PRODUCTION_MANAGER",
         "MERCHANDISER",
         "STORE_MANAGER",
@@ -33,12 +33,10 @@ export async function GET(req: Request) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {};
 
-    if (role === "SAMPLE_PRODUCTION_MANAGER") {
+    if (role === "SENIOR_MERCHANDISER") {
         where.order_type = "SAMPLE";
     } else if (role === "PRODUCTION_MANAGER") {
         where.order_type = "PRODUCTION";
-    } else if (role === "MERCHANDISER") {
-        where.assigned_merchandiser_id = auth.user.id;
     }
     // ACCOUNTANT, CEO, STORE_MANAGER, RUNNER see all orders
 
@@ -46,7 +44,6 @@ export async function GET(req: Request) {
         where,
         include: {
             buyer: true,
-            merchandiser: { select: { id: true, name: true } },
             creator: { select: { name: true } },
             lines: { include: { style: true } },
         },

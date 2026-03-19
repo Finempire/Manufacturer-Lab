@@ -141,29 +141,6 @@ export async function sendOrderAssignedEmail(
   await sendEmail(to, subject, html);
 }
 
-export async function sendTechPackRevisionEmail(
-  to: string,
-  techPackNo: string,
-  orderNo: string,
-  notes: string
-) {
-  const subject = `Tech Pack ${techPackNo} — Revision Required`;
-  const body = `
-    <p>Tech pack <strong>${escapeHtml(techPackNo)}</strong> for order <strong>${escapeHtml(orderNo)}</strong> requires revision.</p>
-    <div style="background-color:#fef3c7;border-left:4px solid #f59e0b;padding:12px 16px;margin:16px 0;border-radius:4px;">
-      <p style="margin:0;font-size:13px;color:#92400e;"><strong>Revision Notes:</strong></p>
-      <p style="margin:4px 0 0 0;font-size:13px;color:#92400e;">${escapeHtml(notes)}</p>
-    </div>
-    <p>Please update and resubmit the tech pack.</p>`;
-  const html = buildEmailHtml(
-    `Revision Required: ${techPackNo}`,
-    body,
-    `${APP_URL}/tech-packs`,
-    "View Tech Pack"
-  );
-  await sendEmail(to, subject, html);
-}
-
 export async function sendApprovalRequestEmail(
   to: string,
   entityType: string,

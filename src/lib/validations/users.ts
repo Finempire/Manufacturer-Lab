@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const RoleEnum = z.enum([
   "ACCOUNTANT",
-  "SAMPLE_PRODUCTION_MANAGER",
+  "SENIOR_MERCHANDISER",
   "PRODUCTION_MANAGER",
   "MERCHANDISER",
   "STORE_MANAGER",

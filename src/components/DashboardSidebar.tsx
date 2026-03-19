@@ -6,9 +6,9 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
   LogOut, Menu, Bell, X, ChevronDown,
-  LayoutDashboard, ShoppingCart, CreditCard, FileText,
+  LayoutDashboard, ShoppingCart, CreditCard,
   Package, Users, Boxes, ClipboardList, Truck,
-  BarChart3, Receipt, Palette, Store, Factory,
+  BarChart3, Receipt, Palette, Store,
   AlertCircle
 } from "lucide-react";
 
@@ -34,25 +34,25 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
     { path: "/dashboard/accountant/master/styles", label: "Styles", icon: <Palette className="w-[18px] h-[18px]" />, section: "Master Data" },
     { path: "/dashboard/accountant/users", label: "Users", icon: <Users className="w-[18px] h-[18px]" />, section: "Administration" },
   ],
-  SAMPLE_PRODUCTION_MANAGER: [
-    { path: "/dashboard/sample-pm", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
-    { path: "/dashboard/sample-pm/orders", label: "Orders", icon: <ShoppingCart className="w-[18px] h-[18px]" />, section: "Main" },
-    { path: "/dashboard/sample-pm/tech-packs", label: "Tech Packs", icon: <FileText className="w-[18px] h-[18px]" />, section: "Main" },
-    { path: "/dashboard/sample-pm/material-needs", label: "Material Needs", icon: <Package className="w-[18px] h-[18px]" />, section: "Main" },
-    { path: "/dashboard/sample-pm/production", label: "Production", icon: <Factory className="w-[18px] h-[18px]" />, section: "Main" },
-    { path: "/dashboard/sample-pm/expense-requests", label: "Expense Requests", icon: <Receipt className="w-[18px] h-[18px]" />, section: "Main" },
+  SENIOR_MERCHANDISER: [
+    { path: "/dashboard/senior-merchandiser", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/senior-merchandiser/orders", label: "Orders", icon: <ShoppingCart className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/senior-merchandiser/material-needs", label: "Material Needs", icon: <Package className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/senior-merchandiser/expense-requests", label: "Expense Requests", icon: <Receipt className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/senior-merchandiser/my-purchases", label: "My Purchases", icon: <Truck className="w-[18px] h-[18px]" />, section: "Main" },
   ],
   PRODUCTION_MANAGER: [
     { path: "/dashboard/production", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
     { path: "/dashboard/production/orders", label: "Orders", icon: <ShoppingCart className="w-[18px] h-[18px]" />, section: "Main" },
-    { path: "/dashboard/production/tech-packs", label: "Tech Packs", icon: <FileText className="w-[18px] h-[18px]" />, section: "Main" },
     { path: "/dashboard/production/material-needs", label: "Material Needs", icon: <Package className="w-[18px] h-[18px]" />, section: "Main" },
-    { path: "/dashboard/production/production", label: "Production", icon: <Factory className="w-[18px] h-[18px]" />, section: "Main" },
     { path: "/dashboard/production/expense-requests", label: "Expense Requests", icon: <Receipt className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/production/my-purchases", label: "My Purchases", icon: <Truck className="w-[18px] h-[18px]" />, section: "Main" },
   ],
   MERCHANDISER: [
     { path: "/dashboard/merchandiser", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
-    { path: "/dashboard/merchandiser/tech-packs", label: "Tech Packs", icon: <FileText className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/merchandiser/material-needs", label: "Material Needs", icon: <Package className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/merchandiser/expense-requests", label: "Expense Requests", icon: <Receipt className="w-[18px] h-[18px]" />, section: "Main" },
+    { path: "/dashboard/merchandiser/my-purchases", label: "My Purchases", icon: <Truck className="w-[18px] h-[18px]" />, section: "Main" },
   ],
   STORE_MANAGER: [
     { path: "/dashboard/manager", label: "Dashboard", icon: <LayoutDashboard className="w-[18px] h-[18px]" />, section: "Main" },
@@ -77,7 +77,7 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
 
 const ROLE_LABELS: Record<string, string> = {
   ACCOUNTANT: "Accountant",
-  SAMPLE_PRODUCTION_MANAGER: "Sample PM",
+  SENIOR_MERCHANDISER: "Senior Merchandiser",
   PRODUCTION_MANAGER: "Production PM",
   MERCHANDISER: "Merchandiser",
   STORE_MANAGER: "Store Manager",

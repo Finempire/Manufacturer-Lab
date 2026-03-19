@@ -5,7 +5,7 @@ import { Bell, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 
 interface Props {
-  entityType: "ORDER" | "TECH_PACK" | "MATERIAL_REQUEST" | "PURCHASE" | "EXPENSE";
+  entityType: "ORDER" | "MATERIAL_REQUEST" | "PURCHASE" | "EXPENSE";
   entityId: string;
   targetRole?: string;
   targetUserId?: string;

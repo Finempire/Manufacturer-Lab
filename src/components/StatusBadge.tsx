@@ -12,68 +12,33 @@ interface StatusConfig {
 }
 
 const STATUS_MAP: Record<string, StatusConfig> = {
+  // Order statuses (simplified flow)
   ORDER_RECEIVED: {
     label: "Order Received",
     dotColor: "bg-slate-400",
     bgColor: "bg-slate-500/10",
     textColor: "text-slate-300",
   },
-  PENDING_PM_ACCEPTANCE: {
-    label: "Awaiting PM",
-    dotColor: "bg-amber-400",
-    bgColor: "bg-amber-500/10",
-    textColor: "text-amber-300",
-  },
-  MERCHANDISER_ASSIGNED: {
-    label: "Merch Assigned",
+  REQUEST_RAISED: {
+    label: "Request Raised",
     dotColor: "bg-blue-400",
     bgColor: "bg-blue-500/10",
     textColor: "text-blue-300",
   },
-  TECH_PACK_IN_PROGRESS: {
-    label: "Tech Pack WIP",
-    dotColor: "bg-blue-500",
-    bgColor: "bg-blue-500/15",
-    textColor: "text-blue-300",
-  },
-  TECH_PACK_COMPLETED: {
-    label: "Tech Pack Done",
-    dotColor: "bg-cyan-400",
-    bgColor: "bg-cyan-500/10",
-    textColor: "text-cyan-300",
-  },
-  MATERIAL_REQUIREMENT_SENT: {
-    label: "Need Req. Sent",
-    dotColor: "bg-purple-400",
-    bgColor: "bg-purple-500/10",
-    textColor: "text-purple-300",
-  },
-  MATERIAL_IN_PROGRESS: {
-    label: "Material WIP",
+  INVOICE_SUBMITTED: {
+    label: "Invoice Submitted",
     dotColor: "bg-indigo-400",
     bgColor: "bg-indigo-500/10",
     textColor: "text-indigo-300",
   },
-  MATERIAL_COMPLETED: {
-    label: "Material Done",
-    dotColor: "bg-teal-400",
-    bgColor: "bg-teal-500/10",
-    textColor: "text-teal-300",
-  },
-  PRODUCTION_ACCEPTED: {
-    label: "Prod. Accepted",
+  APPROVED: {
+    label: "Approved",
     dotColor: "bg-green-400",
     bgColor: "bg-green-500/10",
     textColor: "text-green-300",
   },
-  UNDER_PRODUCTION: {
-    label: "Under Prod.",
-    dotColor: "bg-green-500",
-    bgColor: "bg-green-500/15",
-    textColor: "text-green-300",
-  },
-  PRODUCTION_COMPLETED: {
-    label: "Prod. Done",
+  PAID: {
+    label: "Paid",
     dotColor: "bg-emerald-400",
     bgColor: "bg-emerald-500/10",
     textColor: "text-emerald-300",
@@ -91,53 +56,35 @@ const STATUS_MAP: Record<string, StatusConfig> = {
     textColor: "text-red-300",
   },
   // Purchase statuses
-  PENDING_RUNNER_ACCEPTANCE: {
-    label: "Awaiting Runner",
+  PENDING_PURCHASE: {
+    label: "Pending Purchase",
     dotColor: "bg-amber-400",
     bgColor: "bg-amber-500/10",
     textColor: "text-amber-300",
   },
-  RUNNER_ACCEPTED: {
-    label: "Runner Accepted",
+  SELF_PURCHASE: {
+    label: "Self Purchase",
     dotColor: "bg-blue-400",
     bgColor: "bg-blue-500/10",
     textColor: "text-blue-300",
   },
-  PROVISIONAL_INVOICE_UPLOADED: {
-    label: "Prov. Invoice",
+  PARTIALLY_PAID: {
+    label: "Partially Paid",
     dotColor: "bg-indigo-400",
     bgColor: "bg-indigo-500/10",
     textColor: "text-indigo-300",
   },
-  ACCOUNTANT_APPROVED: {
-    label: "Approved",
-    dotColor: "bg-green-400",
-    bgColor: "bg-green-500/10",
-    textColor: "text-green-300",
+  PAID_PENDING_TAX_INVOICE: {
+    label: "Paid (Tax Invoice Pending)",
+    dotColor: "bg-purple-400",
+    bgColor: "bg-purple-500/10",
+    textColor: "text-purple-300",
   },
-  PAYMENT_DONE: {
-    label: "Paid",
-    dotColor: "bg-emerald-400",
-    bgColor: "bg-emerald-500/10",
-    textColor: "text-emerald-300",
-  },
-  SHOW_TO_VENDOR: {
-    label: "Show to Vendor",
-    dotColor: "bg-cyan-400",
-    bgColor: "bg-cyan-500/10",
-    textColor: "text-cyan-300",
-  },
-  VENDOR_CONFIRMED: {
-    label: "Vendor Confirmed",
-    dotColor: "bg-teal-400",
-    bgColor: "bg-teal-500/10",
-    textColor: "text-teal-300",
-  },
-  FINAL_TAX_INVOICE_UPLOADED: {
-    label: "Tax Invoice Done",
-    dotColor: "bg-emerald-500",
-    bgColor: "bg-emerald-500/15",
-    textColor: "text-emerald-300",
+  REJECTED: {
+    label: "Rejected",
+    dotColor: "bg-red-400",
+    bgColor: "bg-red-500/10",
+    textColor: "text-red-300",
   },
   // Expense statuses
   PENDING_APPROVAL: {
@@ -146,78 +93,11 @@ const STATUS_MAP: Record<string, StatusConfig> = {
     bgColor: "bg-amber-500/10",
     textColor: "text-amber-300",
   },
-  APPROVED: {
-    label: "Approved",
-    dotColor: "bg-green-400",
-    bgColor: "bg-green-500/10",
-    textColor: "text-green-300",
-  },
-  REJECTED: {
-    label: "Rejected",
-    dotColor: "bg-red-400",
-    bgColor: "bg-red-500/10",
-    textColor: "text-red-300",
-  },
-  PAID: {
-    label: "Paid",
-    dotColor: "bg-emerald-400",
-    bgColor: "bg-emerald-500/10",
-    textColor: "text-emerald-300",
-  },
-  // Tech pack statuses
-  PENDING_MERCH_ACCEPTANCE: {
-    label: "Awaiting Merch",
-    dotColor: "bg-amber-400",
-    bgColor: "bg-amber-500/10",
-    textColor: "text-amber-300",
-  },
-  MERCH_ACCEPTED: {
-    label: "Merch Accepted",
-    dotColor: "bg-blue-400",
-    bgColor: "bg-blue-500/10",
-    textColor: "text-blue-300",
-  },
-  DRAFT: {
-    label: "Draft",
-    dotColor: "bg-slate-400",
-    bgColor: "bg-slate-500/10",
-    textColor: "text-slate-300",
-  },
-  SUBMITTED: {
-    label: "Submitted",
-    dotColor: "bg-blue-400",
-    bgColor: "bg-blue-500/10",
-    textColor: "text-blue-300",
-  },
-  PM_REVIEWING: {
-    label: "PM Reviewing",
+  PENDING_PAYMENT: {
+    label: "Pending Payment",
     dotColor: "bg-indigo-400",
     bgColor: "bg-indigo-500/10",
     textColor: "text-indigo-300",
-  },
-  REVISION_REQUIRED: {
-    label: "Revision Req.",
-    dotColor: "bg-orange-400",
-    bgColor: "bg-orange-500/10",
-    textColor: "text-orange-300",
-  },
-  SENT_TO_BUYER: {
-    label: "Sent to Buyer",
-    dotColor: "bg-purple-400",
-    bgColor: "bg-purple-500/10",
-    textColor: "text-purple-300",
-  },
-  BUYER_APPROVED: {
-    label: "Buyer Approved",
-    dotColor: "bg-green-400",
-    bgColor: "bg-green-500/10",
-    textColor: "text-green-300",
-  },
-  BUYER_REJECTED: {
-    label: "Buyer Rejected",
-    dotColor: "bg-red-400",
-    bgColor: "bg-red-500/10",
-    textColor: "text-red-300",
   },
   // Material requirement statuses
   PENDING_STORE_ACCEPTANCE: {
@@ -226,11 +106,17 @@ const STATUS_MAP: Record<string, StatusConfig> = {
     bgColor: "bg-amber-500/10",
     textColor: "text-amber-300",
   },
-  STORE_ACCEPTED: {
+  ACCEPTED_BY_STORE: {
     label: "Store Accepted",
     dotColor: "bg-blue-400",
     bgColor: "bg-blue-500/10",
     textColor: "text-blue-300",
+  },
+  REQUEST_RAISED_STORE: {
+    label: "Request Raised",
+    dotColor: "bg-indigo-400",
+    bgColor: "bg-indigo-500/10",
+    textColor: "text-indigo-300",
   },
   IN_PROGRESS: {
     label: "In Progress",

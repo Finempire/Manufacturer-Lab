@@ -1,0 +1,88 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { format } from "date-fns";
+import { ArrowLeft, FileText } from "lucide-react";
+import { toast } from "sonner";
+
+interface ExpenseDetail {
+    id: string;
+    expense_no: string;
+    expense_date: string;
+    expense_category: string;
+    description: string;
+    vendor_name: string | null;
+    expected_amount: number;
+    actual_amount: number | null;
+    attachment_path: string | null;
+    rejection_reason: string | null;
+    status: string;
+    raised_by: { name: string };
+    buyer: { name: string };
+    order: { order_no: string };
+}
+
+const STATUS_COLORS: Record<string, string> = {
+    PENDING_APPROVAL: "bg-amber-50 text-amber-800 border-amber-200",
+    APPROVED: "bg-blue-50 text-blue-800 border-blue-200",
+    REJECTED: "bg-red-50 text-red-800 border-red-200",
+    PAID: "bg-green-50 text-green-800 border-green-200",
+};
+
+export default function SamplePMExpenseDetailPage() {
+    const params = useParams();
+    const router = useRouter();
+    const [expense, setExpense] = useState<ExpenseDetail | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch(`/api/expenses/${params.id}`)
+            .then(r => r.json())
+            .then(data => { setExpense(data); setLoading(false); })
+            .catch(() => { toast.error("Failed to load"); setLoading(false); });
+    }, [params.id]);
+
+    if (loading) return <div className="text-center py-12 text-foreground-muted">Loading...</div>;
+    if (!expense) return <div className="text-center py-12 text-foreground-muted">Not found</div>;
+
+    return (
+        <div className="space-y-6 max-w-3xl mx-auto pb-10">
+            <div className="flex items-center gap-4">
+                <button onClick={() => router.back()} className="p-2 bg-surface-1 border border-border rounded-lg hover:bg-surface-2 transition"><ArrowLeft className="w-5 h-5 text-foreground-secondary" /></button>
+                <div className="flex-1">
+                    <h1 className="text-lg font-semibold tracking-tight text-foreground">{expense.expense_no}</h1>
+                    <p className="text-sm text-foreground-tertiary mt-0.5">{expense.order.order_no} &bull; {expense.buyer.name}</p>
+                </div>
+                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border ${STATUS_COLORS[expense.status] || "bg-surface-3 text-foreground border-border"}`}>{expense.status.replace(/_/g, " ")}</span>
+            </div>
+
+            <div className="bg-surface-1 rounded-lg border border-border p-5">
+                <h3 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wide border-b pb-2">Details</h3>
+                <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+                    <div><p className="text-xs text-foreground-tertiary mb-1">Date</p><p className="text-sm font-medium">{format(new Date(expense.expense_date), "dd MMM yyyy")}</p></div>
+                    <div><p className="text-xs text-foreground-tertiary mb-1">Category</p><p className="text-sm font-medium">{expense.expense_category.replace(/_/g, " ")}</p></div>
+                    <div><p className="text-xs text-foreground-tertiary mb-1">Raised By</p><p className="text-sm font-medium">{expense.raised_by.name}</p></div>
+                    <div><p className="text-xs text-foreground-tertiary mb-1">Vendor</p><p className="text-sm font-medium">{expense.vendor_name || "—"}</p></div>
+                    <div><p className="text-xs text-foreground-tertiary mb-1">Expected</p><p className="text-sm font-bold">₹{expense.expected_amount.toLocaleString("en-IN")}</p></div>
+                    {expense.actual_amount && <div><p className="text-xs text-foreground-tertiary mb-1">Paid</p><p className="text-sm font-bold text-green-700">₹{expense.actual_amount.toLocaleString("en-IN")}</p></div>}
+                    <div className="col-span-2"><p className="text-xs text-foreground-tertiary mb-1">Description</p><p className="text-sm text-foreground-secondary">{expense.description}</p></div>
+                </div>
+            </div>
+
+            {expense.rejection_reason && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <p className="text-xs text-red-600 font-bold uppercase mb-1">Rejection Reason</p>
+                    <p className="text-sm text-red-800">{expense.rejection_reason}</p>
+                </div>
+            )}
+
+            {expense.attachment_path && (
+                <div className="bg-surface-1 rounded-lg border border-border p-4">
+                    <div className="flex items-center gap-2 mb-2"><FileText className="w-4 h-4 text-blue-500" /><span className="text-sm font-bold">Attachment</span></div>
+                    <button onClick={() => window.open(`/api/files/${expense.attachment_path}?action=inline`, '_blank')} className="px-4 py-2 text-xs font-medium bg-surface-2 border border-border rounded-lg hover:bg-surface-3">View</button>
+                </div>
+            )}
+        </div>
+    );
+}

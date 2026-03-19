@@ -9,7 +9,8 @@ export async function GET(req: Request) {
     const auth = await requireRole([
         "ACCOUNTANT",
         "PRODUCTION_MANAGER",
-        "SAMPLE_PRODUCTION_MANAGER",
+        "SENIOR_MERCHANDISER",
+        "MERCHANDISER",
         "STORE_MANAGER",
         "CEO",
     ]);
@@ -26,7 +27,7 @@ export async function GET(req: Request) {
     if (status) where.status = status;
 
     const role = auth.user.role;
-    if (role === "PRODUCTION_MANAGER" || role === "SAMPLE_PRODUCTION_MANAGER") {
+    if (role === "PRODUCTION_MANAGER" || role === "SENIOR_MERCHANDISER" || role === "MERCHANDISER") {
         where.production_manager_id = auth.user.id;
     } else if (role === "STORE_MANAGER") {
         // SM sees requirements assigned to them or pending acceptance
@@ -53,7 +54,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-    const auth = await requireRole(["PRODUCTION_MANAGER", "SAMPLE_PRODUCTION_MANAGER"]);
+    const auth = await requireRole(["PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "MERCHANDISER"]);
     if (!auth.authorized) return auth.response;
 
     try {
@@ -93,10 +94,30 @@ export async function POST(req: Request) {
             },
         });
 
-        // Update order status
+        // Set operational control fields on the newly created requirement
+        await prisma.materialRequirement.update({
+            where: { id: requirement.id },
+            data: {
+                pending_since_at: new Date(),
+                next_action_role: "STORE_MANAGER",
+                next_action_label: "Accept or decline material requirement",
+                blocker_code: "WAITING_STORE_ACCEPTANCE",
+                entered_stage_at: new Date(),
+                last_activity_at: new Date(),
+            },
+        });
+
+        // Update order status and operational control fields
         await prisma.order.update({
             where: { id: order_id },
-            data: { status: "MATERIAL_REQUIREMENT_SENT" },
+            data: {
+                status: "REQUEST_RAISED",
+                last_activity_at: new Date(),
+                next_action_role: "STORE_MANAGER",
+                next_action_label: "Accept material requirement",
+                blocker_code: "WAITING_STORE_ACCEPTANCE",
+                pending_since_at: new Date(),
+            },
         });
 
         await createAuditLog({
