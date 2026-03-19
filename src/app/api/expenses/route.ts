@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/rbac";
+import { recalculateOrderCost } from "@/lib/costTracker";
 
 export async function GET() {
     const auth = await requireRole([
@@ -77,6 +78,11 @@ export async function POST(req: Request) {
                 attachment_path: body.attachment_path || null,
             },
         });
+
+        // Recalculate cost summary for the linked order
+        if (expense.order_id) {
+            recalculateOrderCost(expense.order_id).catch(console.error);
+        }
 
         return NextResponse.json(expense, { status: 201 });
     } catch (error) {

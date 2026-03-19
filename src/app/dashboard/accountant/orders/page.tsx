@@ -18,6 +18,13 @@ const ORDER_STATUSES = [
     "PAID", "COMPLETED", "CANCELLED"
 ];
 
+interface CostSummaryBrief {
+    total_actual_cost: number;
+    cost_variance: number;
+    cost_variance_pct: number;
+    cost_status: "ON_BUDGET" | "WARNING" | "OVER_BUDGET";
+}
+
 interface Order {
     id: string;
     order_no: string;
@@ -29,6 +36,7 @@ interface Order {
     blocker_code?: string | null;
     pending_since_at?: string | null;
     overdue_flag?: boolean;
+    cost_summary?: CostSummaryBrief | null;
 }
 
 interface Buyer { id: string; name: string; brand_code: string; }
@@ -180,7 +188,10 @@ export default function OrdersList() {
             "Date": format(new Date(o.order_date), "dd MMM yyyy"),
             "Buyer": o.buyer?.name,
             "Type": o.order_type,
-            "Amount": o.total_amount,
+            "Budget": o.total_amount,
+            "Actual Cost": o.cost_summary?.total_actual_cost ?? "",
+            "Variance": o.cost_summary?.cost_variance ?? "",
+            "Cost Status": o.cost_summary?.cost_status?.replace(/_/g, " ") ?? "",
             "Status": o.status.replace(/_/g, " "),
         }));
         exportToExcel(exportData, "Orders_Export");
@@ -272,16 +283,18 @@ export default function OrdersList() {
                                 <th className="px-3 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase tracking-wider">Date</th>
                                 <th className="px-3 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase tracking-wider">Buyer</th>
                                 <th className="px-3 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase tracking-wider">Type</th>
-                                <th className="px-3 py-3 text-right text-xs font-medium text-foreground-tertiary uppercase tracking-wider">Amount</th>
+                                <th className="px-3 py-3 text-right text-xs font-medium text-foreground-tertiary uppercase tracking-wider">Budget</th>
+                                <th className="px-3 py-3 text-right text-xs font-medium text-foreground-tertiary uppercase tracking-wider">Actual</th>
+                                <th className="px-3 py-3 text-right text-xs font-medium text-foreground-tertiary uppercase tracking-wider">Variance</th>
                                 <th className="px-3 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase tracking-wider">Status</th>
                                 <th className="px-3 py-3 text-center text-xs font-medium text-foreground-tertiary uppercase tracking-wider">Action</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border-secondary">
                             {loading ? (
-                                <tr><td colSpan={7} className="px-3 py-12 text-center text-sm text-foreground-muted">Loading...</td></tr>
+                                <tr><td colSpan={9} className="px-3 py-12 text-center text-sm text-foreground-muted">Loading...</td></tr>
                             ) : filteredOrders.length === 0 ? (
-                                <tr><td colSpan={7} className="px-3 py-12 text-center text-sm text-foreground-muted">{orders.length > 0 ? "No orders match your filters" : "No orders found. Create one to get started."}</td></tr>
+                                <tr><td colSpan={9} className="px-3 py-12 text-center text-sm text-foreground-muted">{orders.length > 0 ? "No orders match your filters" : "No orders found. Create one to get started."}</td></tr>
                             ) : (
                                 filteredOrders.map((order) => (
                                     <tr key={order.id} className={`hover:bg-surface-2 transition-colors h-10 ${order.overdue_flag ? "bg-red-50/50" : ""}`}>
@@ -297,7 +310,21 @@ export default function OrdersList() {
                                             </span>
                                         </td>
                                         <td className="px-3 py-2.5 text-sm text-foreground text-right font-medium tabular-nums font-mono">
-                                            {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(order.total_amount)}
+                                            {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(order.total_amount)}
+                                        </td>
+                                        <td className="px-3 py-2.5 text-sm text-right tabular-nums font-mono">
+                                            {order.cost_summary ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(order.cost_summary.total_actual_cost) : <span className="text-foreground-muted">—</span>}
+                                        </td>
+                                        <td className="px-3 py-2.5 text-sm text-right tabular-nums font-mono">
+                                            {order.cost_summary ? (
+                                                <span className={`inline-flex items-center gap-1 ${
+                                                    order.cost_summary.cost_status === "OVER_BUDGET" ? "text-red-600" :
+                                                    order.cost_summary.cost_status === "WARNING" ? "text-amber-600" :
+                                                    "text-green-600"
+                                                }`}>
+                                                    {order.cost_summary.cost_variance >= 0 ? "" : "-"}{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(Math.abs(order.cost_summary.cost_variance))}
+                                                </span>
+                                            ) : <span className="text-foreground-muted">—</span>}
                                         </td>
                                         <td className="px-3 py-2.5">
                                             <StatusBadge status={order.status} />

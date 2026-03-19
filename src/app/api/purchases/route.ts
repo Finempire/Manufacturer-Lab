@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { recalculateOrderCost } from "@/lib/costTracker";
 
 export const dynamic = "force-dynamic";
 
@@ -153,6 +154,15 @@ export async function POST(req: Request) {
 
             return newPurchase;
         });
+
+        // Recalculate cost summary for the linked order
+        const materialRequest = await prisma.materialRequest.findUnique({
+            where: { id: request_id },
+            select: { order_id: true },
+        });
+        if (materialRequest?.order_id) {
+            recalculateOrderCost(materialRequest.order_id).catch(console.error);
+        }
 
         return NextResponse.json(purchase, { status: 201 });
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/rbac";
+import { recalculateOrderCost } from "@/lib/costTracker";
 
 export async function GET(
     _req: Request,
@@ -53,9 +54,20 @@ export async function PUT(
         const expense = await prisma.expenseRequest.update({
             where: { id: params.id },
             data: updateData,
+            select: { id: true, order_id: true, status: true, expected_amount: true, actual_amount: true },
         });
 
-        return NextResponse.json(expense);
+        // Recalculate cost summary for the linked order
+        if (expense.order_id) {
+            recalculateOrderCost(expense.order_id).catch(console.error);
+        }
+
+        // Re-fetch full expense for response
+        const fullExpense = await prisma.expenseRequest.findUnique({
+            where: { id: params.id },
+        });
+
+        return NextResponse.json(fullExpense);
     } catch (error) {
         console.error("Update expense error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });

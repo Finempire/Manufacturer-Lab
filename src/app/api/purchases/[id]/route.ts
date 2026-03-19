@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getOrderIdFromPurchase, recalculateOrderCost } from "@/lib/costTracker";
 
 export const dynamic = "force-dynamic";
 
@@ -86,6 +87,12 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
             return result;
         });
+
+        // Recalculate cost summary for the linked order
+        const orderId = await getOrderIdFromPurchase(params.id);
+        if (orderId) {
+            recalculateOrderCost(orderId).catch(console.error);
+        }
 
         return NextResponse.json(updated);
     } catch (error) {
