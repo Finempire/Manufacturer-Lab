@@ -185,7 +185,7 @@ export async function GET(req: Request) {
                     let trips = 0;
                     let amountHandled = 0;
                     let pendingConfirmations = 0;
-                    let pendingTax = 0;
+                    const pendingTax = 0;
 
                     requests.forEach((req: any) => {
                         req.purchases.forEach((p: any) => {
