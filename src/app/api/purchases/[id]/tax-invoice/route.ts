@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
+// Generic invoice upload - adds files to purchase invoice_files array
 export async function POST(req: Request, { params }: { params: { id: string } }) {
     try {
         const session = await getServerSession(authOptions);
@@ -12,57 +13,39 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
         const userId = (session.user as any).id;
         const body = await req.json();
+        const newFiles: string[] = Array.isArray(body.invoice_files) ? body.invoice_files : body.invoice_file ? [body.invoice_file] : [];
 
-        if (!body.tax_invoice_path) {
-            return NextResponse.json({ error: "Missing tax_invoice_path" }, { status: 400 });
+        if (newFiles.length === 0) {
+            return NextResponse.json({ error: "No invoice files provided" }, { status: 400 });
         }
 
         const purchase = await prisma.purchase.findUnique({ where: { id: params.id } });
-
         if (!purchase) return NextResponse.json({ error: "Purchase not found" }, { status: 404 });
-        if (purchase.runner_id !== userId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+        const updatedFiles = [...(purchase.invoice_files || []), ...newFiles];
 
         const updated = await prisma.$transaction(async (tx) => {
             const res = await tx.purchase.update({
                 where: { id: purchase.id },
-                data: {
-                    tax_invoice_path: body.tax_invoice_path,
-                    status: "COMPLETED" // Full tax invoice + paid means completed entirely
-                }
+                data: { invoice_files: updatedFiles },
             });
 
-            // Audit
             await tx.auditLog.create({
                 data: {
                     entity_type: "PURCHASE",
                     entity_id: purchase.id,
-                    action: "FINAL_TAX_INVOICE_UPLOADED",
+                    action: "INVOICE_FILES_UPLOADED",
                     performed_by: userId,
-                    new_state: JSON.stringify({ path: body.tax_invoice_path, new_status: "COMPLETED" })
-                }
+                    new_state: JSON.stringify({ files: newFiles }),
+                },
             });
-
-            // Notify Accountant
-            const accountants = await tx.user.findMany({ where: { role: "ACCOUNTANT", is_active: true } });
-            if (accountants.length > 0) {
-                await tx.notification.createMany({
-                    data: accountants.map(acc => ({
-                        user_id: acc.id,
-                        title: "Final Tax Invoice Uploaded",
-                        message: `Final GST invoice received for ${purchase.purchase_no}.`,
-                        entity_type: "PURCHASE",
-                        entity_id: purchase.id,
-                    }))
-                });
-            }
 
             return res;
         });
 
         return NextResponse.json(updated);
-
     } catch (error) {
-        console.error("Tax invoice upload error:", error);
+        console.error("Invoice upload error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }

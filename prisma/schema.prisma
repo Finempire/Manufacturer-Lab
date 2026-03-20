@@ -49,15 +49,9 @@ enum PurchaseStatus {
   APPROVED
   PAID
   PARTIALLY_PAID
-  PAID_PENDING_TAX_INVOICE
   COMPLETED
   REJECTED
   CANCELLED
-}
-
-enum InvoiceType {
-  PROVISIONAL
-  TAX
 }
 
 enum PaymentMethod {
@@ -116,7 +110,6 @@ enum BlockerCode {
   WAITING_ACCOUNTANT_APPROVAL
   WAITING_PAYMENT
   WAITING_VENDOR_CONFIRMATION
-  WAITING_FINAL_TAX_INVOICE
   WAITING_EXPENSE_COMPLETION
   WAITING_PRODUCTION_ACCEPTANCE
   WAITING_FINAL_SIGNOFF
@@ -125,7 +118,6 @@ enum BlockerCode {
 enum ExceptionFlag {
   MISSING_DOCUMENT
   OVERDUE_REQUIRED_DATE
-  PENDING_TAX_INVOICE
   VENDOR_MISMATCH
   BLOCKED_BY_APPROVAL
   REOPENED_ITEM
@@ -139,6 +131,12 @@ enum CommentEntityType {
   MATERIAL_REQUEST
   PURCHASE
   EXPENSE_REQUEST
+}
+
+enum CostStatus {
+  ON_BUDGET
+  WARNING
+  OVER_BUDGET
 }
 
 // ─── MODELS ───
@@ -348,6 +346,7 @@ model Order {
   material_requests     MaterialRequest[]
   expenses              ExpenseRequest[]
   comments              Comment[]  @relation("OrderComments")
+  cost_summary          OrderCostSummary?
 
   @@index([buyer_id])
   @@index([status])
@@ -512,9 +511,7 @@ model Purchase {
   invoice_no               String
   invoice_date             DateTime
   invoice_amount           Float
-  invoice_type_submitted   InvoiceType
-  provisional_invoice_path String?
-  tax_invoice_path         String?
+  invoice_files            String[]   @default([])
   accountant_notes         String?
   status                   PurchaseStatus @default(INVOICE_SUBMITTED)
   // ─── Operational Control Fields ───
@@ -823,4 +820,35 @@ model DuplicateWarning {
 
   @@index([entity_type, entity_id])
   @@index([warning_type])
+}
+
+// ─── ORDER COST SUMMARY (Realtime Cost Tracker) ───
+
+model OrderCostSummary {
+  id                    String      @id @default(uuid())
+  order_id              String      @unique
+  budgeted_amount       Float       @default(0)
+  // Actual costs by category
+  actual_material_cost  Float       @default(0)
+  actual_expense_cost   Float       @default(0)
+  total_actual_cost     Float       @default(0)
+  // Variance
+  cost_variance         Float       @default(0)
+  cost_variance_pct     Float       @default(0)
+  // Breakdown by payment stage
+  pending_material      Float       @default(0)
+  approved_material     Float       @default(0)
+  paid_material         Float       @default(0)
+  pending_expense       Float       @default(0)
+  approved_expense      Float       @default(0)
+  paid_expense          Float       @default(0)
+  // Status
+  cost_status           CostStatus  @default(ON_BUDGET)
+  updated_at            DateTime    @updatedAt
+  created_at            DateTime    @default(now())
+
+  order Order @relation(fields: [order_id], references: [id], onDelete: Cascade)
+
+  @@index([order_id])
+  @@index([cost_status])
 }

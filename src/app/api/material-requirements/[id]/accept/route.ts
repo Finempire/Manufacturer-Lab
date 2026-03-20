@@ -7,7 +7,7 @@ export async function POST(
     _req: Request,
     { params }: { params: { id: string } }
 ) {
-    const auth = await requireRole(["STORE_MANAGER"]);
+    const auth = await requireRole(["STORE_MANAGER", "PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "MERCHANDISER", "ACCOUNTANT", "CEO"]);
     if (!auth.authorized) return auth.response;
 
     try {

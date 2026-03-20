@@ -125,21 +125,21 @@ export async function GET(
       })),
     });
 
-    // 4. Pending final tax invoices
-    const purchasesNeedingTaxInvoice = purchases.filter(
-      (p) => p.status === "PAID_PENDING_TAX_INVOICE"
+    // 4. All purchases completed or paid
+    const purchasesPendingCompletion = purchases.filter(
+      (p) => !["PAID", "COMPLETED"].includes(p.status)
     );
 
     checklist.push({
-      id: "tax_invoices",
-      label: "No pending final tax invoices",
-      status: purchasesNeedingTaxInvoice.length === 0 ? "complete" : "warning",
-      detail: purchasesNeedingTaxInvoice.length > 0
-        ? `${purchasesNeedingTaxInvoice.length} pending tax invoices`
-        : "All tax invoices received",
-      blockers: purchasesNeedingTaxInvoice.map((p) => ({
+      id: "purchases_complete",
+      label: "All purchases paid or completed",
+      status: purchasesPendingCompletion.length === 0 ? "complete" : "warning",
+      detail: purchasesPendingCompletion.length > 0
+        ? `${purchasesPendingCompletion.length} purchases pending`
+        : "All purchases completed",
+      blockers: purchasesPendingCompletion.map((p) => ({
         id: p.id,
-        label: `Purchase ${p.purchase_no} — pending tax invoice`,
+        label: `Purchase ${p.purchase_no} — ${p.status.replace(/_/g, " ").toLowerCase()}`,
         status: p.status,
       })),
     });

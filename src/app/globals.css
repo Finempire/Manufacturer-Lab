@@ -3,46 +3,46 @@
 @tailwind utilities;
 
 :root {
-  /* Surface System - Dark Mode First */
-  --surface-0: #0a0a0f;      /* App shell background */
-  --surface-1: #111118;      /* Cards / tables / sections */
-  --surface-2: #1a1a24;      /* Elevated: drawers / modals / command palette */
-  --surface-3: #222230;      /* Hover states, active items */
+  /* Surface System - Light Professional Theme */
+  --surface-0: #f8f9fb;      /* App shell background */
+  --surface-1: #ffffff;      /* Cards / tables / sections */
+  --surface-2: #ffffff;      /* Elevated: drawers / modals / command palette */
+  --surface-3: #f1f3f5;      /* Hover states, active items */
 
   /* Borders */
-  --border-primary: #2a2a3a;
-  --border-secondary: #1e1e2e;
-  --border-accent: #3a3a4f;
+  --border-primary: #e2e5ea;
+  --border-secondary: #edf0f3;
+  --border-accent: #d0d5dd;
 
   /* Text */
-  --text-primary: #f0f0f5;
-  --text-secondary: #a0a0b5;
-  --text-tertiary: #6b6b80;
-  --text-muted: #4a4a5f;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  --text-muted: #9ca3af;
 
   /* Brand */
-  --brand-primary: #6366f1;    /* Indigo */
-  --brand-hover: #818cf8;
-  --brand-muted: rgba(99, 102, 241, 0.15);
-  --brand-ring: rgba(99, 102, 241, 0.3);
+  --brand-primary: #4f46e5;    /* Indigo */
+  --brand-hover: #4338ca;
+  --brand-muted: rgba(79, 70, 229, 0.08);
+  --brand-ring: rgba(79, 70, 229, 0.25);
 
   /* Semantic Status */
-  --status-success: #22c55e;
-  --status-success-muted: rgba(34, 197, 94, 0.12);
-  --status-warning: #f59e0b;
-  --status-warning-muted: rgba(245, 158, 11, 0.12);
-  --status-danger: #ef4444;
-  --status-danger-muted: rgba(239, 68, 68, 0.12);
-  --status-info: #3b82f6;
-  --status-info-muted: rgba(59, 130, 246, 0.12);
+  --status-success: #16a34a;
+  --status-success-muted: rgba(22, 163, 74, 0.08);
+  --status-warning: #d97706;
+  --status-warning-muted: rgba(217, 119, 6, 0.08);
+  --status-danger: #dc2626;
+  --status-danger-muted: rgba(220, 38, 38, 0.08);
+  --status-info: #2563eb;
+  --status-info-muted: rgba(37, 99, 235, 0.08);
   --status-neutral: #6b7280;
-  --status-neutral-muted: rgba(107, 114, 128, 0.12);
+  --status-neutral-muted: rgba(107, 114, 128, 0.08);
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
 }
 
 body {
@@ -68,7 +68,7 @@ body {
   }
 }
 
-/* Scrollbar styling - dark premium */
+/* Scrollbar styling - light professional */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -81,7 +81,7 @@ body {
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-tertiary);
+  background: var(--text-muted);
 }
 
 /* Table resizable columns */
@@ -101,7 +101,7 @@ body {
   opacity: 0.5;
 }
 
-/* Premium surface classes */
+/* Surface classes */
 .surface-0 {
   background: var(--surface-0);
 }
@@ -117,7 +117,7 @@ body {
   background: var(--surface-3);
 }
 
-/* Premium card hover */
+/* Card hover */
 .card-hover {
   transition: all 0.2s ease;
 }
@@ -133,7 +133,7 @@ body {
   100% { background-position: 200% 0; }
 }
 .skeleton {
-  background: linear-gradient(90deg, var(--surface-1) 25%, var(--surface-2) 50%, var(--surface-1) 75%);
+  background: linear-gradient(90deg, var(--surface-0) 25%, var(--surface-3) 50%, var(--surface-0) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 6px;
@@ -175,10 +175,10 @@ body {
   outline: none;
 }
 .focus-ring:focus-visible {
-  box-shadow: 0 0 0 2px var(--surface-0), 0 0 0 4px var(--brand-primary);
+  box-shadow: 0 0 0 2px var(--surface-1), 0 0 0 4px var(--brand-primary);
 }
 
-/* Premium input styles */
+/* Input styles */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -189,5 +189,5 @@ input[type="tel"],
 input[type="url"],
 textarea,
 select {
-  color-scheme: dark;
+  color-scheme: light;
 }

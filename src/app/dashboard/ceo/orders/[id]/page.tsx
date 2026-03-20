@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { ArrowLeft, Package } from "lucide-react";
 import { toast } from "sonner";
+import CostTracker from "@/components/CostTracker";
 
 interface OrderDetail {
     id: string;
@@ -143,6 +144,9 @@ export default function CEOOrderDetail() {
 
                 {/* Right Column */}
                 <div className="space-y-6">
+                    {/* Cost Tracker */}
+                    <CostTracker orderId={order.id} />
+
                     <div className="bg-surface-1 rounded-lg border border-border p-4">
                         <h4 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3">Assignments</h4>
                         <div className="space-y-3">

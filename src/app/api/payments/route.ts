@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getOrderIdFromPurchase, recalculateOrderCost } from "@/lib/costTracker";
 
 export const dynamic = "force-dynamic";
 
@@ -44,16 +45,12 @@ export async function POST(req: Request) {
         }
 
         // Calculate new status
-        // Spec: paid == invoice -> PAID, paid < invoice -> PARTIALLY_PAID. If PROVISIONAL -> PAID_PENDING_TAX_INVOICE.
         const parsedPaid = parseFloat(amount_paid);
         const floatInvoiceAmt = parseFloat(purchase.invoice_amount.toString());
 
-        // This is a simplified check, typically you'd aggregate all payments for a purchase.
         let newStatus = "PAID";
         if (parsedPaid < floatInvoiceAmt) {
             newStatus = "PARTIALLY_PAID";
-        } else if (purchase.invoice_type_submitted === "PROVISIONAL") {
-            newStatus = "PAID_PENDING_TAX_INVOICE";
         }
 
         const payment = await prisma.$transaction(async (tx) => {
@@ -79,7 +76,7 @@ export async function POST(req: Request) {
 
             // 3. Create or Update VendorConfirmation if Paid
             const runner = await tx.user.findUnique({ where: { id: purchase.runner_id } });
-            if (newStatus === "PAID" || newStatus === "PAID_PENDING_TAX_INVOICE") {
+            if (newStatus === "PAID") {
                 await tx.vendorConfirmation.upsert({
                     where: { purchase_id },
                     update: { status: "NOT_CONFIRMED" },
@@ -118,6 +115,12 @@ export async function POST(req: Request) {
 
             return updatedPur; // returning the updated purchase
         });
+
+        // Recalculate cost summary for the linked order
+        const orderId = await getOrderIdFromPurchase(purchase_id);
+        if (orderId) {
+            recalculateOrderCost(orderId).catch(console.error);
+        }
 
         return NextResponse.json(payment, { status: 201 });
 

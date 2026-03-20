@@ -14,9 +14,7 @@ interface Purchase {
     invoice_no: string;
     invoice_date: string;
     invoice_amount: number;
-    invoice_type_submitted: "PROVISIONAL" | "TAX";
-    provisional_invoice_path: string | null;
-    tax_invoice_path: string | null;
+    invoice_files: string[];
     status: string;
     amount_paid: number; // Derived or fetched in real app
 }
@@ -131,7 +129,7 @@ export default function AccountantPaymentsPage() {
                                 </div>
                                 <div className="text-right">
                                     <p className="text-lg font-bold text-blue-700">₹{pur.invoice_amount.toLocaleString()}</p>
-                                    <p className="text-[10px] text-foreground-tertiary uppercase tracking-wider mt-0.5">{pur.invoice_type_submitted}</p>
+                                    <p className="text-[10px] text-foreground-tertiary uppercase tracking-wider mt-0.5">Invoice</p>
                                 </div>
                             </div>
                             <div className="p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
@@ -195,10 +193,10 @@ export default function AccountantPaymentsPage() {
 
                                     <div className="pt-3 flex gap-2 border-t border-border">
                                         {/* In real app, we'd use generateSignedUrl to preview. Using dummy alert for now */}
-                                        <button type="button" onClick={() => window.open(`/api/files/${selectedPur.invoice_type_submitted === 'PROVISIONAL' ? selectedPur.provisional_invoice_path : selectedPur.tax_invoice_path}?action=inline`, '_blank')} className="flex-1 flex justify-center items-center gap-2 px-3 py-1.5 bg-surface-1 border border-border rounded text-xs font-medium text-foreground-secondary hover:bg-surface-2">
+                                        <button type="button" onClick={() => window.open(`/api/files/${selectedPur.invoice_files?.[0]}?action=inline`, '_blank')} className="flex-1 flex justify-center items-center gap-2 px-3 py-1.5 bg-surface-1 border border-border rounded text-xs font-medium text-foreground-secondary hover:bg-surface-2">
                                             <Eye className="w-3.5 h-3.5" /> View Invoice
                                         </button>
-                                        <a href={`/api/files/${selectedPur.invoice_type_submitted === 'PROVISIONAL' ? selectedPur.provisional_invoice_path : selectedPur.tax_invoice_path}?action=download`} className="flex-1 flex justify-center items-center gap-2 px-3 py-1.5 bg-surface-1 border border-border rounded text-xs font-medium text-foreground-secondary hover:bg-surface-2">
+                                        <a href={`/api/files/${selectedPur.invoice_files?.[0]}?action=download`} className="flex-1 flex justify-center items-center gap-2 px-3 py-1.5 bg-surface-1 border border-border rounded text-xs font-medium text-foreground-secondary hover:bg-surface-2">
                                             <Download className="w-3.5 h-3.5" /> Download
                                         </a>
                                     </div>

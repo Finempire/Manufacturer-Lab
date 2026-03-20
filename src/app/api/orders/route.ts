@@ -40,12 +40,15 @@ export async function GET(req: Request) {
     }
     // ACCOUNTANT, CEO, STORE_MANAGER, RUNNER see all orders
 
+    const isFinancialRole = ["ACCOUNTANT", "CEO"].includes(role);
+
     const orders = await prisma.order.findMany({
         where,
         include: {
             buyer: true,
             creator: { select: { name: true } },
             lines: { include: { style: true } },
+            ...(isFinancialRole ? { cost_summary: true } : {}),
         },
         orderBy: { created_at: "desc" },
     });

@@ -14,9 +14,7 @@ export const PurchaseSchema = z.object({
   invoice_no: z.string().min(1, "Invoice number is required"),
   invoice_date: z.string().min(1, "Invoice date is required"),
   invoice_amount: z.number().positive("Invoice amount must be positive"),
-  invoice_type_submitted: z.enum(["PROVISIONAL", "TAX"]),
-  provisional_invoice_path: z.string().optional(),
-  tax_invoice_path: z.string().optional(),
+  invoice_files: z.array(z.string()).optional(),
   lines: z
     .array(PurchaseLineSchema)
     .min(1, "At least one purchase line is required"),
