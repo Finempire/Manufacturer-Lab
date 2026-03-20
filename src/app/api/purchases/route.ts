@@ -69,13 +69,11 @@ export async function POST(req: Request) {
             invoice_no,
             invoice_date,
             invoice_amount,
-            invoice_type_submitted,
-            provisional_invoice_path,
-            tax_invoice_path,
+            invoice_files,
             lines,
         } = body;
 
-        if (!request_id || !vendor_id || !invoice_no || !invoice_date || !invoice_amount || !invoice_type_submitted) {
+        if (!request_id || !vendor_id || !invoice_no || !invoice_date || !invoice_amount) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
@@ -105,9 +103,7 @@ export async function POST(req: Request) {
                     invoice_no,
                     invoice_date: new Date(invoice_date),
                     invoice_amount,
-                    invoice_type_submitted,
-                    provisional_invoice_path: provisional_invoice_path || null,
-                    tax_invoice_path: tax_invoice_path || null,
+                    invoice_files: Array.isArray(invoice_files) ? invoice_files : [],
                     status: "INVOICE_SUBMITTED",
                     lines: {
                         create: lines.map((l: any) => ({
@@ -133,7 +129,7 @@ export async function POST(req: Request) {
                     entity_id: newPurchase.id,
                     action: "INVOICE_UPLOADED",
                     performed_by: userId,
-                    new_state: JSON.stringify({ invoice_no, invoice_amount, type: invoice_type_submitted }),
+                    new_state: JSON.stringify({ invoice_no, invoice_amount }),
                     ip_address: req.headers.get("x-forwarded-for") || "unknown"
                 }
             });

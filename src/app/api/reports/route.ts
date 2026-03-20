@@ -64,7 +64,7 @@ export async function GET(req: Request) {
                 const data = vendors.map(v => {
                     const totalPurchases = v.purchases.length;
                     const amount = v.purchases.reduce((sum: number, p: any) => sum + parseFloat(p.invoice_amount.toString()), 0);
-                    const pendingTax = v.purchases.filter((p: any) => !p.tax_invoice_path && p.invoice_type_submitted === 'PROVISIONAL').length;
+                    const pendingTax = 0; // Tax invoice tracking removed
 
                     // Collect unique styles
                     const styleSet = new Set<string>();
@@ -192,7 +192,7 @@ export async function GET(req: Request) {
                             trips++;
                             amountHandled += parseFloat(p.invoice_amount.toString());
                             if (p.confirmation?.status === 'NOT_CONFIRMED') pendingConfirmations++;
-                            if (p.invoice_type_submitted === 'PROVISIONAL' && !p.tax_invoice_path) pendingTax++;
+                            // Tax invoice tracking removed
                         });
                     });
 
@@ -422,10 +422,10 @@ export async function GET(req: Request) {
             }
 
             case "pending-provisional": {
+                // Report kept for backwards compatibility but no longer filters by invoice type
                 const purchases = await prisma.purchase.findMany({
                     where: {
-                        invoice_type_submitted: "PROVISIONAL",
-                        tax_invoice_path: null,
+                        status: { in: ["INVOICE_SUBMITTED", "APPROVED"] },
                         created_at: startDate && endDate ? dateFilter : undefined,
                     },
                     include: {
@@ -591,15 +591,8 @@ export async function GET(req: Request) {
                         where: { overdue_flag: true, created_at: startDate && endDate ? dateFilter : undefined },
                         select: { order_no: true, overdue_reason: true, status: true },
                     }),
-                    prisma.purchase.findMany({
-                        where: {
-                            invoice_type_submitted: "PROVISIONAL",
-                            tax_invoice_path: null,
-                            status: { in: ["PAID", "PAID_PENDING_TAX_INVOICE"] },
-                            created_at: startDate && endDate ? dateFilter : undefined,
-                        },
-                        select: { purchase_no: true, vendor: { select: { name: true } }, invoice_date: true },
-                    }),
+                    // Missing doc purchases - no longer track tax invoice separately
+                    Promise.resolve([]),
                 ]);
 
                 const data: any[] = [];
@@ -610,7 +603,7 @@ export async function GET(req: Request) {
                 rejectedPurchases.forEach((p) => data.push({ type: "Rejected Purchase", reference: p.purchase_no, date: p.created_at.toISOString().split("T")[0], reason: "Rejected", by: p.vendor.name }));
                 rejectedExpenses.forEach((e) => data.push({ type: "Rejected Expense", reference: e.expense_no, date: e.created_at.toISOString().split("T")[0], reason: e.rejection_reason || "—", by: "—" }));
                 overdueOrders.forEach((o) => data.push({ type: "Overdue Order", reference: o.order_no, date: "—", reason: o.overdue_reason || "—", by: o.status }));
-                missingDocPurchases.forEach((p) => data.push({ type: "Missing Tax Invoice", reference: p.purchase_no, date: p.invoice_date.toISOString().split("T")[0], reason: "Provisional without tax invoice", by: p.vendor.name }));
+                // missingDocPurchases no longer tracked
 
                 return NextResponse.json(data);
             }
@@ -625,8 +618,6 @@ export async function GET(req: Request) {
                                 purchases: {
                                     select: {
                                         status: true,
-                                        invoice_type_submitted: true,
-                                        tax_invoice_path: true,
                                         created_at: true,
                                         updated_at: true,
                                     },
@@ -642,7 +633,7 @@ export async function GET(req: Request) {
                     const accepted = allPurchases.filter((p) => p.status !== "PENDING_PURCHASE" && p.status !== "REJECTED" && p.status !== "CANCELLED").length;
                     const completed = allPurchases.filter((p) => p.status === "COMPLETED" || p.status === "PAID").length;
                     const rejected = allPurchases.filter((p) => p.status === "REJECTED").length;
-                    const provisionalPendingTax = allPurchases.filter((p) => p.invoice_type_submitted === "PROVISIONAL" && !p.tax_invoice_path).length;
+                    const provisionalPendingTax = 0; // Tax invoice tracking removed
 
                     // Average completion time in days (created_at to updated_at for completed)
                     const completedPurchases = allPurchases.filter((p) => p.status === "COMPLETED" || p.status === "PAID");

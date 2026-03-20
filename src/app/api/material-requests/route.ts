@@ -52,7 +52,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-    const auth = await requireRole(["STORE_MANAGER", "PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "MERCHANDISER"]);
+    const auth = await requireRole(["STORE_MANAGER", "PRODUCTION_MANAGER", "SENIOR_MERCHANDISER", "MERCHANDISER", "ACCOUNTANT", "CEO"]);
     if (!auth.authorized) return auth.response;
 
     try {

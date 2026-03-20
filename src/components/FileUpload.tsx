@@ -3,7 +3,7 @@ import { UploadCloud, File, Image as ImageIcon, CheckCircle, XCircle, X } from "
 import { toast } from "sonner";
 
 interface FileUploadProps {
-    type: "PROVISIONAL_INVOICE" | "TAX_INVOICE" | "PAYMENT_PROOF" | "EXPENSE_ATTACHMENT";
+    type: "INVOICE" | "PROVISIONAL_INVOICE" | "TAX_INVOICE" | "PAYMENT_PROOF" | "EXPENSE_ATTACHMENT";
     entityId: string;
     onUploadSuccess: (relativePath: string) => void;
     accept?: string;

@@ -34,14 +34,8 @@ export async function GET() {
             },
         }),
         prisma.user.count({ where: { is_active: true } }),
-        // Overdue final tax invoices: purchases paid with provisional invoice but no tax invoice
-        prisma.purchase.count({
-            where: {
-                status: "PAID_PENDING_TAX_INVOICE",
-                invoice_type_submitted: "PROVISIONAL",
-                tax_invoice_path: null,
-            },
-        }),
+        // Placeholder: overdue tax invoices no longer tracked
+        Promise.resolve(0),
         // Orders pending final sign-off
         prisma.order.count({
             where: { status: "PAID" },

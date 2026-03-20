@@ -10,6 +10,7 @@ export async function GET(
         "ACCOUNTANT",
         "PRODUCTION_MANAGER",
         "SENIOR_MERCHANDISER",
+        "MERCHANDISER",
         "STORE_MANAGER",
         "CEO",
     ]);

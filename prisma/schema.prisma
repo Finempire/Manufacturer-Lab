@@ -49,15 +49,9 @@ enum PurchaseStatus {
   APPROVED
   PAID
   PARTIALLY_PAID
-  PAID_PENDING_TAX_INVOICE
   COMPLETED
   REJECTED
   CANCELLED
-}
-
-enum InvoiceType {
-  PROVISIONAL
-  TAX
 }
 
 enum PaymentMethod {
@@ -116,7 +110,6 @@ enum BlockerCode {
   WAITING_ACCOUNTANT_APPROVAL
   WAITING_PAYMENT
   WAITING_VENDOR_CONFIRMATION
-  WAITING_FINAL_TAX_INVOICE
   WAITING_EXPENSE_COMPLETION
   WAITING_PRODUCTION_ACCEPTANCE
   WAITING_FINAL_SIGNOFF
@@ -125,7 +118,6 @@ enum BlockerCode {
 enum ExceptionFlag {
   MISSING_DOCUMENT
   OVERDUE_REQUIRED_DATE
-  PENDING_TAX_INVOICE
   VENDOR_MISMATCH
   BLOCKED_BY_APPROVAL
   REOPENED_ITEM
@@ -519,9 +511,7 @@ model Purchase {
   invoice_no               String
   invoice_date             DateTime
   invoice_amount           Float
-  invoice_type_submitted   InvoiceType
-  provisional_invoice_path String?
-  tax_invoice_path         String?
+  invoice_files            String[]   @default([])
   accountant_notes         String?
   status                   PurchaseStatus @default(INVOICE_SUBMITTED)
   // ─── Operational Control Fields ───

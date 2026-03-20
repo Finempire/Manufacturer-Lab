@@ -13,9 +13,7 @@ interface Purchase {
     invoice_no: string;
     invoice_date: string;
     invoice_amount: number;
-    invoice_type_submitted: string;
-    provisional_invoice_path: string | null;
-    tax_invoice_path: string | null;
+    invoice_files: string[];
     accountant_notes: string | null;
     status: string;
     created_at: string;
@@ -40,7 +38,6 @@ const STATUS_COLORS: Record<string, string> = {
     APPROVED: "bg-green-100 text-green-800",
     PAID: "bg-blue-100 text-blue-800",
     PARTIALLY_PAID: "bg-indigo-100 text-indigo-800",
-    PAID_PENDING_TAX_INVOICE: "bg-purple-100 text-purple-800",
     COMPLETED: "bg-surface-3 text-foreground-secondary",
     REJECTED: "bg-red-100 text-red-800",
     CANCELLED: "bg-surface-3 text-foreground-tertiary",
@@ -150,7 +147,6 @@ export default function PurchasesReviewPage() {
                                     <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">Runner</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">Invoice</th>
                                     <th className="px-4 py-3 text-right text-xs font-medium text-foreground-tertiary uppercase">Amount</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">Type</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">Status</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-foreground-tertiary uppercase">Date</th>
                                     <th className="px-4 py-3 text-center text-xs font-medium text-foreground-tertiary uppercase">Actions</th>
@@ -166,11 +162,6 @@ export default function PurchasesReviewPage() {
                                         <td className="px-4 py-3 text-sm text-foreground-secondary">{p.invoice_no}</td>
                                         <td className="px-4 py-3 text-sm text-right font-medium tabular-nums">
                                             ₹{p.invoice_amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <span className="text-xs font-medium text-foreground-secondary">
-                                                {p.invoice_type_submitted === "PROVISIONAL" ? "Provisional" : "Tax Invoice"}
-                                            </span>
                                         </td>
                                         <td className="px-4 py-3">
                                             <span className={`px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded-md ${STATUS_COLORS[p.status] || "bg-surface-3 text-foreground-secondary"}`}>
@@ -217,7 +208,6 @@ export default function PurchasesReviewPage() {
                                 <div><p className="text-xs text-foreground-tertiary">Buyer</p><p className="text-sm font-medium">{selectedPurchase.request?.buyer?.name || "—"}</p></div>
                                 <div><p className="text-xs text-foreground-tertiary">Requested By</p><p className="text-sm font-medium">{selectedPurchase.request?.manager?.name || "—"}</p></div>
                                 <div><p className="text-xs text-foreground-tertiary">Invoice Date</p><p className="text-sm font-medium">{format(new Date(selectedPurchase.invoice_date), "dd MMM yyyy")}</p></div>
-                                <div><p className="text-xs text-foreground-tertiary">Invoice Type</p><p className="text-sm font-medium">{selectedPurchase.invoice_type_submitted === "PROVISIONAL" ? "Provisional Slip" : "Tax Invoice"}</p></div>
                                 <div><p className="text-xs text-foreground-tertiary">Invoice Amount</p><p className="text-sm font-bold text-foreground">₹{selectedPurchase.invoice_amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</p></div>
                                 <div><p className="text-xs text-foreground-tertiary">Status</p>
                                     <span className={`px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider rounded-md ${STATUS_COLORS[selectedPurchase.status] || "bg-surface-3 text-foreground-secondary"}`}>
@@ -227,20 +217,15 @@ export default function PurchasesReviewPage() {
                             </div>
 
                             {/* Invoice documents */}
-                            {(selectedPurchase.provisional_invoice_path || selectedPurchase.tax_invoice_path) && (
+                            {selectedPurchase.invoice_files?.length > 0 && (
                                 <div>
-                                    <h3 className="text-sm font-semibold text-foreground mb-2">Documents</h3>
-                                    <div className="flex gap-3">
-                                        {selectedPurchase.provisional_invoice_path && (
-                                            <a href={`/api/files/${selectedPurchase.provisional_invoice_path}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 bg-surface-2 border border-border rounded-lg text-sm text-blue-600 hover:bg-surface-3 transition">
-                                                <FileText className="w-4 h-4" /> Provisional Invoice
+                                    <h3 className="text-sm font-semibold text-foreground mb-2">Invoice Documents</h3>
+                                    <div className="flex flex-wrap gap-3">
+                                        {selectedPurchase.invoice_files.map((file, idx) => (
+                                            <a key={idx} href={`/api/files/${file}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 bg-surface-2 border border-border rounded-lg text-sm text-blue-600 hover:bg-surface-3 transition">
+                                                <FileText className="w-4 h-4" /> Invoice {idx + 1}
                                             </a>
-                                        )}
-                                        {selectedPurchase.tax_invoice_path && (
-                                            <a href={`/api/files/${selectedPurchase.tax_invoice_path}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 bg-surface-2 border border-border rounded-lg text-sm text-blue-600 hover:bg-surface-3 transition">
-                                                <FileText className="w-4 h-4" /> Tax Invoice
-                                            </a>
-                                        )}
+                                        ))}
                                     </div>
                                 </div>
                             )}

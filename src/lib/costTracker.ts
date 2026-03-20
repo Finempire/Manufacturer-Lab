@@ -43,7 +43,6 @@ export async function recalculateOrderCost(orderId: string): Promise<OrderCostSu
                 break;
             case "PAID":
             case "PARTIALLY_PAID":
-            case "PAID_PENDING_TAX_INVOICE":
             case "COMPLETED":
                 paid_material += amt;
                 break;

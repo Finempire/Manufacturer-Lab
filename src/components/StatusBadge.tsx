@@ -74,12 +74,6 @@ const STATUS_MAP: Record<string, StatusConfig> = {
     bgColor: "bg-indigo-500/10",
     textColor: "text-indigo-300",
   },
-  PAID_PENDING_TAX_INVOICE: {
-    label: "Paid (Tax Invoice Pending)",
-    dotColor: "bg-purple-400",
-    bgColor: "bg-purple-500/10",
-    textColor: "text-purple-300",
-  },
   REJECTED: {
     label: "Rejected",
     dotColor: "bg-red-400",

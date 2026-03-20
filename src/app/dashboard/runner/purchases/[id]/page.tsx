@@ -13,9 +13,7 @@ interface PurchaseDetail {
     invoice_no: string;
     invoice_date: string;
     invoice_amount: number;
-    invoice_type_submitted: "PROVISIONAL" | "TAX";
-    provisional_invoice_path: string | null;
-    tax_invoice_path: string | null;
+    invoice_files: string[];
     status: string;
     vendor: { name: string; contact_person: string | null; phone: string | null; address: string | null };
     request: { request_no: string; manager: { name: string } };
@@ -31,8 +29,8 @@ export default function PurchaseDetailPage() {
     const [confirming, setConfirming] = useState(false);
     const [remark, setRemark] = useState("");
 
-    // If runner uploads final tax invoice
-    const [taxUploadPath, setTaxUploadPath] = useState<string | null>(null);
+    // For uploading additional invoices
+    const [newInvoicePath, setNewInvoicePath] = useState<string | null>(null);
 
     useEffect(() => {
         fetch(`/api/purchases/${params.id}`)
@@ -64,16 +62,17 @@ export default function PurchaseDetailPage() {
         }
     };
 
-    const handleTaxUploadSubmit = async () => {
-        if (!purchase || !taxUploadPath) return;
+    const handleInvoiceUpload = async () => {
+        if (!purchase || !newInvoicePath) return;
         try {
             const res = await fetch(`/api/purchases/${purchase.id}/tax-invoice`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ tax_invoice_path: taxUploadPath }),
+                body: JSON.stringify({ invoice_files: [newInvoicePath] }),
             });
-            if (!res.ok) throw new Error("Failed to save final invoice");
-            toast.success("Final Tax Invoice saved!");
+            if (!res.ok) throw new Error("Failed to upload invoice");
+            toast.success("Invoice uploaded!");
+            setNewInvoicePath(null);
 
             const updated = await fetch(`/api/purchases/${params.id}`).then(r => r.json());
             setPurchase(updated);
@@ -85,7 +84,7 @@ export default function PurchaseDetailPage() {
     if (loading) return <div className="text-center py-12 text-foreground-tertiary">Loading details...</div>;
     if (!purchase) return <div className="text-center py-12 text-foreground-tertiary">Purchase not found</div>;
 
-    const needsTaxInvoice = purchase.status === "PAID_PENDING_TAX_INVOICE" && purchase.invoice_type_submitted === "PROVISIONAL";
+    const canUploadMore = !["COMPLETED", "CANCELLED", "REJECTED"].includes(purchase.status);
     const payment = purchase.payments?.[0]; // Assuming 1 payment for simplicity
 
     const renderDocumentCard = (title: string, path: string | null, type: string) => {
@@ -151,7 +150,6 @@ export default function PurchaseDetailPage() {
                             <p className="text-xs text-foreground-tertiary uppercase tracking-wider font-bold mb-1">Billed Amount</p>
                             <p className="text-2xl font-bold text-foreground">₹{purchase.invoice_amount.toLocaleString()}</p>
                             <p className="text-xs text-foreground-tertiary mt-2">Inv No: <span className="font-medium text-foreground">{purchase.invoice_no}</span></p>
-                            <p className="text-xs text-foreground-tertiary mt-1">Type: <span className="font-medium text-foreground">{purchase.invoice_type_submitted}</span></p>
                         </div>
                         <div className="flex-1 p-5 bg-blue-50/30">
                             <p className="text-xs text-blue-600 uppercase tracking-wider font-bold mb-1">Amount Paid</p>
@@ -205,23 +203,21 @@ export default function PurchaseDetailPage() {
                         </div>
                     )}
 
-                    {/* STAGE 8B: Missing Final Tax Invoice Banner */}
-                    {needsTaxInvoice && (
-                        <div className="bg-orange-50 border-l-4 border-orange-500 p-5 rounded-r-xl shadow-sm">
-                            <h3 className="text-orange-900 font-bold text-sm flex items-center gap-2 mb-2">
-                                <FileText className="w-5 h-5 text-orange-600" /> Action Required: Upload Final Tax Invoice
+                    {/* Upload Additional Invoice */}
+                    {canUploadMore && (
+                        <div className="bg-surface-1 border border-border rounded-lg p-5">
+                            <h3 className="text-foreground font-bold text-sm flex items-center gap-2 mb-3">
+                                <FileText className="w-5 h-5 text-blue-600" /> Upload Additional Invoice
                             </h3>
-                            <p className="text-xs text-orange-800 mb-4">Because a Provisional Slip was initially submitted, a final GST Tax Invoice must now be uploaded to close this transaction.</p>
-
-                            <div className="bg-surface-1 p-3 rounded-lg border border-orange-200">
+                            <div className="bg-surface-2 p-3 rounded-lg border border-border">
                                 <FileUpload
-                                    type="TAX_INVOICE"
+                                    type="INVOICE"
                                     entityId={purchase.id}
-                                    onUploadSuccess={path => setTaxUploadPath(path)}
+                                    onUploadSuccess={path => setNewInvoicePath(path)}
                                 />
-                                {taxUploadPath && (
-                                    <button onClick={handleTaxUploadSubmit} className="mt-3 w-full py-2.5 bg-orange-600 text-white rounded font-medium text-sm hover:bg-orange-700 transition flex justify-center items-center gap-2">
-                                        Submit Final Document <ChevronRight className="w-4 h-4" />
+                                {newInvoicePath && (
+                                    <button onClick={handleInvoiceUpload} className="mt-3 w-full py-2.5 bg-blue-600 text-white rounded font-medium text-sm hover:bg-blue-700 transition flex justify-center items-center gap-2">
+                                        Upload Invoice <ChevronRight className="w-4 h-4" />
                                     </button>
                                 )}
                             </div>
@@ -235,11 +231,11 @@ export default function PurchaseDetailPage() {
                     <h3 className="text-sm font-bold text-foreground tracking-wide uppercase px-1">Attached Documents</h3>
 
                     <div className="grid grid-cols-1 gap-4">
-                        {renderDocumentCard("Initial Invoice", purchase.invoice_type_submitted === 'PROVISIONAL' ? purchase.provisional_invoice_path : purchase.tax_invoice_path, "INVOICE")}
+                        {purchase.invoice_files?.map((file, idx) => (
+                            renderDocumentCard(`Invoice ${idx + 1}`, file, "INVOICE")
+                        ))}
 
                         {payment?.payment_proof_path && renderDocumentCard("Payment Proof", payment.payment_proof_path, "PAYMENT")}
-
-                        {purchase.invoice_type_submitted === 'PROVISIONAL' && purchase.tax_invoice_path && renderDocumentCard("Final Tax Invoice", purchase.tax_invoice_path, "TAX_INVOICE")}
                     </div>
                 </div>
             </div>

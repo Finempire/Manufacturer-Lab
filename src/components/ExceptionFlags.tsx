@@ -39,12 +39,6 @@ const FLAG_MAP: Record<string, FlagConfig> = {
     icon: Truck,
     classes: "bg-red-500/10 text-red-400",
   },
-  PENDING_TAX_INVOICE: {
-    label: "Tax Invoice",
-    description: "Tax invoice is pending for this item",
-    icon: Receipt,
-    classes: "bg-orange-500/10 text-orange-400",
-  },
   BLOCKED_BY_APPROVAL: {
     label: "Blocked",
     description: "This item is blocked waiting for approval",

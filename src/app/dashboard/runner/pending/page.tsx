@@ -53,7 +53,6 @@ export default function PendingPurchasesPage() {
         vendor_id: "",
         invoice_no: "",
         invoice_date: new Date().toISOString().split("T")[0],
-        invoice_type_submitted: "PROVISIONAL",
         invoice_amount: "",
     });
 
@@ -123,7 +122,7 @@ export default function PendingPurchasesPage() {
         if (!selectedReq) return;
 
         if (!uploadedPath) {
-            toast.error(`${formData.invoice_type_submitted === 'PROVISIONAL' ? 'Provisional slip' : 'Tax invoice'} document is required`);
+            toast.error("Invoice document is required");
             return;
         }
 
@@ -135,8 +134,7 @@ export default function PendingPurchasesPage() {
                 invoice_no: formData.invoice_no,
                 invoice_date: formData.invoice_date,
                 invoice_amount: parseFloat(formData.invoice_amount),
-                invoice_type_submitted: formData.invoice_type_submitted,
-                [formData.invoice_type_submitted === "PROVISIONAL" ? "provisional_invoice_path" : "tax_invoice_path"]: uploadedPath,
+                invoice_files: uploadedPath ? [uploadedPath] : [],
                 lines: purchaseLines.map(l => ({
                     material_id: l.material_id,
                     quantity: l.quantity,
@@ -291,26 +289,17 @@ export default function PendingPurchasesPage() {
                                     </div>
                                 </div>
 
-                                {/* Row 3: Invoice Type | Total Amount */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-medium text-foreground-secondary mb-1">Invoice Type *</label>
-                                        <select required className="w-full h-11 md:h-10 px-3 border border-border rounded-lg text-sm focus:ring-2 focus:ring-blue-500" value={formData.invoice_type_submitted} onChange={(e) => setFormData({ ...formData, invoice_type_submitted: e.target.value })}>
-                                            <option value="PROVISIONAL">Provisional Slip (Kacha Bill)</option>
-                                            <option value="TAX">Final Tax Invoice</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-medium text-foreground-secondary mb-1">Total Invoice Amount (₹) *</label>
-                                        <input type="number" required min="1" step="0.01" className="w-full h-11 md:h-10 px-3 border border-border rounded-lg text-sm text-right font-medium tabular-nums focus:ring-2 focus:ring-blue-500" value={formData.invoice_amount} onChange={(e) => setFormData({ ...formData, invoice_amount: e.target.value })} />
-                                    </div>
+                                {/* Row 3: Total Amount */}
+                                <div>
+                                    <label className="block text-xs font-medium text-foreground-secondary mb-1">Total Invoice Amount (₹) *</label>
+                                    <input type="number" required min="1" step="0.01" className="w-full h-11 md:h-10 px-3 border border-border rounded-lg text-sm text-right font-medium tabular-nums focus:ring-2 focus:ring-blue-500" value={formData.invoice_amount} onChange={(e) => setFormData({ ...formData, invoice_amount: e.target.value })} />
                                 </div>
 
                                 {/* Upload */}
                                 <div className="pt-2">
                                     <label className="block text-xs font-bold text-foreground mb-2">Upload Invoice *</label>
                                     <FileUpload
-                                        type={formData.invoice_type_submitted === "PROVISIONAL" ? "PROVISIONAL_INVOICE" : "TAX_INVOICE"}
+                                        type="INVOICE"
                                         entityId={selectedReq.id}
                                         onUploadSuccess={(path) => setUploadedPath(path)}
                                     />

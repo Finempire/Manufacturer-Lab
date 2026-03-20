@@ -95,12 +95,6 @@ const BLOCKER_MAP: Record<string, BlockerConfig> = {
     bgColor: "bg-yellow-500/10",
     textColor: "text-yellow-300",
   },
-  WAITING_FINAL_TAX_INVOICE: {
-    label: "Waiting Tax Invoice",
-    dotColor: "bg-yellow-400",
-    bgColor: "bg-yellow-500/10",
-    textColor: "text-yellow-300",
-  },
   WAITING_EXPENSE_COMPLETION: {
     label: "Waiting Expense Completion",
     dotColor: "bg-yellow-400",
